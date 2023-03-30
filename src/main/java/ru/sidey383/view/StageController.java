@@ -3,11 +3,10 @@ package ru.sidey383.view;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class StageController {
 
@@ -25,6 +24,8 @@ public class StageController {
         gameScene.getRoot().requestFocus();
         mainScene.getRoot().requestFocus();
         primaryStage.setScene(mainScene);
+        primaryStage.setFullScreenExitKeyCombination(KeyCombination.keyCombination("F11"));
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 

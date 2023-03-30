@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER"
+<?import javafx.scene.image.ImageView?>
+<StackPane
       onKeyTyped="#onKeyPress"
       onKeyReleased="#onKeyRelease"
       onMouseClicked="#mouseClick"
@@ -13,6 +14,7 @@
       xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.sidey383.view.game.GameController">
+    <ImageView fx:id="background" managed="true" pickOnBounds="true"/>
     <Label fx:id="keyLabel" text="Start test" />
     <Canvas fx:id="gameField" />
-</VBox>
+</StackPane>
