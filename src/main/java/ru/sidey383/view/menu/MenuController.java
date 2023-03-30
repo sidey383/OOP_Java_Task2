@@ -1,17 +1,35 @@
 package ru.sidey383.view.menu;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import ru.sidey383.view.StageController;
+import ru.sidey383.view.RootNode;
 
-public class MenuController {
+public class MenuController extends RootNode {
 
     public Label mainTitle;
 
-    public void startGame(MouseEvent mouseEvent) {
-        System.out.println("Start game "+ mouseEvent.toString());
+    @FXML
+    private Button startButton;
+
+    @FXML
+    private Button scoreButton;
+
+    public MenuController(StageController controller) {
+        super(controller);
     }
 
-    public void showScore(MouseEvent mouseEvent) {
-        System.out.println("Show score "+ mouseEvent.toString());
+    @FXML
+    private void startGame() {
+        stageController.getStage().setScene(stageController.getGameStartScene());
+        stageController.getStage().show();
+    }
+
+
+    @FXML
+    public void showScore(ActionEvent actionEvent) {
     }
 }
