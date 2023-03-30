@@ -1,0 +1,2 @@
+rootProject.name = 'OOP_Java_Task2'
+include("app")
