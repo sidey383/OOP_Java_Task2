@@ -8,7 +8,7 @@
       prefWidth="400"
       xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.sidey383.view.menu.MenuController">
+      fx:controller="ru.sidey383.view.menu.MenuSceneController">
     <Button fx:id="startButton" minHeight="30.0" minWidth="100.0" text="Start game" onAction="#startGame"/>
     <Button fx:id="scoreButton" minHeight="30.0" minWidth="100.0" text="Score" onAction="#showScore"/>
 </VBox>

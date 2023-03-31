@@ -13,7 +13,7 @@
       prefWidth="400"
       xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.sidey383.view.game.GameController">
+      fx:controller="ru.sidey383.view.game.GameSceneController">
     <ImageView fx:id="background" managed="true" pickOnBounds="true"/>
     <Label fx:id="keyLabel" text="Start test" />
     <Canvas fx:id="gameField" />

@@ -1,7 +1,5 @@
 package ru.sidey383.model.game;
 
-import ru.sidey383.model.intarface.TimerGame;
-
 public abstract class AbstractTimerGame implements TimerGame {
 
     protected final static long NO_TIME = -1;
@@ -18,15 +16,8 @@ public abstract class AbstractTimerGame implements TimerGame {
     }
 
     @Override
-    public boolean isStarted() {
+    public boolean isOn() {
         return startTime != NO_TIME;
-    }
-
-    @Override
-    public long gameTime() {
-        if (pauseTime != NO_TIME)
-            return System.currentTimeMillis() - startTime;
-        return pauseTime - startTime;
     }
 
     @Override
@@ -40,8 +31,23 @@ public abstract class AbstractTimerGame implements TimerGame {
         pauseTime = NO_TIME;
     }
 
+    public void stop() {
+        startTime = NO_TIME;
+        pauseTime = NO_TIME;
+    }
+
     @Override
     public boolean isPaused() {
         return pauseTime != NO_TIME;
+    }
+
+    @Override
+    public long getStartTime() {
+        return startTime;
+    }
+
+    @Override
+    public long toLocalTime(long systemTime) {
+        return systemTime - startTime;
     }
 }

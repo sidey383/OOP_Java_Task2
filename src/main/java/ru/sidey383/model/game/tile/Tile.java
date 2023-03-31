@@ -1,4 +1,4 @@
-package ru.sidey383.model.intarface.tile;
+package ru.sidey383.model.game.tile;
 
 public interface Tile {
 
@@ -8,10 +8,8 @@ public interface Tile {
 
     TileStatus getStatus();
 
-    void press();
+    void press(long relativeTime);
 
-    void release();
-
-    void onEnd();
+    void release(long relativeTime);
 
 }

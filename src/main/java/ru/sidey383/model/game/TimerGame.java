@@ -1,4 +1,4 @@
-package ru.sidey383.model.intarface;
+package ru.sidey383.model.game;
 
 public interface TimerGame {
 
@@ -6,14 +6,16 @@ public interface TimerGame {
 
     void stop();
 
-    boolean isStarted();
-
-    long gameTime();
+    boolean isOn();
 
     void pause();
 
     void resume();
 
     boolean isPaused();
+
+    long getStartTime();
+
+    long toLocalTime(long systemTime);
 
 }
