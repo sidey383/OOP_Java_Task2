@@ -3,6 +3,7 @@ package ru.sidey383.view.game;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import ru.sidey383.model.game.tile.Tile;
 import ru.sidey383.control.TimeAdapter;
 
@@ -66,17 +67,25 @@ public class GameCanvas extends Canvas {
             long time = timeAdapter.getRelativeFromNano(timeNS);
             long timeToShow = timeAdapter.getTimeToShow();
             int lineCount = tiles.length;
+            graphicsContext.setFill(new Color(1, 1, 1, 0.7));
+            graphicsContext.fillRect(0, 0, 0.05 * width / lineCount, height);
+            for (int  i = 1; i < lineCount; i++) {
+                double x = (i - 0.05) * width / lineCount;
+                double lWidth = 0.1 * width / lineCount;
+                graphicsContext.fillRect(x, 0, lWidth, height);
+            }
+            graphicsContext.fillRect(width * (lineCount - 0.05) / lineCount, 0, 0.05 * width / lineCount, height);
+            graphicsContext.setFill(new Color(0, 0, 0, 1));
             for (int i = 0; i < lineCount; i++) {
-                double x = i * width / lineCount;
-                double tWidth = width / lineCount;
+                double x = (i + 0.1) * width / lineCount;
+                double tWidth = 0.8 * width / lineCount;
                 for (Tile t : tiles[i]) {
                     double pose1 = (double) (t.getEndTime() - time) / timeToShow;
                     double pose2 = (double) (t.getEndTime() - t.getStartTime()) / timeToShow;
-                    System.out.println(time + " " + pose1 + " " +pose2);
                     graphicsContext.fillRoundRect(
                            x, height - height * pose1,
                            tWidth,  height * pose2,
-                           5, 5);
+                           width/20, height/20);
                 }
             }
         }

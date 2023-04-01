@@ -12,7 +12,7 @@ public class GameKeyEvent extends Event {
     private final long createTime;
 
     public GameKeyEvent(boolean isPress, KeyCode keyCode) {
-        super(false);
+        super(true);
         this.keyCode = keyCode;
         this.isPress = isPress;
         createTime = System.nanoTime();

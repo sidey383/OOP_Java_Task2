@@ -26,10 +26,12 @@ public class EventManager {
             EventHandler eventHandler = method.getAnnotation(EventHandler.class);
             if (eventHandler == null)
                 continue;
-            Class<? extends Event> eventClazz = eventHandler.event();
-            if (!executorMap.containsKey(eventClazz))
-                executorMap.put(eventClazz, new ArrayList<>());
-            executorMap.get(eventClazz).add(new EventExecutor(listener, method));
+            Class<?>[] params = method.getParameterTypes();
+            if (params.length != 1 || params[0].isAssignableFrom(Event.class))
+                return;
+            if (!executorMap.containsKey(params[0]))
+                executorMap.put((Class<? extends Event>) params[0], new ArrayList<>());
+            executorMap.get(params[0]).add(new EventExecutor(listener, method));
         }
     }
 
@@ -44,6 +46,8 @@ public class EventManager {
     public void runEvent(Event event) {
         Class<? extends Event> clazz = event.getClass();
         List<EventExecutor> executors = executorMap.get(clazz);
+        if (executors == null)
+            return;
         if (event.isAsynchronous()) {
             executors.forEach(e ->
                     new Thread(() -> {

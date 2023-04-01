@@ -6,20 +6,28 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import ru.sidey383.view.game.GameCanvas?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.stage.Screen?>
 <StackPane
       onKeyTyped="#onKeyPress"
       onKeyReleased="#onKeyRelease"
       xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.sidey383.view.game.GameSceneController">
-    <ImageView fx:id="background" managed="false" StackPane.alignment="CENTER"/>
+      prefWidth="${screen.visualBounds.width}"
+      prefHeight="${screen.visualBounds.height}"
+      minHeight="600"
+      minWidth="800"
+      fx:controller="ru.sidey383.view.game.GameSceneController"
+      fx:id="stackPane">
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
+    <ImageView fx:id="background" managed="false" StackPane.alignment="CENTER" fitHeight="${stackPane.height}" fitWidth="${stackPane.width}" />
     <GridPane fx:id="gridPane" alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity">
         <columnConstraints>
-            <ColumnConstraints percentWidth="20" />
-            <ColumnConstraints percentWidth="60" />
-            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="30" />
+            <ColumnConstraints percentWidth="40" />
+            <ColumnConstraints percentWidth="30" />
         </columnConstraints>
         <GameCanvas fx:id="gameField"
                     pickOnBounds="true"
