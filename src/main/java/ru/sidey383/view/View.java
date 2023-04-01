@@ -1,5 +1,6 @@
 package ru.sidey383.view;
 
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.sidey383.view.choose.GameChooseSceneControllerFactory;
 import ru.sidey383.view.game.GameSceneControllerFactory;
@@ -22,6 +23,8 @@ public class View implements ViewInterface {
 
     public View(Stage stage) {
         this.stage = stage;
+        stage.setTitle("Piano tiles");
+        stage.getIcons().add(new Image("/icon.png"));
     }
 
     public Stage getStage() {
@@ -31,6 +34,7 @@ public class View implements ViewInterface {
     @Override
     public void setScene(SceneController controller) {
         stage.setScene(controller.getScene());
+        stage.show();
     }
 
 

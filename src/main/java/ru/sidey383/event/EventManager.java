@@ -1,17 +1,12 @@
 package ru.sidey383.event;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class EventManager {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private static final EventManager manager = new EventManager();
+    public static final EventManager manager = new EventManager();
 
     Map<Class<? extends Event>, List<EventExecutor>> executorMap = new HashMap<>();
 
@@ -55,7 +50,7 @@ public class EventManager {
                         try {
                             e.execute(event);
                         } catch (Throwable ex) {
-                            logger.error("Can't execute event " + event.getClass().getSimpleName(), ex);
+                            ex.printStackTrace();
                         }
                     }).start());
         } else {
@@ -63,7 +58,7 @@ public class EventManager {
                 try {
                     e.execute(event);
                 } catch (Throwable ex) {
-                    logger.error("Can't execute event " + event.getClass().getSimpleName(), ex);
+                    ex.printStackTrace();
                 }
             });
         }

@@ -1,13 +1,13 @@
 package ru.sidey383.view.game;
 
-import java.awt.*;
+import ru.sidey383.view.SceneController;
 
-public interface GameView {
+public abstract class GameView extends SceneController implements GameRender {
 
-    Graphics getGraphic();
+    public abstract void startRender();
 
-    void showScore();
+    public abstract void stopRender();
 
-
+    public abstract void showScore();
 
 }

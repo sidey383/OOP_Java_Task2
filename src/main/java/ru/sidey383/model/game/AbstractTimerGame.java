@@ -12,7 +12,7 @@ public abstract class AbstractTimerGame implements TimerGame {
     public void start() {
         if (startTime != NO_TIME)
             throw new IllegalStateException("Game already stared");
-        startTime = System.currentTimeMillis();
+        startTime = System.nanoTime();
     }
 
     @Override
@@ -22,12 +22,12 @@ public abstract class AbstractTimerGame implements TimerGame {
 
     @Override
     public void pause() {
-        pauseTime = System.currentTimeMillis();
+        pauseTime = System.nanoTime();
     }
 
     @Override
     public void resume() {
-        startTime = startTime + System.currentTimeMillis() - pauseTime;
+        startTime = startTime + System.nanoTime() - pauseTime;
         pauseTime = NO_TIME;
     }
 

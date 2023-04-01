@@ -15,7 +15,6 @@ javafx {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
     compileOnly 'org.jetbrains:annotations:24.0.1'
-    implementation 'org.slf4j:slf4j-log4j13:1.0.1'
 }
 
 application {

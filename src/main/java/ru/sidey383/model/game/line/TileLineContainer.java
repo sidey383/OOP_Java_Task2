@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TileLineContainer implements TileLine {
 
-    private final static long CHUNK_TIME = 5000;
+    private final static long CHUNK_TIME = 5000000;
 
     private final TileChunk[] tileChunks;
 

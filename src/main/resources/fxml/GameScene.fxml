@@ -5,16 +5,40 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
+<?import ru.sidey383.view.game.GameCanvas?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 <StackPane
       onKeyTyped="#onKeyPress"
       onKeyReleased="#onKeyRelease"
-      onMouseClicked="#mouseClick"
-      prefHeight="600"
-      prefWidth="400"
       xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.sidey383.view.game.GameSceneController">
-    <ImageView fx:id="background" managed="true" pickOnBounds="true"/>
-    <Label fx:id="keyLabel" text="Start test" />
-    <Canvas fx:id="gameField" />
+    <ImageView fx:id="background" managed="false" StackPane.alignment="CENTER"/>
+    <GridPane fx:id="gridPane" alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="60" />
+            <ColumnConstraints percentWidth="20" />
+        </columnConstraints>
+        <GameCanvas fx:id="gameField"
+                    pickOnBounds="true"
+                    StackPane.alignment="CENTER"
+                    GridPane.hgrow="always"
+                    GridPane.vgrow="always"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="1"/>
+        <VBox GridPane.hgrow="always"
+              GridPane.vgrow="always"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="2">
+            <Button fx:id="button1"  text="Button1"/>
+            <Button fx:id="button2" text="Button2"/>
+        </VBox>
+    </GridPane>
+    <Label fx:id="score" blendMode="ADD" StackPane.alignment="CENTER" textFill="aqua" visible="false">
+        <font>
+            <Font name="System Bold" size="20.0" />
+        </font>
+    </Label>
 </StackPane>
