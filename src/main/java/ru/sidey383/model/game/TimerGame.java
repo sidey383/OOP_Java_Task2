@@ -1,5 +1,8 @@
 package ru.sidey383.model.game;
 
+/**
+ * use nano time
+ * **/
 public interface TimerGame {
 
     void start();
@@ -17,5 +20,7 @@ public interface TimerGame {
     long getStartTime();
 
     long toLocalTime(long systemTime);
+
+    long getTotalTime();
 
 }

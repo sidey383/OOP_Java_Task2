@@ -30,5 +30,9 @@ public class GameKeyEvent extends Event {
         return createTime;
     }
 
+    public static enum KeyAction {
+        PRESS, RELEASE
+    }
+
 
 }

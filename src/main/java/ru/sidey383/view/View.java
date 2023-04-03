@@ -1,12 +1,14 @@
 package ru.sidey383.view;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ru.sidey383.event.EventHandler;
 import ru.sidey383.event.EventManager;
 import ru.sidey383.view.choose.GameChooseSceneControllerFactory;
+import ru.sidey383.view.events.WindowCloseEvent;
 import ru.sidey383.view.events.GameKeyEvent;
 import ru.sidey383.view.game.GameSceneControllerFactory;
 import ru.sidey383.view.menu.MenuSceneControllerFactory;
@@ -28,11 +30,16 @@ public class View implements ViewInterface {
 
     public View(Stage stage) {
         this.stage = stage;
+        stage.setOnCloseRequest(this::windowsClose);
         stage.setFullScreenExitHint("");
         stage.setMaximized(true);
         stage.setTitle("Piano tiles");
         stage.getIcons().add(new Image("/icon.png"));
         EventManager.manager.registerListener(this);
+    }
+
+    private void windowsClose(WindowEvent windowEvent) {
+        EventManager.manager.runEvent(new WindowCloseEvent());
     }
 
     public Stage getStage() {
@@ -41,18 +48,19 @@ public class View implements ViewInterface {
 
     @Override
     public void setScene(SceneController controller) {
-        stage.setScene(controller.getScene());
-        stage.show();
+        Platform.runLater(() -> {
+            stage.setScene(controller.getScene());
+            stage.show();
+        });
+
     }
 
     @EventHandler
     public void onKeyPress(GameKeyEvent keyEvent) {
-        System.out.println("key pressed");
         if (keyEvent.getKeyCode() == KeyCode.F11) {
             stage.setFullScreen(!stage.fullScreenProperty().get());
         }
     }
-
 
     @SuppressWarnings("unchecked")
     public <T extends SceneController> SceneControllerFactory<? extends T> getFactory(Class<T> clazz) {

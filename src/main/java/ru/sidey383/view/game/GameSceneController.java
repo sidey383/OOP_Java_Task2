@@ -2,33 +2,46 @@ package ru.sidey383.view.game;
 
 
 import javafx.animation.AnimationTimer;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.event.EventManager;
-import ru.sidey383.model.game.tile.Tile;
-import ru.sidey383.view.events.GameKeyEvent;
+import ru.sidey383.model.game.level.line.tile.Tile;
+import ru.sidey383.view.events.GameExitEvent;
+import ru.sidey383.view.events.GamePauseEvent;
+import ru.sidey383.view.events.GameResumeEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GameSceneController extends GameView  implements Initializable{
+public class GameSceneController extends GameView  implements Initializable {
 
     @FXML
     public Label score;
-
     @FXML
     private GameCanvas gameField;
-
-    private GraphicsContext graphicsContext;
+    @FXML
+    private ImageView leftBackground;
+    @FXML
+    private ImageView centerBackground;
+    @FXML
+    private ImageView rightBackground;
 
     @FXML
-    private ImageView background;
+    private Node scorePane;
+
+    private MediaPlayer mediaPlayer;
+
+    private TimeAdapter timeAdapter;
 
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
@@ -37,26 +50,8 @@ public class GameSceneController extends GameView  implements Initializable{
         }
     };
 
-
-    @FXML
-    public void onKeyPress(KeyEvent keyEvent) {
-        EventManager.manager.runEvent(new GameKeyEvent(true, keyEvent.getCode()));
-    }
-
-    @FXML
-    public void onKeyRelease(KeyEvent keyEvent) {
-        EventManager.manager.runEvent(new GameKeyEvent(false, keyEvent.getCode()));
-    }
-
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            background.setImage(new Image("/background.jpg"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        graphicsContext = gameField.getGraphicsContext2D();
-    }
+    public void initialize(URL location, ResourceBundle resources) {}
 
     public void sendTileInfo() {
 
@@ -69,22 +64,65 @@ public class GameSceneController extends GameView  implements Initializable{
 
     @Override
     public void setTimeAdapter(TimeAdapter adapter) {
+        this.timeAdapter = adapter;
         gameField.setTimeAdapter(adapter);
     }
 
     @Override
-    public void startRender() {
+    public void start() {
+        if (timeAdapter == null)
+            throw new IllegalStateException("Time adapter must be initialized");
+        if (mediaPlayer != null)
+            mediaPlayer.setStartTime(new Duration ((double) (timeAdapter.getRelativeFromNano(System.nanoTime()) / 1_000_000L)));
         timer.start();
     }
 
     @Override
-    public void stopRender() {
+    public void stop() {
+        if (mediaPlayer != null)
+            mediaPlayer.stop();
         timer.stop();
     }
 
     @Override
-    public void showScore() {
-        score.setText("SCORE: 222002");
-        score.setVisible(true);
+    public void showScore(String scoreStr) {
+        score.setText(scoreStr);
+        scorePane.setVisible(true);
     }
+
+    @Override
+    public void setLeftImage(Image image) {
+        leftBackground.setImage(image);
+    }
+
+    @Override
+    public void setRightImage(Image image) {
+        rightBackground.setImage(image);
+    }
+
+    @Override
+    public void setCenterImage(Image image) {
+        centerBackground.setImage(image);
+    }
+
+    @Override
+    public void setMusic(Media sound) {
+        mediaPlayer = new MediaPlayer(sound);
+    }
+
+    @FXML
+    public void pressExit(ActionEvent actionEvent) {
+        EventManager.manager.runEvent(new GameExitEvent());
+    }
+
+    @FXML
+    public void pressPause(ActionEvent actionEvent) {
+        EventManager.manager.runEvent(new GamePauseEvent());
+    }
+
+    @FXML
+    public void pressResume(ActionEvent actionEvent) {
+        EventManager.manager.runEvent(new GameResumeEvent());
+    }
+
 }

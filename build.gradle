@@ -9,12 +9,13 @@ repositories {
 }
 
 javafx {
-    modules = [ 'javafx.controls', 'javafx.fxml']
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.media']
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
     compileOnly 'org.jetbrains:annotations:24.0.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
 }
 
 application {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -8,45 +7,96 @@
 <?import ru.sidey383.view.game.GameCanvas?>
 <?import javafx.scene.text.Font?>
 <?import javafx.stage.Screen?>
+<?import javafx.scene.shape.Rectangle?>
 <StackPane
-      onKeyTyped="#onKeyPress"
-      onKeyReleased="#onKeyRelease"
-      xmlns="http://javafx.com/javafx/17.0.2-ea"
-      xmlns:fx="http://javafx.com/fxml/1"
-      prefWidth="${screen.visualBounds.width}"
-      prefHeight="${screen.visualBounds.height}"
-      minHeight="600"
-      minWidth="800"
-      fx:controller="ru.sidey383.view.game.GameSceneController"
-      fx:id="stackPane">
+        onKeyPressed="#onKeyPress"
+        onKeyReleased="#onKeyRelease"
+        xmlns="http://javafx.com/javafx/17.0.2-ea"
+        xmlns:fx="http://javafx.com/fxml/1"
+        prefWidth="${screen.visualBounds.width}"
+        prefHeight="${screen.visualBounds.height}"
+        minHeight="600"
+        minWidth="800"
+        fx:controller="ru.sidey383.view.game.GameSceneController"
+        fx:id="root">
     <fx:define>
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
-    <ImageView fx:id="background" managed="false" StackPane.alignment="CENTER" fitHeight="${stackPane.height}" fitWidth="${stackPane.width}" />
-    <GridPane fx:id="gridPane" alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity">
+    <GridPane alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity">
         <columnConstraints>
-            <ColumnConstraints percentWidth="30" />
-            <ColumnConstraints percentWidth="40" />
-            <ColumnConstraints percentWidth="30" />
+            <ColumnConstraints percentWidth="35"/>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="35"/>
         </columnConstraints>
-        <GameCanvas fx:id="gameField"
-                    pickOnBounds="true"
-                    StackPane.alignment="CENTER"
-                    GridPane.hgrow="always"
-                    GridPane.vgrow="always"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="1"/>
-        <VBox GridPane.hgrow="always"
-              GridPane.vgrow="always"
-              GridPane.rowIndex="0"
-              GridPane.columnIndex="2">
-            <Button fx:id="button1"  text="Button1"/>
-            <Button fx:id="button2" text="Button2"/>
-        </VBox>
+        <StackPane
+                fx:id="leftStackPane"
+                StackPane.alignment="CENTER"
+                GridPane.hgrow="always"
+                GridPane.vgrow="always"
+                GridPane.rowIndex="0"
+                GridPane.columnIndex="0">
+            <ImageView fx:id="leftBackground" managed="false" StackPane.alignment="CENTER"
+                       fitHeight="${leftStackPane.height}"
+                       fitWidth="${leftStackPane.width}"/>
+        </StackPane>
+        <StackPane
+                fx:id="centerStackPane"
+                StackPane.alignment="CENTER"
+                GridPane.hgrow="always"
+                GridPane.vgrow="always"
+                GridPane.rowIndex="0"
+                GridPane.columnIndex="1">
+            <ImageView fx:id="centerBackground" managed="false" StackPane.alignment="CENTER"
+                       fitHeight="${centerStackPane.height}"
+                       fitWidth="${centerStackPane.width}"/>
+            <GameCanvas fx:id="gameField" pickOnBounds="true"/>
+        </StackPane>
+        <StackPane
+                fx:id="rightStackPane"
+                StackPane.alignment="CENTER"
+                GridPane.hgrow="always"
+                GridPane.vgrow="always"
+                GridPane.rowIndex="0"
+                GridPane.columnIndex="2">
+            <ImageView fx:id="rightBackground" managed="false" StackPane.alignment="CENTER"
+                       fitHeight="${rightStackPane.height}"
+                       fitWidth="${rightStackPane.width}"/>
+            <VBox GridPane.hgrow="always"
+                  GridPane.vgrow="always"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="2">
+                <Button fx:id="exit" onAction="#pressExit" text="exit"/>
+                <Button fx:id="pause" onAction="#pressPause" text="pause"/>
+                <Button fx:id="resume" onAction="#pressResume" text="resume"/>
+            </VBox>
+        </StackPane>
     </GridPane>
-    <Label fx:id="score" blendMode="ADD" StackPane.alignment="CENTER" textFill="aqua" visible="false">
-        <font>
-            <Font name="System Bold" size="20.0" />
-        </font>
-    </Label>
+    <GridPane alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity" focusTraversable="true" disable="true">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="40"/>
+            <ColumnConstraints percentWidth="20"/>
+            <ColumnConstraints percentWidth="40"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="40"/>
+            <RowConstraints percentHeight="20"/>
+            <RowConstraints percentHeight="40"/>
+        </rowConstraints>
+        <StackPane fx:id="scorePane" visible="false"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1">
+            <Rectangle
+                    fx:id="scoreBackground"
+                    blendMode="HARD_LIGHT"
+                    StackPane.alignment="CENTER"
+                    stroke="bisque" fill="darkorchid"
+                    height="${scorePane.height}"
+                    width="${scorePane.width}"/>
+            <Label fx:id="score" blendMode="HARD_LIGHT" StackPane.alignment="CENTER" textFill="chartreuse">
+                <font>
+                    <Font name="System Bold" size="20.0"/>
+                </font>
+            </Label>
+        </StackPane>
+    </GridPane>
 </StackPane>

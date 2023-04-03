@@ -1,7 +1,7 @@
 package ru.sidey383.view.game;
 
 import ru.sidey383.control.TimeAdapter;
-import ru.sidey383.model.game.tile.Tile;
+import ru.sidey383.model.game.level.line.tile.Tile;
 
 public interface GameRender {
 
