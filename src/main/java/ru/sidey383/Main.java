@@ -20,9 +20,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //jsonTest();
-        gameStartCheck(primaryStage);
-        //viewCheck(primaryStage);
+        gameMenuCheck(primaryStage);
     }
 
     private void jsonTest() throws JsonProcessingException {
@@ -31,10 +29,17 @@ public class Main extends Application {
         System.out.println(mapper.writer().writeValueAsString(new ru.sidey383.model.game.level.line.tile.LongTile(1000, 1200)));
     }
 
+    private void gameMenuCheck(Stage primaryStage) throws Exception {
+        View view = new View(primaryStage);
+        RootModel model = new RootModel();
+        Controller controller = new Controller(view, model);
+        controller.openMenu();
+    }
+
     private void gameStartCheck(Stage primaryStage) throws Exception {
         View view = new View(primaryStage);
         RootModel model = new RootModel();
-        Controller controller = new Controller(view, model.getSettings());
+        Controller controller = new Controller(view, model);
         model.startGame(new GameDescription() {
             @Override
             public String getName() {

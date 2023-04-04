@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER"
-      prefHeight="600"
-      prefWidth="400"
-      xmlns="http://javafx.com/javafx/17.0.2-ea"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.sidey383.view.menu.MenuSceneController">
-    <Button fx:id="startButton" minHeight="30.0" minWidth="100.0" text="Start game"/>
-    <Button fx:id="scoreButton" minHeight="30.0" minWidth="100.0" text="Score"/>
-</VBox>
+
+<StackPane
+        onKeyPressed="#onKeyPress"
+        onKeyReleased="#onKeyRelease"
+        xmlns="http://javafx.com/javafx/17.0.2-ea"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="ru.sidey383.view.menu.MenuSceneController"
+        fx:id="root">
+    <VBox alignment="CENTER"
+          minHeight="600"
+          minWidth="800"
+          xmlns="http://javafx.com/javafx/17.0.2-ea"
+          xmlns:fx="http://javafx.com/fxml/1">
+        <Button fx:id="startButton" minHeight="30.0" minWidth="100.0" onAction="#startAction" text="Start game"/>
+        <Button fx:id="scoreButton" minHeight="30.0" minWidth="100.0" onAction="#scoreAction" text="Score"/>
+        <Button fx:id="exitButton" minHeight="30.0" minWidth="100.0" onAction="#exitAction" text="Exit"/>
+    </VBox>
+</StackPane>

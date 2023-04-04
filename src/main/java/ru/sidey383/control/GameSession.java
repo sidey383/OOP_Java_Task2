@@ -2,17 +2,19 @@ package ru.sidey383.control;
 
 import javafx.application.Platform;
 import ru.sidey383.event.EventHandler;
-import ru.sidey383.event.EventManager;
 import ru.sidey383.model.game.ClickType;
 import ru.sidey383.model.game.TileLinesGame;
 import ru.sidey383.model.game.level.line.tile.Tile;
 import ru.sidey383.model.game.level.line.tile.TileStatus;
 import ru.sidey383.view.events.*;
+import ru.sidey383.view.events.game.PlayerGameStopEvent;
+import ru.sidey383.view.events.game.PlayerPauseEvent;
+import ru.sidey383.view.events.game.PlayerResumeEvent;
 import ru.sidey383.view.game.GameView;
 
 import java.util.*;
 
-public class GameController {
+public class GameSession extends ControllerSession {
 
     private final TileLinesGame game;
 
@@ -20,14 +22,17 @@ public class GameController {
 
     private Timer graphicUpdateTimer;
 
-    private final Map<Integer, ClickType> keyMap;
+    private final Map<Integer, ClickType> keyMap = new HashMap<>();
 
 
-    public GameController(TileLinesGame game, GameView gameView, Map<Integer, ClickType> keyMap) {
+
+    public GameSession(Controller controller, TileLinesGame game, GameView gameView) {
+        super(controller);
         this.game = game;
         this.gameView = gameView;
-        this.keyMap = keyMap;
-        EventManager.manager.registerListener(this);
+        for (Map.Entry<ClickType, Integer> e : getController().getSettings().gameKeys().entrySet()) {
+            keyMap.put(e.getValue(), e.getKey());
+        }
         gameView.setTimeAdapter(new TimeAdapter() {
             @Override
             public long getRelativeFromNano(long timeNS) {
@@ -39,26 +44,37 @@ public class GameController {
                 return game.getTimeToShow();
             }
         });
-        gameStart();
     }
 
-    private void gameStart() {
+    @Override
+    public void start() {
+        super.start();
         game.start();
         graphicStart();
     }
 
+    @Override
+    public void end() {
+        super.end();
+        gameEnd();
+    }
+
     private void gameEnd() {
         graphicStop();
-        game.stop();
+        if (game.isOn())
+            game.stop();
+    }
+
+    private void showScore() {
         Collection<TileStatus> statistic = game.getStatistic();
         int score = statistic.stream().mapToInt(TileStatus::getScore).sum();
         long clicked = statistic.stream().filter(TileStatus::isClicked).count();
-        Platform.runLater( ()  ->
-            gameView.showScore(String.format("""
-                    Score: %d
-                    Clicked: %d
-                    Missed: %d
-                    """, score, clicked, statistic.size() - clicked))
+        Platform.runLater(() ->
+                gameView.showScore(String.format("""
+                        Score: %d
+                        Clicked: %d
+                        Missed: %d
+                        """, score, clicked, statistic.size() - clicked))
         );
     }
 
@@ -100,27 +116,23 @@ public class GameController {
     }
 
     @EventHandler
-    public void onWindowsClose(WindowCloseEvent e) {
+    public void onGameExit(PlayerGameStopEvent e) {
         gameEnd();
+        showScore();
     }
 
     @EventHandler
-    public void onGameExit(GameExitEvent e) {
-        gameEnd();
-    }
-
-    @EventHandler
-    public void onPause(GamePauseEvent e) {
+    public void onPause(PlayerPauseEvent e) {
         gamePause();
     }
 
     @EventHandler
-    public void onResume(GameResumeEvent e) {
+    public void onResume(PlayerResumeEvent e) {
         gameResume();
     }
 
     @EventHandler
-    public void onGameKey(GameKeyEvent e) {
+    public void onGameKey(PlayerKeyEvent e) {
         if (e.isPress()) {
             game.press(keyMap.get(e.getKeyCode().getCode()), game.toLocalTime(e.getCreateNanoTine()));
         } else {

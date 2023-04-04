@@ -9,7 +9,7 @@ import ru.sidey383.event.EventHandler;
 import ru.sidey383.event.EventManager;
 import ru.sidey383.view.choose.GameChooseSceneControllerFactory;
 import ru.sidey383.view.events.WindowCloseEvent;
-import ru.sidey383.view.events.GameKeyEvent;
+import ru.sidey383.view.events.PlayerKeyEvent;
 import ru.sidey383.view.game.GameSceneControllerFactory;
 import ru.sidey383.view.menu.MenuSceneControllerFactory;
 import ru.sidey383.view.score.ScoreSceneControllerFactory;
@@ -32,7 +32,7 @@ public class View implements ViewInterface {
         this.stage = stage;
         stage.setOnCloseRequest(this::windowsClose);
         stage.setFullScreenExitHint("");
-        stage.setMaximized(true);
+        stage.setResizable(true);
         stage.setTitle("Piano tiles");
         stage.getIcons().add(new Image("/icon.png"));
         EventManager.manager.registerListener(this);
@@ -49,15 +49,18 @@ public class View implements ViewInterface {
     @Override
     public void setScene(SceneController controller) {
         Platform.runLater(() -> {
+            boolean fullScreen = stage.isFullScreen();
+            stage.hide();
             stage.setScene(controller.getScene());
             stage.show();
+            stage.setFullScreen(fullScreen);
         });
 
     }
 
     @EventHandler
-    public void onKeyPress(GameKeyEvent keyEvent) {
-        if (keyEvent.getKeyCode() == KeyCode.F11) {
+    public void onKeyPress(PlayerKeyEvent keyEvent) {
+        if (keyEvent.isPress() && keyEvent.getKeyCode() == KeyCode.F11) {
             stage.setFullScreen(!stage.fullScreenProperty().get());
         }
     }
@@ -71,5 +74,10 @@ public class View implements ViewInterface {
             }
         }
         return null;
+    }
+
+    @Override
+    public void close() {
+        Platform.runLater(stage::close);
     }
 }

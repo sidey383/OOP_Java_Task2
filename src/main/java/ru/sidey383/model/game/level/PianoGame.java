@@ -49,14 +49,14 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     @Override
     public void press(ClickType type, long globalTime) {
         TileLine line = lines.get(type);
-        if (line != null)
+        if (line != null && isOn() && !isPaused())
             line.press(globalTime);
     }
 
     @Override
     public void release(ClickType type, long globalTime) {
         TileLine line = lines.get(type);
-        if (line != null)
+        if (line != null && isOn() && !isPaused())
             line.release(globalTime);
     }
 

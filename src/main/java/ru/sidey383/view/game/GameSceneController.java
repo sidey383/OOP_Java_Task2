@@ -6,19 +6,21 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import ru.sidey383.control.AvailableScene;
 import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.event.EventManager;
 import ru.sidey383.model.game.level.line.tile.Tile;
-import ru.sidey383.view.events.GameExitEvent;
-import ru.sidey383.view.events.GamePauseEvent;
-import ru.sidey383.view.events.GameResumeEvent;
+import ru.sidey383.view.events.PlayerChangeSceneEvent;
+import ru.sidey383.view.events.game.PlayerGameStopEvent;
+import ru.sidey383.view.events.game.PlayerPauseEvent;
+import ru.sidey383.view.events.game.PlayerResumeEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,6 +40,9 @@ public class GameSceneController extends GameView  implements Initializable {
 
     @FXML
     private Node scorePane;
+
+    @FXML
+    private Button menuButton;
 
     private MediaPlayer mediaPlayer;
 
@@ -87,6 +92,8 @@ public class GameSceneController extends GameView  implements Initializable {
     @Override
     public void showScore(String scoreStr) {
         score.setText(scoreStr);
+        menuButton.setDisable(false);
+        menuButton.setVisible(true);
         scorePane.setVisible(true);
     }
 
@@ -112,17 +119,22 @@ public class GameSceneController extends GameView  implements Initializable {
 
     @FXML
     public void pressExit(ActionEvent actionEvent) {
-        EventManager.manager.runEvent(new GameExitEvent());
+        EventManager.manager.runEvent(new PlayerGameStopEvent());
     }
 
     @FXML
     public void pressPause(ActionEvent actionEvent) {
-        EventManager.manager.runEvent(new GamePauseEvent());
+        EventManager.manager.runEvent(new PlayerPauseEvent());
     }
 
     @FXML
     public void pressResume(ActionEvent actionEvent) {
-        EventManager.manager.runEvent(new GameResumeEvent());
+        EventManager.manager.runEvent(new PlayerResumeEvent());
+    }
+
+    @FXML
+    public void toMenu(ActionEvent actionEvent) {
+        EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
     }
 
 }
