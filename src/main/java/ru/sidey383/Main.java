@@ -9,7 +9,6 @@ import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.model.RootModel;
 import ru.sidey383.model.game.description.GameDescription;
 import ru.sidey383.model.game.level.line.tile.*;
-import ru.sidey383.view.SceneControllerFactory;
 import ru.sidey383.view.View;
 import ru.sidey383.view.game.GameView;
 
@@ -55,8 +54,7 @@ public class Main extends Application {
 
     private static void viewCheck(Stage primaryStage) throws IOException {
                 View view = new View(primaryStage);
-        SceneControllerFactory<? extends GameView> factory = view.getFactory(GameView.class);
-        GameView gameView = factory.createScene();
+        GameView gameView = view.getScene(GameView.class);
         view.setScene(gameView);
         gameView.setTimeAdapter(new TimeAdapter() {
 

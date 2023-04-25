@@ -1,13 +1,12 @@
 package ru.sidey383.control;
 
-import javafx.scene.image.Image;
 import ru.sidey383.event.EventHandler;
 import ru.sidey383.event.EventManager;
 import ru.sidey383.model.ModelInterface;
 import ru.sidey383.model.event.ModelStartTileLinesGameEvent;
 import ru.sidey383.model.game.TileLinesGame;
 import ru.sidey383.model.settings.AppSettings;
-import ru.sidey383.view.SceneControllerFactory;
+import ru.sidey383.read.ZIPGameReader;
 import ru.sidey383.view.ViewInterface;
 import ru.sidey383.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.view.events.WindowCloseEvent;
@@ -34,18 +33,15 @@ public class Controller {
     }
 
     public void startGame(TileLinesGame game) {
-        SceneControllerFactory<? extends GameView> factory = view.getFactory(GameView.class);
         GameView gameView = null;
         try {
-            gameView = factory.createScene();
+            gameView = view.getScene(GameView.class);
         } catch (IOException e) {
             //TODO: some logging
         }
         if (gameView == null)
             return;
-        gameView.setCenterImage(new Image(game.getCenterImage()));
-        gameView.setLeftImage(new Image(game.getLeftImage()));
-        gameView.setRightImage(new Image(game.getRightImage()));
+        ZIPGameReader gameReader = new ZIPGameReader(gameView.getReaders());
         view.setScene(gameView);
         if (session != null)
             session.end();
@@ -56,7 +52,7 @@ public class Controller {
     public void openMenu() {
         MenuView menuView = null;
         try {
-            menuView = view.getFactory(MenuView.class).createScene();
+            menuView = view.getScene(MenuView.class);
         } catch (IOException e) {
             //TODO: some logging
         }

@@ -13,7 +13,6 @@ public class EventManager {
     private EventManager() {
     }
 
-
     public void registerListener(Object listener) {
         if (listener == null)
             return;
@@ -27,7 +26,7 @@ public class EventManager {
             if (eventHandler == null)
                 continue;
             Class<?>[] params = method.getParameterTypes();
-            if (params.length != 1 || params[0].isAssignableFrom(Event.class))
+            if (params.length != 1 || !Event.class.isAssignableFrom(params[0]))
                 return;
             if (!executorMap.containsKey(params[0]))
                 executorMap.put((Class<? extends Event>) params[0], new ArrayList<>());
@@ -67,6 +66,5 @@ public class EventManager {
             });
         }
     }
-
 
 }

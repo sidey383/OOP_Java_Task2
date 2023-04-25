@@ -1,4 +1,4 @@
-package ru.sidey383.model.game.read;
+package ru.sidey383.read;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ZIPGameReader {
     }
 
     public interface DataReader {
-        java.lang.Object read(java.io.InputStream is) throws Throwable;
+        Object read(java.io.InputStream is) throws Throwable;
     }
 
 }

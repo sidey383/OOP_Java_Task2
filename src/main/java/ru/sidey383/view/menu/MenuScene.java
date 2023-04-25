@@ -9,7 +9,7 @@ import ru.sidey383.view.events.menu.PlayerGameExitEvent;
 import ru.sidey383.view.events.menu.PlayerGameScoreEvent;
 import ru.sidey383.view.events.menu.PlayerMenuGameStartEvent;
 
-public class MenuSceneController extends MenuView {
+public class MenuScene extends MenuView {
 
     public Label mainTitle;
 

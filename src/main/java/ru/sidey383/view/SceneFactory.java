@@ -1,23 +1,22 @@
 package ru.sidey383.view;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.net.URL;
 
-public abstract class SceneControllerFactory<T extends SceneController> {
+public abstract class SceneFactory<T extends Scene> {
 
     public T createScene() throws IOException {
         FXMLLoader loader = new FXMLLoader(getFXMLPath());
         loader.setControllerFactory(this::controllerFXMLFactory);
-        Scene scene = new Scene(loader.load());
+        javafx.scene.Scene scene = new javafx.scene.Scene(loader.load());
         T sceneController = loader.getController();
         sceneController.setScene(scene);
         return sceneController;
     }
 
-    public abstract boolean canProduceType(Class<? extends SceneController> clazz);
+    public abstract boolean canProduceType(Class<? extends Scene> clazz);
 
     protected abstract URL getFXMLPath();
 

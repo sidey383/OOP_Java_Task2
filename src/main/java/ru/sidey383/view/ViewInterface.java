@@ -1,10 +1,12 @@
 package ru.sidey383.view;
 
+import java.io.IOException;
+
 public interface ViewInterface {
 
-    void setScene(SceneController scene);
+    void setScene(Scene scene);
 
-    <T extends SceneController> SceneControllerFactory<? extends T> getFactory(Class<T> clazz);
+    <T extends Scene> T getScene(Class<T> clazz) throws IOException;
 
     void close();
 

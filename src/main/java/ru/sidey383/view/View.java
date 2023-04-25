@@ -7,13 +7,14 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.sidey383.event.EventHandler;
 import ru.sidey383.event.EventManager;
-import ru.sidey383.view.choose.GameChooseSceneControllerFactory;
+import ru.sidey383.view.choose.GameChooseSceneFactory;
 import ru.sidey383.view.events.WindowCloseEvent;
 import ru.sidey383.view.events.PlayerKeyEvent;
-import ru.sidey383.view.game.GameSceneControllerFactory;
-import ru.sidey383.view.menu.MenuSceneControllerFactory;
-import ru.sidey383.view.score.ScoreSceneControllerFactory;
+import ru.sidey383.view.game.GameSceneFactory;
+import ru.sidey383.view.menu.MenuSceneFactory;
+import ru.sidey383.view.score.ScoreSceneFactory;
 
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -21,11 +22,11 @@ public class View implements ViewInterface {
 
     private final Stage stage;
 
-    List<SceneControllerFactory<? extends SceneController>> sceneFactories = List.of(
-            new MenuSceneControllerFactory(),
-            new GameChooseSceneControllerFactory(),
-            new ScoreSceneControllerFactory(),
-            new GameSceneControllerFactory()
+    List<SceneFactory<? extends Scene>> sceneFactories = List.of(
+            new MenuSceneFactory(),
+            new GameChooseSceneFactory(),
+            new ScoreSceneFactory(),
+            new GameSceneFactory()
     );
 
     public View(Stage stage) {
@@ -47,7 +48,7 @@ public class View implements ViewInterface {
     }
 
     @Override
-    public void setScene(SceneController controller) {
+    public void setScene(Scene controller) {
         Platform.runLater(() -> {
             boolean fullScreen = stage.isFullScreen();
             stage.hide();
@@ -66,11 +67,11 @@ public class View implements ViewInterface {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends SceneController> SceneControllerFactory<? extends T> getFactory(Class<T> clazz) {
-        for (SceneControllerFactory<? extends SceneController> factory : sceneFactories) {
+    public <T extends Scene> T getScene(Class<T> clazz) throws IOException {
+        for (SceneFactory<? extends Scene> factory : sceneFactories) {
             Class<?> factoryClazz = (Class<?>) ((ParameterizedType) factory.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
             if (clazz.isAssignableFrom(factoryClazz)) {
-                return (SceneControllerFactory<? extends T>) factory;
+                return (T) factory.createScene();
             }
         }
         return null;

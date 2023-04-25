@@ -10,6 +10,11 @@ import ru.sidey383.model.game.read.PianoGameReader;
 import ru.sidey383.model.score.GameScore;
 import ru.sidey383.model.settings.AppSettings;
 
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -25,7 +30,20 @@ public class RootModel implements ModelInterface {
 
     @Override
     public Collection<GameDescription> getGameDescriptions() {
-        return null;
+        Collection<GameDescription> descriptions = new ArrayList<>();
+        Path gamesPath = getSettings().gamesPath();
+        try(DirectoryStream<Path> ds = Files.newDirectoryStream(gamesPath)) {
+            ds.forEach((path) -> {
+                try {
+                    reader.readGameDescription(path.toUri().toURL()).ifPresent(descriptions::add);
+                } catch (Exception e) {
+                    //TODO: come logging
+                }
+            });
+        } catch (Exception e) {
+            //TODO: come logging
+        }
+        return descriptions;
     }
 
     @Override
@@ -46,6 +64,11 @@ public class RootModel implements ModelInterface {
                         ClickType.LINE_5, KeyCode.K.getCode(),
                         ClickType.LINE_6, KeyCode.L.getCode()
                         );
+            }
+
+            @Override
+            public Path gamesPath() {
+                return Paths.get("");
             }
         };
     }

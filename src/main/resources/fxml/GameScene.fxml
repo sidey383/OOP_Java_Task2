@@ -17,7 +17,7 @@
         prefHeight="${screen.visualBounds.height}"
         minHeight="600"
         minWidth="800"
-        fx:controller="ru.sidey383.view.game.GameSceneController"
+        fx:controller="ru.sidey383.view.game.GameScene"
         fx:id="root">
     <fx:define>
         <Screen fx:factory="getPrimary" fx:id="screen"/>
