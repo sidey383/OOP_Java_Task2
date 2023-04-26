@@ -4,9 +4,13 @@ import java.io.IOException;
 
 public interface ViewInterface {
 
-    void setScene(Scene scene);
+    void setScene(AppScene scene);
 
-    <T extends Scene> T getScene(Class<T> clazz) throws IOException;
+    <T extends AppScene> T getScene(Class<T> clazz) throws IOException;
+
+    void showException(String message, Exception e);
+
+    void showException(Exception e);
 
     void close();
 

@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import ru.sidey383.control.Controller;
 import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.model.RootModel;
-import ru.sidey383.model.game.description.GameDescription;
+import ru.sidey383.model.game.GameDescription;
 import ru.sidey383.model.game.level.line.tile.*;
 import ru.sidey383.view.View;
 import ru.sidey383.view.game.GameView;

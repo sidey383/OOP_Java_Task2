@@ -1,16 +1,16 @@
 package ru.sidey383.view.menu;
 
-import ru.sidey383.view.Scene;
+import ru.sidey383.view.AppScene;
 import ru.sidey383.view.SceneFactory;
 
 import java.net.URL;
 
 
-public class MenuSceneFactory extends SceneFactory<MenuScene> {
+public class MenuSceneFactory extends SceneFactory<MenuAppScene> {
 
     @Override
-    public boolean canProduceType(Class<? extends Scene> clazz) {
-        return clazz.isAssignableFrom(MenuScene.class);
+    public boolean canProduceType(Class<? extends AppScene> clazz) {
+        return clazz.isAssignableFrom(MenuAppScene.class);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class MenuSceneFactory extends SceneFactory<MenuScene> {
 
     @Override
     protected Object controllerFXMLFactory(Class<?> clazz) {
-        return new MenuScene();
+        return new MenuAppScene();
     }
 }

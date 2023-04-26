@@ -25,7 +25,7 @@ import ru.sidey383.view.events.game.PlayerResumeEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GameScene extends GameView  implements Initializable {
+public class GameAppScene extends GameView  implements Initializable {
 
     @FXML
     public Label score;

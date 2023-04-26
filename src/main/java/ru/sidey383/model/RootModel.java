@@ -4,9 +4,11 @@ import javafx.scene.input.KeyCode;
 import ru.sidey383.event.EventManager;
 import ru.sidey383.model.event.ModelStartTileLinesGameEvent;
 import ru.sidey383.model.game.ClickType;
-import ru.sidey383.model.game.description.GameDescription;
+import ru.sidey383.model.game.GameDescription;
 import ru.sidey383.model.game.level.PianoGame;
-import ru.sidey383.model.game.read.PianoGameReader;
+import ru.sidey383.model.game.read.DataContainer;
+import ru.sidey383.model.game.read.ZIPGameDescriptionReader;
+import ru.sidey383.model.game.read.ZIPGameReader;
 import ru.sidey383.model.score.GameScore;
 import ru.sidey383.model.settings.AppSettings;
 
@@ -20,12 +22,17 @@ import java.util.Map;
 
 public class RootModel implements ModelInterface {
 
-    PianoGameReader reader = new PianoGameReader();
+    private ZIPGameReader gameReader = new ZIPGameReader();
+
+    private ZIPGameDescriptionReader gameDescriptionReader = new ZIPGameDescriptionReader();
+
+    public RootModel() {}
 
     @Override
     public void startGame(GameDescription gameDescription) throws Exception {
-        PianoGame game = reader.readGame(gameDescription.getGameContainer());
-        EventManager.manager.runEvent(new ModelStartTileLinesGameEvent(game));
+        DataContainer container = gameReader.readZIP(gameDescription.getGameContainer());
+        PianoGame game = gameReader.readGame(container);
+        EventManager.manager.runEvent(new ModelStartTileLinesGameEvent(container, game));
     }
 
     @Override
@@ -35,7 +42,9 @@ public class RootModel implements ModelInterface {
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(gamesPath)) {
             ds.forEach((path) -> {
                 try {
-                    reader.readGameDescription(path.toUri().toURL()).ifPresent(descriptions::add);
+                    descriptions.add(
+                            gameDescriptionReader.readDescription(path.toUri().toURL())
+                    );
                 } catch (Exception e) {
                     //TODO: come logging
                 }

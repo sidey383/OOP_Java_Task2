@@ -1,8 +1,7 @@
-package ru.sidey383.model.game.description;
+package ru.sidey383.model.game;
 
 import java.net.URL;
 
-//TODO: add data reader reference in this interface
 public interface GameDescription {
 
     String getName();

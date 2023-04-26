@@ -1,15 +1,15 @@
 package ru.sidey383.view.game;
 
-import ru.sidey383.view.Scene;
+import ru.sidey383.view.AppScene;
 import ru.sidey383.view.SceneFactory;
 
 import java.net.URL;
 
-public class GameSceneFactory extends SceneFactory<GameScene> {
+public class GameSceneFactory extends SceneFactory<GameAppScene> {
 
     @Override
-    public boolean canProduceType(Class<? extends Scene> clazz) {
-        return clazz.isAssignableFrom(GameScene.class);
+    public boolean canProduceType(Class<? extends AppScene> clazz) {
+        return clazz.isAssignableFrom(GameAppScene.class);
     }
 
     @Override
@@ -19,6 +19,6 @@ public class GameSceneFactory extends SceneFactory<GameScene> {
 
     @Override
     protected Object controllerFXMLFactory(Class<?> clazz) {
-        return new GameScene();
+        return new GameAppScene();
     }
 }

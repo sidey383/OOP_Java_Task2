@@ -1,14 +1,14 @@
 package ru.sidey383.model.event;
 
-import ru.sidey383.event.Event;
 import ru.sidey383.model.game.TileLinesGame;
+import ru.sidey383.model.game.read.DataContainer;
 
-public class ModelStartTileLinesGameEvent extends Event {
+public class ModelStartTileLinesGameEvent extends ModelStartGameEvent {
 
     private final TileLinesGame game;
 
-    public ModelStartTileLinesGameEvent(TileLinesGame game) {
-        super(true);
+    public ModelStartTileLinesGameEvent(DataContainer dataContainer, TileLinesGame game) {
+        super(dataContainer);
         this.game = game;
     }
 

@@ -1,7 +1,9 @@
-package ru.sidey383.control;
+package ru.sidey383.control.session;
 
+import ru.sidey383.control.Controller;
+import ru.sidey383.control.ControllerSession;
 import ru.sidey383.event.EventHandler;
-import ru.sidey383.model.game.description.GameDescription;
+import ru.sidey383.model.game.GameDescription;
 import ru.sidey383.view.events.menu.PlayerGameExitEvent;
 import ru.sidey383.view.events.menu.PlayerMenuGameStartEvent;
 import ru.sidey383.view.menu.MenuView;

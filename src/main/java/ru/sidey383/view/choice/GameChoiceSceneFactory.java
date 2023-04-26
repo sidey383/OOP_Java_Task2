@@ -1,15 +1,16 @@
-package ru.sidey383.view.score;
+package ru.sidey383.view.choice;
 
 import ru.sidey383.view.AppScene;
 import ru.sidey383.view.SceneFactory;
+import ru.sidey383.view.menu.MenuAppScene;
 
 import java.net.URL;
 
-public class ScoreSceneFactory extends SceneFactory<ScoreAppScene> {
+public class GameChoiceSceneFactory extends SceneFactory<GameChoiceAppScene> {
 
     @Override
     public boolean canProduceType(Class<? extends AppScene> clazz) {
-        return clazz.isAssignableFrom(ScoreSceneFactory.class);
+        return clazz.isAssignableFrom(MenuAppScene.class);
     }
 
     @Override

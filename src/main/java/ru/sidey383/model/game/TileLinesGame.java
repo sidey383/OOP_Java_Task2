@@ -14,19 +14,10 @@ public interface TileLinesGame extends TimerGame, ClickableGame {
 
     ClickType[] getAvailableTypes();
 
-
     /**
      * @return nano time
      * **/
     long getTimeToShow();
-
-    InputStream getLeftImage();
-
-    InputStream getRightImage();
-
-    InputStream getCenterImage();
-
-    InputStream getMusic();
 
     public Collection<TileStatus> getStatistic();
 

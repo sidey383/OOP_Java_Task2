@@ -10,7 +10,7 @@
         onKeyReleased="#onKeyRelease"
         xmlns="http://javafx.com/javafx/17.0.2-ea"
         xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="ru.sidey383.view.menu.MenuScene"
+        fx:controller="ru.sidey383.view.menu.MenuAppScene"
         fx:id="root">
     <VBox alignment="CENTER"
           minHeight="600"

@@ -22,21 +22,9 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
      * **/
     private final long totalTime;
 
-    private final byte[] music;
-
-    private final byte[] leftImage;
-
-    private final byte[] centerImage;
-
-    private final byte[] rightImage;
-
-    public PianoGame(String name, long time, Map<ClickType, Tile[]> tiles, byte[] music, byte[] leftImage, byte[] centerImage, byte[] rightImage) {
+    public PianoGame(String name, long time, Map<ClickType, Tile[]> tiles) {
         this.name = name;
         this.totalTime = time;
-        this.music = music;
-        this.leftImage = leftImage;
-        this.centerImage = centerImage;
-        this.rightImage = rightImage;
         for (Map.Entry<ClickType, Tile[]> entry : tiles.entrySet()) {
             try {
                 lines.put(entry.getKey(), new TileLineContainer(this, Arrays.asList(entry.getValue())));
@@ -81,26 +69,6 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     @Override
     public long getTimeToShow() {
         return 1_000_000_000 ;
-    }
-
-    @Override
-    public InputStream getLeftImage() {
-        return new ByteArrayInputStream(leftImage);
-    }
-
-    @Override
-    public InputStream getRightImage() {
-        return new ByteArrayInputStream(rightImage);
-    }
-
-    @Override
-    public InputStream getCenterImage() {
-        return new ByteArrayInputStream(centerImage);
-    }
-
-    @Override
-    public InputStream getMusic() {
-        return new ByteArrayInputStream(music);
     }
 
     @Override

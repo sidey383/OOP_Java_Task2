@@ -1,11 +1,10 @@
 package ru.sidey383.view.game;
 
-import ru.sidey383.read.ZIPGameReader;
-import ru.sidey383.view.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import ru.sidey383.view.AppScene;
 
-import java.util.Map;
-
-public abstract class GameView extends Scene implements GameRender {
+public abstract class GameView extends AppScene implements GameRender {
 
     public abstract void start();
 
@@ -13,8 +12,12 @@ public abstract class GameView extends Scene implements GameRender {
 
     public abstract void showScore(String scoreStr);
 
-    public abstract Map<String, ZIPGameReader.DataReader> getReaders();
+    public abstract void setLeftImage(Image image);
 
-    public abstract Map<String, Object> setData() throws Exception;
+    public abstract void setRightImage(Image image);
+
+    public abstract void setCenterImage(Image image);
+
+    public abstract void setMusic(Media sound);
 
 }

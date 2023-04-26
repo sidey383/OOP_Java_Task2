@@ -1,6 +1,6 @@
 package ru.sidey383.model;
 
-import ru.sidey383.model.game.description.GameDescription;
+import ru.sidey383.model.game.GameDescription;
 import ru.sidey383.model.score.GameScore;
 import ru.sidey383.model.settings.AppSettings;
 

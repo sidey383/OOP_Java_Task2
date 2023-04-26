@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 import java.net.URL;
 
-public abstract class SceneFactory<T extends Scene> {
+public abstract class SceneFactory<T extends AppScene> {
 
     public T createScene() throws IOException {
         FXMLLoader loader = new FXMLLoader(getFXMLPath());
@@ -16,7 +16,7 @@ public abstract class SceneFactory<T extends Scene> {
         return sceneController;
     }
 
-    public abstract boolean canProduceType(Class<? extends Scene> clazz);
+    public abstract boolean canProduceType(Class<? extends AppScene> clazz);
 
     protected abstract URL getFXMLPath();
 

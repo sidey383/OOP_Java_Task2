@@ -1,6 +1,9 @@
-package ru.sidey383.control;
+package ru.sidey383.control.session;
 
 import javafx.application.Platform;
+import ru.sidey383.control.Controller;
+import ru.sidey383.control.ControllerSession;
+import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.event.EventHandler;
 import ru.sidey383.model.game.ClickType;
 import ru.sidey383.model.game.TileLinesGame;
