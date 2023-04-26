@@ -1,7 +1,5 @@
 package ru.sidey383.model.game.read;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import ru.sidey383.model.game.level.PianoGame;
 import ru.sidey383.model.game.level.line.tile.Tile;
 
@@ -33,9 +31,7 @@ public class ZIPGameReader extends ZIPReader {
                 throw new IOException("Can't read tiles "+i+" from file, see other errors");
             gameTiles[i-1] = tiles.get();
         }
-        return new PianoGame(lore.get().name(), lore.get().levelTime, ReaderMethods.convert(gameTiles));
+        return new PianoGame(lore.get().name(), lore.get().levelTime(), ReaderMethods.convert(gameTiles));
     }
-
-    private record GameLore(String name, Long levelTime) {}
 
 }

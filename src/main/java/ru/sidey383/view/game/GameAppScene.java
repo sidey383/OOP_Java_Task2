@@ -2,7 +2,6 @@ package ru.sidey383.view.game;
 
 
 import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -21,6 +20,7 @@ import ru.sidey383.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.view.events.game.PlayerPauseEvent;
 import ru.sidey383.view.events.game.PlayerResumeEvent;
+import ru.sidey383.view.game.component.GameCanvas;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -57,10 +57,6 @@ public class GameAppScene extends GameView  implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
-
-    public void sendTileInfo() {
-
-    }
 
     @Override
     public void updateTiles(Tile[][] nTiles) {
@@ -118,22 +114,22 @@ public class GameAppScene extends GameView  implements Initializable {
     }
 
     @FXML
-    public void pressExit(ActionEvent actionEvent) {
+    public void pressExit() {
         EventManager.manager.runEvent(new PlayerGameStopEvent());
     }
 
     @FXML
-    public void pressPause(ActionEvent actionEvent) {
+    public void pressPause() {
         EventManager.manager.runEvent(new PlayerPauseEvent());
     }
 
     @FXML
-    public void pressResume(ActionEvent actionEvent) {
+    public void pressResume() {
         EventManager.manager.runEvent(new PlayerResumeEvent());
     }
 
     @FXML
-    public void toMenu(ActionEvent actionEvent) {
+    public void toMenu() {
         EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
     }
 

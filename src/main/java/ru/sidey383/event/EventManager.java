@@ -13,6 +13,7 @@ public class EventManager {
     private EventManager() {
     }
 
+    @SuppressWarnings("unchecked")
     public void registerListener(Object listener) {
         if (listener == null)
             return;

@@ -1,4 +1,4 @@
-package ru.sidey383.view.choice;
+package ru.sidey383.view.factories;
 
 import ru.sidey383.view.AppScene;
 import ru.sidey383.view.SceneFactory;
@@ -6,7 +6,8 @@ import ru.sidey383.view.menu.MenuAppScene;
 
 import java.net.URL;
 
-public class GameChoiceSceneFactory extends SceneFactory<GameChoiceAppScene> {
+
+public class MenuSceneFactory extends SceneFactory<MenuAppScene> {
 
     @Override
     public boolean canProduceType(Class<? extends AppScene> clazz) {
@@ -15,11 +16,11 @@ public class GameChoiceSceneFactory extends SceneFactory<GameChoiceAppScene> {
 
     @Override
     protected URL getFXMLPath() {
-        return null;
+        return getClass().getResource("/fxml/MainScene.fxml");
     }
 
     @Override
     protected Object controllerFXMLFactory(Class<?> clazz) {
-        return null;
+        return new MenuAppScene();
     }
 }

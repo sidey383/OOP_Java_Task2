@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<?import ru.sidey383.view.game.GameCanvas?>
+<?import ru.sidey383.view.game.component.GameCanvas?>
 <?import javafx.scene.text.Font?>
 <?import javafx.stage.Screen?>
 <?import javafx.scene.shape.Rectangle?>
@@ -17,8 +17,7 @@
         prefHeight="${screen.visualBounds.height}"
         minHeight="600"
         minWidth="800"
-        fx:controller="ru.sidey383.view.game.GameAppScene"
-        fx:id="root">
+        fx:controller="ru.sidey383.view.game.GameAppScene">
     <fx:define>
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
@@ -65,9 +64,9 @@
                   GridPane.vgrow="always"
                   GridPane.rowIndex="0"
                   GridPane.columnIndex="2">
-                <Button fx:id="exit" onAction="#pressExit" text="exit"/>
-                <Button fx:id="pause" onAction="#pressPause" text="pause"/>
-                <Button fx:id="resume" onAction="#pressResume" text="resume"/>
+                <Button onAction="#pressExit" text="exit"/>
+                <Button onAction="#pressPause" text="pause"/>
+                <Button onAction="#pressResume" text="resume"/>
             </VBox>
         </StackPane>
     </GridPane>
@@ -77,7 +76,6 @@
                prefHeight="${centerStackPane.height}"
                prefWidth="${centerStackPane.width}">
         <Rectangle
-                fx:id="scoreBackground"
                 blendMode="HARD_LIGHT"
                 StackPane.alignment="CENTER"
                 stroke="bisque" fill="darkorchid"/>

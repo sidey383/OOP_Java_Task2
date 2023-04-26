@@ -1,4 +1,4 @@
-package ru.sidey383.view.game;
+package ru.sidey383.view.game.component;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

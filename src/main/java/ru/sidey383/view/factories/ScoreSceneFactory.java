@@ -1,24 +1,25 @@
-package ru.sidey383.view.game;
+package ru.sidey383.view.factories;
 
 import ru.sidey383.view.AppScene;
 import ru.sidey383.view.SceneFactory;
+import ru.sidey383.view.score.ScoreAppScene;
 
 import java.net.URL;
 
-public class GameSceneFactory extends SceneFactory<GameAppScene> {
+public class ScoreSceneFactory extends SceneFactory<ScoreAppScene> {
 
     @Override
     public boolean canProduceType(Class<? extends AppScene> clazz) {
-        return clazz.isAssignableFrom(GameAppScene.class);
+        return clazz.isAssignableFrom(ScoreSceneFactory.class);
     }
 
     @Override
     protected URL getFXMLPath() {
-        return getClass().getResource("/fxml/GameScene.fxml");
+        return null;
     }
 
     @Override
     protected Object controllerFXMLFactory(Class<?> clazz) {
-        return new GameAppScene();
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package ru.sidey383.control;
 
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
+import ru.sidey383.control.session.ChoiceSession;
 import ru.sidey383.control.session.GameSession;
 import ru.sidey383.control.session.MenuSession;
 import ru.sidey383.event.EventHandler;
@@ -12,6 +13,7 @@ import ru.sidey383.model.game.TileLinesGame;
 import ru.sidey383.model.game.read.DataContainer;
 import ru.sidey383.model.settings.AppSettings;
 import ru.sidey383.view.ViewInterface;
+import ru.sidey383.view.choice.ChoiceView;
 import ru.sidey383.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.view.events.WindowCloseEvent;
 import ru.sidey383.view.game.GameView;
@@ -41,7 +43,7 @@ public class Controller {
     }
 
     public void openGame(DataContainer container, TileLinesGame game) {
-        GameView gameView = null;
+        GameView gameView;
 
         try {
             gameView = view.getScene(GameView.class);
@@ -65,7 +67,7 @@ public class Controller {
             } catch (IOException e) {
                 //TODO: some log
             }
-            gameView.setMusic(new Media(p.toUri().getPath()));
+            gameView.setMusic(new Media(p.toUri().toString()));
             view.setScene(gameView);
 
         } catch (IOException e) {
@@ -77,10 +79,7 @@ public class Controller {
         if (gameView == null)
             return;
 
-        if (session != null)
-            session.end();
-        session = new GameSession(this, game, gameView);
-        session.start();
+        setSession(new GameSession(this, game, gameView));
     }
 
     public void openMenu() {
@@ -93,9 +92,24 @@ public class Controller {
         if (menuView == null)
             return;
         view.setScene(menuView);
+        setSession(new MenuSession(this, menuView));
+    }
+
+    public void openGameChoice() {
+        try {
+            ChoiceView choiceView = view.getScene(ChoiceView.class);
+            view.setScene(choiceView);
+            setSession(new ChoiceSession(this, choiceView, getModel().getGameDescriptions()));
+        } catch (Exception e) {
+            //TODO: some logging
+            e.printStackTrace();
+        }
+    }
+
+    private void setSession(ControllerSession newSession) {
         if (session != null)
             session.end();
-        session = new MenuSession(this, menuView);
+        session = newSession;
         session.start();
     }
 
@@ -110,6 +124,7 @@ public class Controller {
     public void onPlayerOpenScene(PlayerChangeSceneEvent e) {
         switch (e.getScene()) {
             case MENU -> openMenu();
+            case GAME_CHOOSE -> openGameChoice();
             default -> {}
         }
     }

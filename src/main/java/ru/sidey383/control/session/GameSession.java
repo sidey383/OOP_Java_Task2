@@ -28,7 +28,6 @@ public class GameSession extends ControllerSession {
     private final Map<Integer, ClickType> keyMap = new HashMap<>();
 
 
-
     public GameSession(Controller controller, TileLinesGame game, GameView gameView) {
         super(controller);
         this.game = game;
@@ -64,6 +63,7 @@ public class GameSession extends ControllerSession {
 
     private void gameEnd() {
         graphicStop();
+        showScore();
         if (game.isOn())
             game.stop();
     }
@@ -115,13 +115,12 @@ public class GameSession extends ControllerSession {
             }
         };
         graphicUpdateTimer = new Timer();
-        graphicUpdateTimer.schedule(graphicUpdateTask, 0, 500);
+        graphicUpdateTimer.schedule(graphicUpdateTask, 0, game.getTimeToShow() / 4_000_000);
     }
 
     @EventHandler
     public void onGameExit(PlayerGameStopEvent e) {
         gameEnd();
-        showScore();
     }
 
     @EventHandler

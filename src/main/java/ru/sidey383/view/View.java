@@ -14,23 +14,26 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.sidey383.event.EventHandler;
 import ru.sidey383.event.EventManager;
-import ru.sidey383.view.choice.GameChoiceSceneFactory;
+import ru.sidey383.view.factories.GameChoiceSceneFactory;
 import ru.sidey383.view.events.WindowCloseEvent;
 import ru.sidey383.view.events.PlayerKeyEvent;
-import ru.sidey383.view.game.GameSceneFactory;
-import ru.sidey383.view.menu.MenuSceneFactory;
-import ru.sidey383.view.score.ScoreSceneFactory;
+import ru.sidey383.view.factories.GameSceneFactory;
+import ru.sidey383.view.factories.MenuSceneFactory;
+import ru.sidey383.view.factories.ScoreSceneFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 
 public class View implements ViewInterface {
 
     private final Stage stage;
+
+    private final Object dialogSynchronizer = new Object();
+
+    private Stage dialog = null;
 
     List<SceneFactory<? extends AppScene>> sceneFactories = List.of(
             new MenuSceneFactory(),
@@ -38,8 +41,6 @@ public class View implements ViewInterface {
             new ScoreSceneFactory(),
             new GameSceneFactory()
     );
-
-    List<Stage> dialogs = new ArrayList<>();
 
     public View(Stage stage) {
         this.stage = stage;
@@ -91,45 +92,52 @@ public class View implements ViewInterface {
 
     @Override
     public void showException(String message, Exception e) {
-        Platform.runLater( () -> {
+        Platform.runLater(() -> {
             Stage dialogStage = new Stage();
-            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.getIcons().addAll(stage.getIcons());
+            dialogStage.initModality(Modality.NONE);
+            dialogStage.setResizable(false);
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(os));
+            Button button = new Button("Ok.");
+            button.setOnAction((a) -> {
 
-            VBox vbox = new VBox(new Text(message + ": " + os.toString()), new Button("Ok."));
+                synchronized (dialogSynchronizer) {
+                    dialogStage.close();
+                    if (dialog == dialogStage) {
+                        dialog = null;
+                    }
+                }
+            });
+            VBox vbox = new VBox(new Text((message == null ? "" : message + ": ") + os), button);
             vbox.setAlignment(Pos.CENTER);
             vbox.setPadding(new Insets(15));
 
             dialogStage.setScene(new Scene(vbox));
             dialogStage.show();
-            dialogs.add(dialogStage);
+            synchronized (dialogSynchronizer) {
+                if (dialog != null)
+                    dialog.close();
+                dialog = dialogStage;
+            }
+
+
         });
     }
 
     @Override
     public void showException(Exception e) {
-        Platform.runLater( () -> {
-            Stage dialogStage = new Stage();
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(os));
-
-            VBox vbox = new VBox(new Text(os.toString()), new Button("Ok."));
-            vbox.setAlignment(Pos.CENTER);
-            vbox.setPadding(new Insets(15));
-
-            dialogStage.setScene(new Scene(vbox));
-            dialogStage.show();
-            dialogs.add(dialogStage);
-        });
+        showException(null, e);
     }
 
     @Override
     public void close() {
-        Platform.runLater(stage::close);
+        Platform.runLater(() -> {
+            if (dialog != null)
+                dialog.close();
+            stage.close();
+        });
     }
 
 }

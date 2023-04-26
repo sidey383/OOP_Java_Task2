@@ -7,8 +7,6 @@ import ru.sidey383.model.game.level.line.TileLineContainer;
 import ru.sidey383.model.game.level.line.tile.Tile;
 import ru.sidey383.model.game.level.line.tile.TileStatus;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.*;
 
 public class PianoGame extends AbstractTimerGame implements TileLinesGame {
@@ -18,7 +16,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     HashMap<ClickType, TileLine> lines = new HashMap<>();
 
     /**
-     * use ms time
+     * use nano time
      * **/
     private final long totalTime;
 
@@ -49,7 +47,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     }
 
     @Override
-    public String getName(String name) {
+    public String getName() {
         return name;
     }
 

@@ -19,12 +19,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.zip.ZipException;
 
 public class RootModel implements ModelInterface {
 
-    private ZIPGameReader gameReader = new ZIPGameReader();
+    private final ZIPGameReader gameReader = new ZIPGameReader();
 
-    private ZIPGameDescriptionReader gameDescriptionReader = new ZIPGameDescriptionReader();
+    private final ZIPGameDescriptionReader gameDescriptionReader = new ZIPGameDescriptionReader();
 
     public RootModel() {}
 
@@ -41,10 +42,13 @@ public class RootModel implements ModelInterface {
         Path gamesPath = getSettings().gamesPath();
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(gamesPath)) {
             ds.forEach((path) -> {
+                if(!Files.isRegularFile(path))
+                    return;
                 try {
                     descriptions.add(
                             gameDescriptionReader.readDescription(path.toUri().toURL())
                     );
+                } catch (ZipException e) {
                 } catch (Exception e) {
                     //TODO: come logging
                 }
@@ -77,7 +81,7 @@ public class RootModel implements ModelInterface {
 
             @Override
             public Path gamesPath() {
-                return Paths.get("");
+                return Paths.get("games");
             }
         };
     }

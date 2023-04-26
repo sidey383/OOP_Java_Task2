@@ -1,36 +1,21 @@
 package ru.sidey383.view.menu;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import ru.sidey383.control.AvailableScene;
 import ru.sidey383.event.EventManager;
+import ru.sidey383.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.view.events.menu.PlayerGameExitEvent;
-import ru.sidey383.view.events.menu.PlayerGameScoreEvent;
-import ru.sidey383.view.events.menu.PlayerMenuGameStartEvent;
 
 public class MenuAppScene extends MenuView {
 
-    public Label mainTitle;
-
-    @FXML
-    private Button startButton;
-
-    @FXML
-    private Button scoreButton;
-
-    @FXML
-    private Button exitButton;
-
-    public void startAction(ActionEvent actionEvent) {
-        EventManager.manager.runEvent(new PlayerMenuGameStartEvent());
+    public void startAction() {
+        EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.GAME_CHOOSE));
     }
 
-    public void scoreAction(ActionEvent actionEvent) {
-        EventManager.manager.runEvent(new PlayerGameScoreEvent());
+    public void scoreAction() {
+        EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.SCORE));
     }
 
-    public void exitAction(ActionEvent actionEvent) {
+    public void exitAction() {
         EventManager.manager.runEvent(new PlayerGameExitEvent());
     }
 }
