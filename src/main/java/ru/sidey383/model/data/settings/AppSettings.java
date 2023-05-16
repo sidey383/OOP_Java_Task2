@@ -2,6 +2,8 @@ package ru.sidey383.model.data.settings;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.sidey383.model.game.ClickType;
 
 import java.nio.file.Path;
@@ -14,7 +16,9 @@ public class AppSettings implements SettingsProvider {
     private Path gamePath;
 
     @JsonCreator
-    public AppSettings(ClickKeys keys, Path gamePath) {
+    public AppSettings(
+            @JsonProperty("keys") ClickKeys keys,
+            @JsonProperty("gamePath") Path gamePath) {
         this.clickKeys = keys;
         this.gamePath = gamePath;
     }
@@ -24,8 +28,9 @@ public class AppSettings implements SettingsProvider {
     }
 
     @Override
+    @JsonIgnore
     public synchronized Map<ClickType, Integer> getGameKeys() {
-        return clickKeys.getMap();
+        return clickKeys.toMap();
     }
 
     @Override
@@ -54,7 +59,7 @@ public class AppSettings implements SettingsProvider {
         Integer[] values;
 
         @JsonCreator
-        public ClickKeys(Integer[] values) {
+        public ClickKeys(@JsonProperty("values") Integer[] values) {
             if (values.length != 6)
                 throw new IllegalArgumentException("Wrong values count");
             this.values = Arrays.copyOf(values, 6);
@@ -83,7 +88,7 @@ public class AppSettings implements SettingsProvider {
             }
         }
 
-        public Map<ClickType, Integer> getMap() {
+        public Map<ClickType, Integer> toMap() {
             return Map.of(
                     ClickType.LINE_1, values[0],
                     ClickType.LINE_2, values[1],

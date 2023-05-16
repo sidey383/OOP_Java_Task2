@@ -80,9 +80,10 @@ public class ScoreContainer implements ScoreProvider {
 
     private void write() {
         try (OutputStream os = Files.newOutputStream(path)) {
-            mapper.writer().forType(listType).writeValue(os, scoreList);
+            mapper.writer().forType(listType).writeValue(os, new ArrayList<>(scoreList.values()));
         } catch (IOException e) {
             //TODO: some logging
+            e.printStackTrace();
         }
     }
 

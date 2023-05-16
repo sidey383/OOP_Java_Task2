@@ -26,7 +26,7 @@ public class SettingsController implements SettingsProvider {
 
     @Override
     public Map<ClickType, Integer> getGameKeys() {
-        return null;
+        return settings.getGameKeys();
     }
 
     @Override

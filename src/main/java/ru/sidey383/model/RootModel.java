@@ -1,6 +1,7 @@
 package ru.sidey383.model;
 
 import ru.sidey383.event.EventManager;
+import ru.sidey383.model.data.DataController;
 import ru.sidey383.model.data.DataProvider;
 import ru.sidey383.model.data.game.GameDescription;
 import ru.sidey383.model.data.game.read.RawDataContainer;
@@ -26,7 +27,7 @@ public class RootModel implements ModelInterface {
     }
 
     public static RootModel createModel(Path dir) throws ModelException {
-        return new RootModel(DataProvider.createDataProvider(dir));
+        return new RootModel(DataController.createController(dir));
     }
 
     @Override
