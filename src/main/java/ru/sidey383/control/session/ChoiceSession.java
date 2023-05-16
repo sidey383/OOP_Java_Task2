@@ -2,7 +2,7 @@ package ru.sidey383.control.session;
 
 import ru.sidey383.control.Controller;
 import ru.sidey383.control.ControllerSession;
-import ru.sidey383.model.game.GameDescription;
+import ru.sidey383.model.data.game.GameDescription;
 import ru.sidey383.view.choice.ChoiceView;
 import ru.sidey383.view.choice.GameChoiceUnit;
 

@@ -1,4 +1,4 @@
-package ru.sidey383.model.game;
+package ru.sidey383.model.data.game;
 
 import java.net.URL;
 

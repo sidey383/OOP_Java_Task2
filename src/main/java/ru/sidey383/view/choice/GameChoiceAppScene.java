@@ -24,4 +24,5 @@ public class GameChoiceAppScene extends ChoiceView {
     public void pressMenu() {
         EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
     }
+
 }

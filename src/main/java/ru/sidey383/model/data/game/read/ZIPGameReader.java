@@ -1,4 +1,4 @@
-package ru.sidey383.model.game.read;
+package ru.sidey383.model.data.game.read;
 
 import ru.sidey383.model.game.level.PianoGame;
 import ru.sidey383.model.game.level.line.tile.Tile;
@@ -20,7 +20,7 @@ public class ZIPGameReader extends ZIPReader {
         readerStructure.put("tiles6.json", ReaderMethods::readTiles);
     }
 
-    public PianoGame readGame(DataContainer data) throws IOException {
+    public PianoGame readGame(RawDataContainer data) throws IOException {
         Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
         if (lore.isEmpty())
             throw new IOException("Can't read game lore from file, see other errors");

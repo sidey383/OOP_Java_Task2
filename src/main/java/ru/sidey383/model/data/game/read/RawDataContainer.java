@@ -1,12 +1,12 @@
-package ru.sidey383.model.game.read;
+package ru.sidey383.model.data.game.read;
 
 import java.util.*;
 
-public class DataContainer {
+public class RawDataContainer {
 
     private final HashMap<String, Object> data = new HashMap<>();
 
-    public DataContainer() {}
+    public RawDataContainer() {}
 
     public synchronized void addObject(String name, Object object) {
         if (object != null)

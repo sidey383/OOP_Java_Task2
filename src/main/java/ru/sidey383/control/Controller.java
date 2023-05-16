@@ -10,8 +10,8 @@ import ru.sidey383.event.EventManager;
 import ru.sidey383.model.ModelInterface;
 import ru.sidey383.model.event.ModelStartTileLinesGameEvent;
 import ru.sidey383.model.game.TileLinesGame;
-import ru.sidey383.model.game.read.DataContainer;
-import ru.sidey383.model.settings.AppSettings;
+import ru.sidey383.model.data.game.read.RawDataContainer;
+import ru.sidey383.model.data.settings.SettingsProvider;
 import ru.sidey383.view.ViewInterface;
 import ru.sidey383.view.choice.ChoiceView;
 import ru.sidey383.view.events.PlayerChangeSceneEvent;
@@ -29,7 +29,7 @@ public class Controller {
 
     private final ViewInterface view;
 
-    private final AppSettings settings;
+    private final SettingsProvider settings;
 
     private final ModelInterface model;
 
@@ -42,7 +42,7 @@ public class Controller {
         EventManager.manager.registerListener(this);
     }
 
-    public void openGame(DataContainer container, TileLinesGame game) {
+    public void openGame(RawDataContainer container, TileLinesGame game) {
         GameView gameView;
 
         try {
@@ -138,7 +138,7 @@ public class Controller {
         return session;
     }
 
-    public AppSettings getSettings() {
+    public SettingsProvider getSettings() {
         return settings;
     }
 

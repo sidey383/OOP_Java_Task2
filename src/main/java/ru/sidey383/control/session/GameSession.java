@@ -9,7 +9,7 @@ import ru.sidey383.model.game.ClickType;
 import ru.sidey383.model.game.TileLinesGame;
 import ru.sidey383.model.game.level.line.tile.Tile;
 import ru.sidey383.model.game.level.line.tile.TileStatus;
-import ru.sidey383.view.events.*;
+import ru.sidey383.view.events.PlayerKeyEvent;
 import ru.sidey383.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.view.events.game.PlayerPauseEvent;
 import ru.sidey383.view.events.game.PlayerResumeEvent;
@@ -32,7 +32,7 @@ public class GameSession extends ControllerSession {
         super(controller);
         this.game = game;
         this.gameView = gameView;
-        for (Map.Entry<ClickType, Integer> e : getController().getSettings().gameKeys().entrySet()) {
+        for (Map.Entry<ClickType, Integer> e : getController().getSettings().getGameKeys().entrySet()) {
             keyMap.put(e.getValue(), e.getKey());
         }
         gameView.setTimeAdapter(new TimeAdapter() {

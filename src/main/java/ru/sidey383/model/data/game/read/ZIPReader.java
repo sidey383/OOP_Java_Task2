@@ -1,4 +1,4 @@
-package ru.sidey383.model.game.read;
+package ru.sidey383.model.data.game.read;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +27,8 @@ public class ZIPReader {
         this.defaultReader = InputStream::readAllBytes;
     }
 
-    public DataContainer readZIP(URL path) throws IOException {
-        DataContainer dataContainer = new DataContainer();
+    public RawDataContainer readZIP(URL path) throws IOException {
+        RawDataContainer rawDataContainer = new RawDataContainer();
         try (ZipInputStream zis = new ZipInputStream(path.openStream())) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
@@ -36,7 +36,7 @@ public class ZIPReader {
                 var func = readerStructure.get(name);
                 if (func != null) {
                     try {
-                        dataContainer.addObject(name, func.read(new FilterInputStream(zis) {
+                        rawDataContainer.addObject(name, func.read(new FilterInputStream(zis) {
                             @Override
                             public void close() throws IOException {
                                 zis.closeEntry();
@@ -48,11 +48,11 @@ public class ZIPReader {
                         //TODO: add logger or something like this
                     }
                 } else {
-                    dataContainer.addObject(name, zis.readAllBytes());
+                    rawDataContainer.addObject(name, zis.readAllBytes());
                 }
             }
         }
-        return dataContainer;
+        return rawDataContainer;
     }
 
     @FunctionalInterface

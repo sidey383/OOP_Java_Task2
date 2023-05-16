@@ -7,13 +7,14 @@ import javafx.stage.Stage;
 import ru.sidey383.control.Controller;
 import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.model.RootModel;
-import ru.sidey383.model.game.GameDescription;
+import ru.sidey383.model.data.game.GameDescription;
 import ru.sidey383.model.game.level.line.tile.*;
 import ru.sidey383.view.View;
 import ru.sidey383.view.game.GameView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 
 public class Main extends Application {
 
@@ -30,14 +31,14 @@ public class Main extends Application {
 
     private void gameMenuCheck(Stage primaryStage) throws Exception {
         View view = new View(primaryStage);
-        RootModel model = new RootModel();
+        RootModel model = RootModel.createModel(Path.of(""));
         Controller controller = new Controller(view, model);
         controller.openMenu();
     }
 
     private void gameStartCheck(Stage primaryStage) throws Exception {
         View view = new View(primaryStage);
-        RootModel model = new RootModel();
+        RootModel model = RootModel.createModel(Path.of(""));
         Controller controller = new Controller(view, model);
         model.startGame(new GameDescription() {
             @Override

@@ -1,4 +1,4 @@
-package ru.sidey383.model.game.read;
+package ru.sidey383.model.data.game.read;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;

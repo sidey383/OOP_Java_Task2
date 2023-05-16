@@ -1,6 +1,6 @@
-package ru.sidey383.model.game.read;
+package ru.sidey383.model.data.game.read;
 
-import ru.sidey383.model.game.GameDescription;
+import ru.sidey383.model.data.game.GameDescription;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,7 +14,7 @@ public class ZIPGameDescriptionReader extends ZIPReader {
     }
 
     public GameDescription readDescription(URL url) throws IOException {
-        DataContainer data = readZIP(url);
+        RawDataContainer data = readZIP(url);
         Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
         return lore.map(gameLore -> new DefaultGameDescription(gameLore, url)).orElse(null);
     }

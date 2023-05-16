@@ -1,88 +1,57 @@
 package ru.sidey383.model;
 
-import javafx.scene.input.KeyCode;
 import ru.sidey383.event.EventManager;
+import ru.sidey383.model.data.DataProvider;
+import ru.sidey383.model.data.game.GameDescription;
+import ru.sidey383.model.data.game.read.RawDataContainer;
+import ru.sidey383.model.data.game.read.ZIPGameReader;
+import ru.sidey383.model.data.score.GameScore;
+import ru.sidey383.model.data.settings.SettingsProvider;
 import ru.sidey383.model.event.ModelStartTileLinesGameEvent;
-import ru.sidey383.model.game.ClickType;
-import ru.sidey383.model.game.GameDescription;
-import ru.sidey383.model.game.level.PianoGame;
-import ru.sidey383.model.game.read.DataContainer;
-import ru.sidey383.model.game.read.ZIPGameDescriptionReader;
-import ru.sidey383.model.game.read.ZIPGameReader;
-import ru.sidey383.model.score.GameScore;
-import ru.sidey383.model.settings.AppSettings;
+import ru.sidey383.model.exception.ModelException;
+import ru.sidey383.model.exception.ModelIOException;
+import ru.sidey383.model.game.TileLinesGame;
 
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.zip.ZipException;
-
 public class RootModel implements ModelInterface {
+
+    DataProvider dataProvider;
 
     private final ZIPGameReader gameReader = new ZIPGameReader();
 
-    private final ZIPGameDescriptionReader gameDescriptionReader = new ZIPGameDescriptionReader();
+    private RootModel(DataProvider dataProvider) {
+        this.dataProvider = dataProvider;
+    }
 
-    public RootModel() {}
+    public static RootModel createModel(Path dir) throws ModelException {
+        return new RootModel(DataProvider.createDataProvider(dir));
+    }
 
     @Override
-    public void startGame(GameDescription gameDescription) throws Exception {
-        DataContainer container = gameReader.readZIP(gameDescription.getGameContainer());
-        PianoGame game = gameReader.readGame(container);
-        EventManager.manager.runEvent(new ModelStartTileLinesGameEvent(container, game));
+    public void startGame(GameDescription gameDescription) throws ModelException {
+        try {
+            RawDataContainer dataContainer = gameReader.readZIP(gameDescription.getGameContainer());
+            TileLinesGame game = gameReader.readGame(dataContainer);
+            EventManager.manager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
+        } catch (IOException e) {
+            throw new ModelIOException(e);
+        }
     }
 
     @Override
     public Collection<GameDescription> getGameDescriptions() {
-        Collection<GameDescription> descriptions = new ArrayList<>();
-        Path gamesPath = getSettings().gamesPath();
-        try(DirectoryStream<Path> ds = Files.newDirectoryStream(gamesPath)) {
-            ds.forEach((path) -> {
-                if(!Files.isRegularFile(path))
-                    return;
-                try {
-                    descriptions.add(
-                            gameDescriptionReader.readDescription(path.toUri().toURL())
-                    );
-                } catch (ZipException e) {
-                } catch (Exception e) {
-                    //TODO: come logging
-                }
-            });
-        } catch (Exception e) {
-            //TODO: come logging
-        }
-        return descriptions;
+        return dataProvider.getGameProvider().getGames();
     }
 
     @Override
     public Collection<GameScore> getScores() {
-        return null;
+        return dataProvider.getScoreProvider().getScores();
     }
 
     @Override
-    public AppSettings getSettings() {
-        return new AppSettings() {
-            @Override
-            public Map<ClickType, Integer> gameKeys() {
-                return Map.of(
-                        ClickType.LINE_1, KeyCode.A.getCode(),
-                        ClickType.LINE_2, KeyCode.S.getCode(),
-                        ClickType.LINE_3, KeyCode.D.getCode(),
-                        ClickType.LINE_4, KeyCode.J.getCode(),
-                        ClickType.LINE_5, KeyCode.K.getCode(),
-                        ClickType.LINE_6, KeyCode.L.getCode()
-                        );
-            }
-
-            @Override
-            public Path gamesPath() {
-                return Paths.get("games");
-            }
-        };
+    public SettingsProvider getSettings() {
+        return dataProvider.getSettingProvider();
     }
 }
