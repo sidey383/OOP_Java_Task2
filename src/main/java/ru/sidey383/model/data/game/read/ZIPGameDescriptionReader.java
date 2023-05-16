@@ -16,7 +16,7 @@ public class ZIPGameDescriptionReader extends ZIPReader {
     public GameDescription readDescription(URL url) throws IOException {
         RawDataContainer data = readZIP(url);
         Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
-        return lore.map(gameLore -> new DefaultGameDescription(gameLore, url)).orElse(null);
+        return lore.map(gameLore -> new DefaultGameDescription(gameLore, url, gameLore.name() + "_key")).orElse(null);
     }
 
     private static class DefaultGameDescription implements GameDescription {
@@ -25,9 +25,17 @@ public class ZIPGameDescriptionReader extends ZIPReader {
 
         private final URL gameContainer;
 
-        public DefaultGameDescription(GameLore lore, URL gameContainer) {
+        private final String gameKey;
+
+        public DefaultGameDescription(GameLore lore, URL gameContainer, String gameKey) {
             this.gameContainer = gameContainer;
             this.gameLore = lore;
+            this.gameKey = gameKey;
+        }
+
+        @Override
+        public String getGameKey() {
+            return gameKey;
         }
 
         @Override

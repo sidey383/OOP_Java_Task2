@@ -66,7 +66,9 @@ public class ScoreContainer implements ScoreProvider {
 
     @Override
     public void addScore(GameDescription description, long score) {
-            scoreList.put(description.getName(), new GameScore(description.getName(), description.getName(), score));
+        if (!scoreList.containsKey(description.getGameKey()) || scoreList.get(description.getGameKey()).maxScore() < score) {
+            scoreList.put(description.getGameKey(), new GameScore(description.getGameKey(), description.getName(), score));
+        }
     }
 
     private static ScoreContainer createNew(Path path) throws IOException {

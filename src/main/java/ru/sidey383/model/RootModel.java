@@ -11,7 +11,8 @@ import ru.sidey383.model.data.settings.SettingsProvider;
 import ru.sidey383.model.event.ModelStartTileLinesGameEvent;
 import ru.sidey383.model.exception.ModelException;
 import ru.sidey383.model.exception.ModelIOException;
-import ru.sidey383.model.game.TileLinesGame;
+import ru.sidey383.model.game.level.PianoGame;
+import ru.sidey383.model.game.level.line.tile.TileStatus;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -34,7 +35,11 @@ public class RootModel implements ModelInterface {
     public void startGame(GameDescription gameDescription) throws ModelException {
         try {
             RawDataContainer dataContainer = gameReader.readZIP(gameDescription.getGameContainer());
-            TileLinesGame game = gameReader.readGame(dataContainer);
+            PianoGame game = gameReader.readGame(dataContainer);
+            game.addResultListener((data) -> {
+                dataProvider.getScoreProvider().addScore(gameDescription, data.stream().mapToLong(TileStatus::getScore).sum());
+                return null;
+            });
             EventManager.manager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
         } catch (IOException e) {
             throw new ModelIOException(e);

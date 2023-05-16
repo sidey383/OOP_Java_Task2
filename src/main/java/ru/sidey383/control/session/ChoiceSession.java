@@ -8,6 +8,7 @@ import ru.sidey383.view.choice.GameChoiceUnit;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ChoiceSession extends ControllerSession {
 
@@ -15,7 +16,7 @@ public class ChoiceSession extends ControllerSession {
 
     public ChoiceSession(Controller controller, ChoiceView view, Collection<GameDescription> descriptions) {
         super(controller);
-        view.setGameChoice(descriptions.stream().filter(Objects::nonNull).map(d -> (GameChoiceUnit) new GameChoiceUnit() {
+        view.setGameChoice(descriptions.stream().filter(Objects::nonNull).map(d -> new GameChoiceUnit() {
             @Override
             public String getText() {
                 return d.getName();
@@ -29,7 +30,7 @@ public class ChoiceSession extends ControllerSession {
                     //TODO: add logger
                 }
             }
-        }).toList());
+        }).collect(Collectors.toList()));
 
         this.view = view;
     }

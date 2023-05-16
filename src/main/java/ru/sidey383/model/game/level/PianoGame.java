@@ -8,12 +8,15 @@ import ru.sidey383.model.game.level.line.tile.Tile;
 import ru.sidey383.model.game.level.line.tile.TileStatus;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
 
     private final String name;
     HashMap<ClickType, TileLine> lines = new HashMap<>();
+
+    private final List<Function<Collection<TileStatus>, Void>> resultListeners = new ArrayList<>();
 
     /**
      * use nano time
@@ -29,6 +32,15 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Illegal state on line "+ entry.getKey(), e);
             }
+        }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        Collection<TileStatus> statuses = getStatistic();
+        for (var listener : resultListeners) {
+            listener.apply(new ArrayList<>(statuses));
         }
     }
 
@@ -83,6 +95,10 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     @Override
     public long getTotalTime() {
         return totalTime;
+    }
+
+    public void addResultListener(Function<Collection<TileStatus>, Void> listener) {
+        resultListeners.add(listener);
     }
 
 }

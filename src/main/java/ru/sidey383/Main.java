@@ -41,6 +41,12 @@ public class Main extends Application {
         RootModel model = RootModel.createModel(Path.of(""));
         Controller controller = new Controller(view, model);
         model.startGame(new GameDescription() {
+
+            @Override
+            public String getGameKey() {
+                return "test_key";
+            }
+
             @Override
             public String getName() {
                 return "test";

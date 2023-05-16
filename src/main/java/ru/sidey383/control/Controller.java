@@ -5,6 +5,7 @@ import javafx.scene.media.Media;
 import ru.sidey383.control.session.ChoiceSession;
 import ru.sidey383.control.session.GameSession;
 import ru.sidey383.control.session.MenuSession;
+import ru.sidey383.control.session.ScoreSession;
 import ru.sidey383.event.EventHandler;
 import ru.sidey383.event.EventManager;
 import ru.sidey383.model.ModelInterface;
@@ -18,6 +19,7 @@ import ru.sidey383.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.view.events.WindowCloseEvent;
 import ru.sidey383.view.game.GameView;
 import ru.sidey383.view.menu.MenuView;
+import ru.sidey383.view.score.ScoreView;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -106,6 +108,17 @@ public class Controller {
         }
     }
 
+    public void openGameScore() {
+        try {
+            ScoreView choiceView = view.getScene(ScoreView.class);
+            view.setScene(choiceView);
+            setSession(new ScoreSession(this, choiceView, getModel().getScores()));
+        } catch (Exception e) {
+            //TODO: some logging
+            e.printStackTrace();
+        }
+    }
+
     private void setSession(ControllerSession newSession) {
         if (session != null)
             session.end();
@@ -125,6 +138,7 @@ public class Controller {
         switch (e.getScene()) {
             case MENU -> openMenu();
             case GAME_CHOOSE -> openGameChoice();
+            case SCORE -> openGameScore();
             default -> {}
         }
     }

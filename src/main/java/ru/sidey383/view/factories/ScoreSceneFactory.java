@@ -15,11 +15,11 @@ public class ScoreSceneFactory extends SceneFactory<ScoreAppScene> {
 
     @Override
     protected URL getFXMLPath() {
-        return null;
+        return getClass().getResource("/fxml/ScoreScene.fxml");
     }
 
     @Override
     protected Object controllerFXMLFactory(Class<?> clazz) {
-        return null;
+        return new ScoreAppScene();
     }
 }
