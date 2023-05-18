@@ -11,7 +11,7 @@
            prefHeight="${screen.visualBounds.height}"
            minHeight="600"
            minWidth="800"
-           fx:controller="ru.sidey383.view.score.ScoreAppScene">
+           fx:controller="ru.sidey383.task2.view.score.ScoreAppScene">
     <fx:define>
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>

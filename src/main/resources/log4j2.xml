@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" packages="ru.sidey383.task2.view.log">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <WindowAppender name="UserLog" icon="/errorIcon.png">
+            <PatternLayout pattern="[%level]: %msg%n" />
+            <LevelRangeFilter minLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+        </WindowAppender>>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="UserLog"/>
+        </Root>
+    </Loggers>
+</Configuration>
