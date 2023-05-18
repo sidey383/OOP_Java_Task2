@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+//TODO: fix repeated pressing of pause and play
 public class GameSession extends ControllerSession {
 
     private final static Logger logger = LogManager.getLogger(GameSession.class);
@@ -68,7 +69,6 @@ public class GameSession extends ControllerSession {
                         .orElse(new byte[0])
         )));
         Path tempMusicPath = Files.createTempFile("gameMedia", "");
-        //TODO: remove temp file
         try (OutputStream os = Files.newOutputStream(tempMusicPath)) {
             os.write(container
                     .getData(byte[].class, "music")
@@ -104,11 +104,6 @@ public class GameSession extends ControllerSession {
         showScore();
         if (game.isOn())
             game.stop();
-        try {
-            Files.delete(tempMusicFile);
-        } catch (IOException e) {
-            logger.warn("Temporary file delete error", e);
-        }
     }
 
     private void showScore() {
