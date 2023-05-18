@@ -1,6 +1,8 @@
 package ru.sidey383.model.data.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.model.exception.ModelException;
 import ru.sidey383.model.exception.ModelIOException;
 import ru.sidey383.model.exception.NotRegularFileException;
@@ -14,6 +16,8 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class SettingsController implements SettingsProvider {
+
+    private final Logger logger = LogManager.getLogger(SettingsController.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private final AppSettings settings;
@@ -35,7 +39,7 @@ public class SettingsController implements SettingsProvider {
         try {
             write();
         } catch (IOException e) {
-            //TODO: logging
+            logger.error(() -> String.format("Settings write error %s", path), e);
         }
     }
 
@@ -50,7 +54,7 @@ public class SettingsController implements SettingsProvider {
         try {
             write();
         } catch (IOException e) {
-            //TODO: logging
+            logger.error(() -> String.format("Settings write error %s", path), e);
         }
     }
 

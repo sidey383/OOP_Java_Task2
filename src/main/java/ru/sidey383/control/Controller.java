@@ -2,6 +2,8 @@ package ru.sidey383.control;
 
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.control.session.ChoiceSession;
 import ru.sidey383.control.session.GameSession;
 import ru.sidey383.control.session.MenuSession;
@@ -28,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Controller {
+
+    private static final Logger logger = LogManager.getLogger(Controller.class);
 
     private final ViewInterface view;
 
@@ -61,20 +65,20 @@ public class Controller {
                     container.getData(byte[].class, "center")
                             .orElse(new byte[0])
             )));
-            Path p =  Files.createTempFile("gameMedia", "");
-            try (OutputStream os = Files.newOutputStream(p)) {
+            Path tempMusicPath =  Files.createTempFile("gameMedia", "");
+            //TODO: remove temp file
+            try (OutputStream os = Files.newOutputStream(tempMusicPath)) {
                 os.write(container
                         .getData(byte[].class, "music")
                         .orElse(new byte[0]));
             } catch (IOException e) {
-                //TODO: some log
+                logger.error(() -> String.format("Music write error %s", tempMusicPath), e);
             }
-            gameView.setMusic(new Media(p.toUri().toString()));
+            gameView.setMusic(new Media(tempMusicPath.toUri().toString()));
             view.setScene(gameView);
 
         } catch (IOException e) {
-            e.printStackTrace();
-            //TODO: come logging
+            logger.error("Game scene create error", e);
             gameView = null;
         }
 
@@ -89,7 +93,7 @@ public class Controller {
         try {
             menuView = view.getScene(MenuView.class);
         } catch (IOException e) {
-            //TODO: some logging
+            logger.fatal("Menu scene score scene create error", e);
         }
         if (menuView == null)
             return;
@@ -103,8 +107,7 @@ public class Controller {
             view.setScene(choiceView);
             setSession(new ChoiceSession(this, choiceView, getModel().getGameDescriptions()));
         } catch (Exception e) {
-            //TODO: some logging
-            e.printStackTrace();
+            logger.fatal("Menu scene score scene create error", e);
         }
     }
 
@@ -114,7 +117,7 @@ public class Controller {
             view.setScene(choiceView);
             setSession(new ScoreSession(this, choiceView, getModel().getScores()));
         } catch (Exception e) {
-            //TODO: some logging
+            logger.error("Game score scene create error", e);
             e.printStackTrace();
         }
     }

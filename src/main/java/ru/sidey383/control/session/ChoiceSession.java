@@ -1,5 +1,7 @@
 package ru.sidey383.control.session;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.control.Controller;
 import ru.sidey383.control.ControllerSession;
 import ru.sidey383.model.data.game.GameDescription;
@@ -11,6 +13,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ChoiceSession extends ControllerSession {
+
+    private final Logger logger = LogManager.getLogger(ChoiceSession.class);
 
     private final ChoiceView view;
 
@@ -27,7 +31,7 @@ public class ChoiceSession extends ControllerSession {
                 try {
                     controller.getModel().startGame(d);
                 } catch (Exception e) {
-                    //TODO: add logger
+                    logger.fatal("Game start error", e);
                 }
             }
         }).collect(Collectors.toList()));

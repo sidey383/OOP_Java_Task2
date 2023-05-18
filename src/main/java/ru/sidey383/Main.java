@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.control.Controller;
 import ru.sidey383.control.TimeAdapter;
 import ru.sidey383.model.RootModel;
@@ -18,9 +20,13 @@ import java.nio.file.Path;
 
 public class Main extends Application {
 
+    private final Logger logger = LogManager.getLogger(Main.class);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         gameMenuCheck(primaryStage);
+        Thread.sleep(1000);
+        logger.error("test");
     }
 
     private void jsonTest() throws JsonProcessingException {

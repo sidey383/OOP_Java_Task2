@@ -2,6 +2,8 @@ package ru.sidey383.model.data.score;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.model.data.game.GameDescription;
 import ru.sidey383.model.exception.ModelException;
 import ru.sidey383.model.exception.ModelIOException;
@@ -17,6 +19,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ScoreContainer implements ScoreProvider {
+
+    private static final Logger logger = LogManager.getLogger(ScoreContainer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -68,6 +72,11 @@ public class ScoreContainer implements ScoreProvider {
     public void addScore(GameDescription description, long score) {
         if (!scoreList.containsKey(description.getGameKey()) || scoreList.get(description.getGameKey()).maxScore() < score) {
             scoreList.put(description.getGameKey(), new GameScore(description.getGameKey(), description.getName(), score));
+            try {
+                write();
+            } catch (IOException e) {
+                logger.error(() -> String.format("Score write error %s", path), e);
+            }
         }
     }
 
@@ -80,12 +89,9 @@ public class ScoreContainer implements ScoreProvider {
         return scoreContainer;
     }
 
-    private void write() {
+    private void write() throws IOException {
         try (OutputStream os = Files.newOutputStream(path)) {
             mapper.writer().forType(listType).writeValue(os, new ArrayList<>(scoreList.values()));
-        } catch (IOException e) {
-            //TODO: some logging
-            e.printStackTrace();
         }
     }
 

@@ -1,5 +1,7 @@
 package ru.sidey383.model.data.game;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.model.data.game.read.ZIPGameDescriptionReader;
 import ru.sidey383.model.data.settings.SettingsProvider;
 
@@ -13,6 +15,8 @@ import java.util.Collection;
 import java.util.zip.ZipException;
 
 public class GameContainer implements GameProvider {
+
+    private final static Logger logger = LogManager.getLogger(GameContainer.class);
 
     private final ZIPGameDescriptionReader gameDescriptionReader = new ZIPGameDescriptionReader();
 
@@ -28,7 +32,7 @@ public class GameContainer implements GameProvider {
         try {
             createDefaultGames(settingsProvider.getGamesDir());
         } catch (IOException e) {
-            //TODO: logging
+            logger.error(() -> String.format("Can't create default games at %s", settingsProvider.getGamesDir()), e);
         }
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(settingsProvider.getGamesDir())) {
             ds.forEach((path) -> {
@@ -39,13 +43,13 @@ public class GameContainer implements GameProvider {
                             gameDescriptionReader.readDescription(path.toUri().toURL())
                     );
                 } catch (ZipException e) {
-                    //It's not correct zip file, ignore this?
+                    logger.debug(() -> String.format("Wrong file in games folder %s", path), e);
                 } catch (Exception e) {
-                    //TODO: some logging
+                    logger.warn(() -> String.format("Game description read error %s", path), e);
                 }
             });
         } catch (Exception e) {
-            //TODO: some logging
+            logger.error(() -> String.format("Error reading the games folder %s", settingsProvider.getGamesDir()), e);
         }
 
         return descriptions;

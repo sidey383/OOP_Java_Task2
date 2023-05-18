@@ -1,5 +1,7 @@
 package ru.sidey383.model.data.game.read;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FilterInputStream;
@@ -12,6 +14,7 @@ import java.util.zip.ZipInputStream;
 
 public class ZIPReader {
 
+    private static final Logger logger = LogManager.getLogger(ZIPReader.class);
 
     protected final Map<String, DataReader> readerStructure;
 
@@ -43,9 +46,7 @@ public class ZIPReader {
                             }
                         }));
                     } catch (Throwable t) {
-                        System.err.println("error while read entry " + name);
-                        t.printStackTrace();
-                        //TODO: add logger or something like this
+                        logger.warn(() -> String.format("Error while read entry %s in %s", name, path), t);
                     }
                 } else {
                     rawDataContainer.addObject(name, zis.readAllBytes());
