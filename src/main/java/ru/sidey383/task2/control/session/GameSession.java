@@ -1,12 +1,18 @@
 package ru.sidey383.task2.control.session;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.sidey383.task2.control.Controller;
 import ru.sidey383.task2.control.ControllerSession;
 import ru.sidey383.task2.control.TimeAdapter;
 import ru.sidey383.task2.event.EventHandler;
+import ru.sidey383.task2.model.data.game.read.RawDataContainer;
 import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.TileLinesGame;
+import ru.sidey383.task2.model.game.TimerGame;
 import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 import ru.sidey383.task2.view.game.GameView;
@@ -15,9 +21,16 @@ import ru.sidey383.task2.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.task2.view.events.game.PlayerPauseEvent;
 import ru.sidey383.task2.view.events.game.PlayerResumeEvent;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class GameSession extends ControllerSession {
+
+    private final static Logger logger = LogManager.getLogger(GameSession.class);
 
     private final TileLinesGame game;
 
@@ -25,27 +38,52 @@ public class GameSession extends ControllerSession {
 
     private Timer graphicUpdateTimer;
 
-    private final Map<Integer, ClickType> keyMap = new HashMap<>();
+    private final Path tempMusicFile;
+
+    private final Map<Integer, ClickType> keyMap;
 
 
-    public GameSession(Controller controller, TileLinesGame game, GameView gameView) {
+    public GameSession(Controller controller, TileLinesGame game, GameView gameView, Map<Integer, ClickType> keyMap, Path tempMusicFile) {
         super(controller);
         this.game = game;
         this.gameView = gameView;
-        for (Map.Entry<ClickType, Integer> e : getController().getSettings().getGameKeys().entrySet()) {
+        this.keyMap = keyMap;
+       this.tempMusicFile = tempMusicFile;
+    }
+
+    public static GameSession create(Controller controller, RawDataContainer container, TileLinesGame game) throws IOException {
+        GameView gameView;
+
+        gameView = controller.getView().getScene(GameView.class);
+        gameView.setRightImage(new Image(new ByteArrayInputStream(
+                container.getData(byte[].class, "right")
+                        .orElse(new byte[0])
+        )));
+        gameView.setLeftImage(new Image(new ByteArrayInputStream(
+                container.getData(byte[].class, "left")
+                        .orElse(new byte[0])
+        )));
+        gameView.setCenterImage(new Image(new ByteArrayInputStream(
+                container.getData(byte[].class, "center")
+                        .orElse(new byte[0])
+        )));
+        Path tempMusicPath = Files.createTempFile("gameMedia", "");
+        //TODO: remove temp file
+        try (OutputStream os = Files.newOutputStream(tempMusicPath)) {
+            os.write(container
+                    .getData(byte[].class, "music")
+                    .orElse(new byte[0]));
+        } catch (IOException e) {
+            logger.error(() -> String.format("Music write error %s", tempMusicPath), e);
+        }
+        gameView.setMusic(new Media(tempMusicPath.toUri().toString()));
+        Map<Integer, ClickType> keyMap = new HashMap<>();
+        for (Map.Entry<ClickType, Integer> e : controller.getSettings().getGameKeys().entrySet()) {
             keyMap.put(e.getValue(), e.getKey());
         }
-        gameView.setTimeAdapter(new TimeAdapter() {
-            @Override
-            public long getRelativeFromNano(long timeNS) {
-                return game.toLocalTime(timeNS);
-            }
-
-            @Override
-            public long getTimeToShow() {
-                return game.getTimeToShow();
-            }
-        });
+        gameView.setTimeAdapter(new SimpleTimeAdapter(game));
+        controller.getView().setScene(gameView);
+        return new GameSession(controller, game, gameView, keyMap, tempMusicPath);
     }
 
     @Override
@@ -66,6 +104,11 @@ public class GameSession extends ControllerSession {
         showScore();
         if (game.isOn())
             game.stop();
+        try {
+            Files.delete(tempMusicFile);
+        } catch (IOException e) {
+            logger.warn("Temporary file delete error", e);
+        }
     }
 
     private void showScore() {
@@ -140,6 +183,26 @@ public class GameSession extends ControllerSession {
         } else {
             game.release(keyMap.get(e.getKeyCode().getCode()), game.toLocalTime(e.getCreateNanoTine()));
         }
+    }
+
+    private static class SimpleTimeAdapter implements TimeAdapter {
+
+        private final TileLinesGame game;
+
+        public SimpleTimeAdapter(TileLinesGame game) {
+            this.game = game;
+        }
+
+        @Override
+        public long getRelativeFromNano(long timeNS) {
+            return game.toLocalTime(timeNS);
+        }
+
+        @Override
+        public long getTimeToShow() {
+            return game.getTimeToShow();
+        }
+
     }
 
 }

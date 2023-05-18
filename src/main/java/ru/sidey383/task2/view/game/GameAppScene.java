@@ -73,8 +73,11 @@ public class GameAppScene extends GameView  implements Initializable {
     public void start() {
         if (timeAdapter == null)
             throw new IllegalStateException("Time adapter must be initialized");
-        if (mediaPlayer != null)
-            mediaPlayer.setStartTime(new Duration ((double) (timeAdapter.getRelativeFromNano(System.nanoTime()) / 1_000_000L)));
+        if (mediaPlayer != null) {
+            mediaPlayer.setStartTime(new Duration((double) (timeAdapter.getRelativeFromNano(System.nanoTime()) / 1_000_000L)));
+            mediaPlayer.setVolume(1);
+            mediaPlayer.play();
+        }
         timer.start();
     }
 

@@ -6,14 +6,18 @@ import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.view.events.menu.PlayerGameExitEvent;
 import ru.sidey383.task2.view.menu.MenuView;
 
+import java.io.IOException;
+
 public class MenuSession extends ControllerSession {
 
-    private final MenuView menuView;
-
-
-    public MenuSession(Controller controller, MenuView menuView) {
+    private MenuSession(Controller controller) {
         super(controller);
-        this.menuView = menuView;
+    }
+
+    public static MenuSession create(Controller controller) throws IOException {
+        MenuView menuView = controller.getView().getScene(MenuView.class);
+        controller.getView().setScene(menuView);
+        return new MenuSession(controller);
     }
 
     @EventHandler

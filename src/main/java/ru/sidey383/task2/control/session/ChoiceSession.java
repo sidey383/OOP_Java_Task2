@@ -8,35 +8,43 @@ import ru.sidey383.task2.model.data.game.GameDescription;
 import ru.sidey383.task2.view.choice.ChoiceView;
 import ru.sidey383.task2.view.choice.GameChoiceUnit;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ChoiceSession extends ControllerSession {
 
-    private final Logger logger = LogManager.getLogger(ChoiceSession.class);
+    private static final Logger logger = LogManager.getLogger(ChoiceSession.class);
 
-    private final ChoiceView view;
-
-    public ChoiceSession(Controller controller, ChoiceView view, Collection<GameDescription> descriptions) {
+    private ChoiceSession(Controller controller) {
         super(controller);
-        view.setGameChoice(descriptions.stream().filter(Objects::nonNull).map(d -> new GameChoiceUnit() {
-            @Override
-            public String getText() {
-                return d.getName();
-            }
+    }
 
-            @Override
-            public void apply() {
-                try {
-                    controller.getModel().startGame(d);
-                } catch (Exception e) {
-                    logger.fatal("Game start error", e);
-                }
-            }
-        }).collect(Collectors.toList()));
+    public static ChoiceSession create(Controller controller) throws IOException {
+        ChoiceView choiceView = controller.getView().getScene(ChoiceView.class);
+        choiceView.setGameChoice(
+                controller.getModel().getGameDescriptions().stream()
+                        .filter(Objects::nonNull)
+                        .map(d -> new GameChoiceUnit() {
+                            @Override
+                            public String getText() {
+                                return d.getName();
+                            }
 
-        this.view = view;
+                            @Override
+                            public void apply() {
+                                try {
+                                    controller.getModel().startGame(d);
+                                } catch (Exception e) {
+                                    logger.fatal("Game start error", e);
+                                }
+                            }
+                        })
+                        .collect(Collectors.toList())
+        );
+        controller.getView().setScene(choiceView);
+        return new ChoiceSession(controller);
     }
 
 }

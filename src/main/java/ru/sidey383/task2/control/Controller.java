@@ -16,7 +16,6 @@ import ru.sidey383.task2.model.game.TileLinesGame;
 import ru.sidey383.task2.model.data.game.read.RawDataContainer;
 import ru.sidey383.task2.model.data.settings.SettingsProvider;
 import ru.sidey383.task2.view.ViewInterface;
-import ru.sidey383.task2.view.choice.ChoiceView;
 import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.task2.view.events.WindowCloseEvent;
 import ru.sidey383.task2.view.game.GameView;
@@ -49,75 +48,34 @@ public class Controller {
     }
 
     public void openGame(RawDataContainer container, TileLinesGame game) {
-        GameView gameView;
-
         try {
-            gameView = view.getScene(GameView.class);
-            gameView.setRightImage(new Image(new ByteArrayInputStream(
-                    container.getData(byte[].class, "right")
-                            .orElse(new byte[0])
-            )));
-            gameView.setLeftImage(new Image(new ByteArrayInputStream(
-                    container.getData(byte[].class, "left")
-                            .orElse(new byte[0])
-            )));
-            gameView.setCenterImage(new Image(new ByteArrayInputStream(
-                    container.getData(byte[].class, "center")
-                            .orElse(new byte[0])
-            )));
-            Path tempMusicPath =  Files.createTempFile("gameMedia", "");
-            //TODO: remove temp file
-            try (OutputStream os = Files.newOutputStream(tempMusicPath)) {
-                os.write(container
-                        .getData(byte[].class, "music")
-                        .orElse(new byte[0]));
-            } catch (IOException e) {
-                logger.error(() -> String.format("Music write error %s", tempMusicPath), e);
-            }
-            gameView.setMusic(new Media(tempMusicPath.toUri().toString()));
-            view.setScene(gameView);
-
-        } catch (IOException e) {
-            logger.error("Game scene create error", e);
-            gameView = null;
+            setSession(GameSession.create(this, container, game));
+        } catch (Exception e) {
+            logger.fatal("Game scene create error", e);
         }
-
-        if (gameView == null)
-            return;
-
-        setSession(new GameSession(this, game, gameView));
     }
 
     public void openMenu() {
-        MenuView menuView = null;
         try {
-            menuView = view.getScene(MenuView.class);
-        } catch (IOException e) {
-            logger.fatal("Menu scene score scene create error", e);
+            setSession(MenuSession.create(this));
+        } catch (Exception e) {
+            logger.fatal("Choice scene create error", e);
         }
-        if (menuView == null)
-            return;
-        view.setScene(menuView);
-        setSession(new MenuSession(this, menuView));
     }
 
     public void openGameChoice() {
         try {
-            ChoiceView choiceView = view.getScene(ChoiceView.class);
-            view.setScene(choiceView);
-            setSession(new ChoiceSession(this, choiceView, getModel().getGameDescriptions()));
+            setSession(ChoiceSession.create(this));
         } catch (Exception e) {
-            logger.fatal("Menu scene score scene create error", e);
+            logger.fatal("Choice scene create error", e);
         }
     }
 
     public void openGameScore() {
         try {
-            ScoreView choiceView = view.getScene(ScoreView.class);
-            view.setScene(choiceView);
-            setSession(new ScoreSession(this, choiceView, getModel().getScores()));
+            setSession(ScoreSession.create(this));
         } catch (Exception e) {
-            logger.error("Game score scene create error", e);
+            logger.error("Score scene create error", e);
             e.printStackTrace();
         }
     }

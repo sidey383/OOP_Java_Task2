@@ -28,24 +28,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         gameMenuCheck(primaryStage);
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            logger.error("test");
-            logger.warn("test");
-            logger.info("test");
-            logger.debug("test");
-            logger.trace("test");
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            logger.error("Error test", new IOException("Test error"));
-        }).start();
     }
 
     private void jsonTest() throws JsonProcessingException {
