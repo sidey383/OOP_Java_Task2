@@ -1,6 +1,6 @@
 package ru.sidey383.task2.model.data.game;
 
-import java.net.URL;
+import java.nio.file.Path;
 
 public interface GameDescription {
 
@@ -8,6 +8,8 @@ public interface GameDescription {
 
     String getName();
 
-    URL getGameContainer();
+    String getHash();
+
+    Path getGameContainer();
 
 }

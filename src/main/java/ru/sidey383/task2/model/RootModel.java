@@ -9,14 +9,17 @@ import ru.sidey383.task2.model.data.game.read.ZIPGameReader;
 import ru.sidey383.task2.model.data.score.GameScore;
 import ru.sidey383.task2.model.data.settings.SettingsProvider;
 import ru.sidey383.task2.model.event.ModelStartTileLinesGameEvent;
+import ru.sidey383.task2.model.exception.IncorrectGameFileException;
 import ru.sidey383.task2.model.exception.ModelException;
 import ru.sidey383.task2.model.exception.ModelIOException;
 import ru.sidey383.task2.model.game.level.tile.line.PianoGame;
 import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Collection;
+
 public class RootModel implements ModelInterface {
 
     DataProvider dataProvider;
@@ -35,20 +38,32 @@ public class RootModel implements ModelInterface {
     public void startGame(GameDescription gameDescription) throws ModelException {
         try {
             RawDataContainer dataContainer = gameReader.readZIP(gameDescription.getGameContainer());
+
+            if (!dataContainer.getHash().equals(gameDescription.getHash())) {
+                throw new IncorrectGameFileException(
+                        gameDescription,
+                        String.format("Wrong hash, expect %s value %s", gameDescription.getHash(), dataContainer.getHash())
+                );
+            }
+
             PianoGame game = gameReader.readGame(dataContainer);
+
             game.addResultListener((data) -> {
                 dataProvider.getScoreProvider().addScore(gameDescription, data.stream().mapToLong(TileStatus::getScore).sum());
                 return null;
             });
+
             EventManager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
-        } catch (IOException e) {
+        } catch (NoSuchFileException e) {
+            throw new IncorrectGameFileException( gameDescription, "The file has been deleted", e);
+        }catch (IOException e) {
             throw new ModelIOException(e);
         }
     }
 
     @Override
     public Collection<GameDescription> getGameDescriptions() {
-        return dataProvider.getGameProvider().getGames();
+        return dataProvider.getGameProvider().readGameDescriptions();
     }
 
     @Override

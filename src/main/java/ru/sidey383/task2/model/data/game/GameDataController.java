@@ -27,7 +27,7 @@ public class GameDataController implements GameProvider {
     }
 
     @Override
-    public Collection<GameDescription> getGames() {
+    public Collection<GameDescription> readGameDescriptions() {
         Collection<GameDescription> descriptions = new ArrayList<>();
         try {
             createDefaultGames(settingsProvider.getGamesDir());
@@ -40,7 +40,7 @@ public class GameDataController implements GameProvider {
                     return;
                 try {
                     descriptions.add(
-                            gameDescriptionReader.readDescription(path.toUri().toURL())
+                            gameDescriptionReader.readDescription(path)
                     );
                 } catch (ZipException e) {
                     logger.debug(() -> String.format("Wrong file in games folder %s", path), e);

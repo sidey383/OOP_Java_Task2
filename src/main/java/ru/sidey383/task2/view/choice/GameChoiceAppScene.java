@@ -15,7 +15,11 @@ public class GameChoiceAppScene extends ChoiceView {
 
     @Override
     public void setGameChoice(Collection<GameChoiceUnit> choices) {
-        Platform.runLater(() -> scrollBox.getChildren().addAll(choices.stream().map(ChoicePane::new).toList()));
+        Platform.runLater(() -> {
+                    scrollBox.getChildren().clear();
+                    scrollBox.getChildren().addAll(choices.stream().map(ChoicePane::new).toList());
+                }
+        );
     }
 
 

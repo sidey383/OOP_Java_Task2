@@ -6,7 +6,7 @@
         </Console>
         <WindowAppender name="UserLog" icon="/errorIcon.png">
             <PatternLayout pattern="[%level]: %msg%n" />
-            <LevelRangeFilter minLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <LevelRangeFilter minLevel="OFF" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
         </WindowAppender>>
     </Appenders>
     <Loggers>

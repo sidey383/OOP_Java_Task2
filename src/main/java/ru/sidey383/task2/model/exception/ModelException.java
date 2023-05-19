@@ -8,4 +8,12 @@ public abstract class ModelException extends Exception {
         super(cause);
     }
 
+    public ModelException(String message) {
+        super(message);
+    }
+
+    public ModelException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
+
 }

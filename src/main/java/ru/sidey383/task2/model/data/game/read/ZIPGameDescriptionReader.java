@@ -3,7 +3,7 @@ package ru.sidey383.task2.model.data.game.read;
 import ru.sidey383.task2.model.data.game.GameDescription;
 
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -13,25 +13,17 @@ public class ZIPGameDescriptionReader extends ZIPReader {
         readerStructure.put("gameLore.json", ReaderMethods::readGameLore);
     }
 
-    public GameDescription readDescription(URL url) throws IOException {
-        RawDataContainer data = readZIP(url);
+    public GameDescription readDescription(Path path) throws IOException {
+        RawDataContainer data = readZIP(path);
         Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
-        return lore.map(gameLore -> new DefaultGameDescription(gameLore, url, gameLore.name() + "_key")).orElse(null);
+        return lore
+                .map(gameLore -> new DefaultGameDescription(gameLore, path, gameLore.name() + "_" + data.getHash(), data.getHash()))
+                .orElse(null);
     }
 
-    private static class DefaultGameDescription implements GameDescription {
+    private record DefaultGameDescription(GameLore gameLore, Path gameContainer, String gameKey,
+                                          String hash) implements GameDescription {
 
-        private final GameLore gameLore;
-
-        private final URL gameContainer;
-
-        private final String gameKey;
-
-        public DefaultGameDescription(GameLore lore, URL gameContainer, String gameKey) {
-            this.gameContainer = gameContainer;
-            this.gameLore = lore;
-            this.gameKey = gameKey;
-        }
 
         @Override
         public String getGameKey() {
@@ -44,7 +36,12 @@ public class ZIPGameDescriptionReader extends ZIPReader {
         }
 
         @Override
-        public URL getGameContainer() {
+        public String getHash() {
+            return hash;
+        }
+
+        @Override
+        public Path getGameContainer() {
             return gameContainer;
         }
     }

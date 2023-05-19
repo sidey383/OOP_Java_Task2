@@ -7,7 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -30,16 +34,24 @@ public class ZIPReader {
         this.defaultReader = InputStream::readAllBytes;
     }
 
-    public RawDataContainer readZIP(URL path) throws IOException {
-        RawDataContainer rawDataContainer = new RawDataContainer();
-        try (ZipInputStream zis = new ZipInputStream(path.openStream())) {
+    public RawDataContainer readZIP(Path path) throws IOException {
+        var builder = RawDataContainer.builder();
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        try (InputStream fis = Files.newInputStream(path);
+             DigestInputStream dis = new DigestInputStream(fis, md);
+             ZipInputStream zis = new ZipInputStream(dis)) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 String name = entry.getName();
                 var func = readerStructure.get(name);
                 if (func != null) {
                     try {
-                        rawDataContainer.addObject(name, func.read(new FilterInputStream(zis) {
+                        builder.withObject(name, func.read(new FilterInputStream(zis) {
                             @Override
                             public void close() throws IOException {
                                 zis.closeEntry();
@@ -49,11 +61,18 @@ public class ZIPReader {
                         logger.warn(() -> String.format("Error while read entry %s in %s", name, path), t);
                     }
                 } else {
-                    rawDataContainer.addObject(name, zis.readAllBytes());
+                    builder.withObject(name, zis.readAllBytes());
                 }
             }
         }
-        return rawDataContainer;
+
+        byte[] hash = md.digest();
+        StringBuilder stringBuilder = new StringBuilder(2*hash.length);
+        for(byte b : hash){
+            stringBuilder.append(String.format("%02x", b&0xff));
+        }
+        builder.withHash(stringBuilder.toString());
+        return builder.build();
     }
 
     @FunctionalInterface

@@ -15,6 +15,8 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     private final String name;
     HashMap<ClickType, TileLine> lines = new HashMap<>();
 
+    private boolean isEnded = false;
+
     private final List<Function<Collection<TileStatus>, Void>> resultListeners = new ArrayList<>();
 
     /**
@@ -41,6 +43,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
         for (var listener : resultListeners) {
             listener.apply(new ArrayList<>(statuses));
         }
+        isEnded = true;
         return ret;
     }
 
@@ -51,6 +54,8 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
     @Override
     public void press(ClickType type, long globalTime) {
+        if (isEnded)
+            return;
         TileLine line = lines.get(type);
         if (line != null && isGoing())
             line.press(globalTime);
@@ -58,6 +63,8 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
     @Override
     public void release(ClickType type, long globalTime) {
+        if (isEnded)
+            return;
         TileLine line = lines.get(type);
         if (line != null && isGoing())
             line.release(globalTime);
@@ -118,6 +125,8 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     }
 
     public void addResultListener(Function<Collection<TileStatus>, Void> listener) {
+        if (isEnded)
+            return;
         resultListeners.add(listener);
     }
 

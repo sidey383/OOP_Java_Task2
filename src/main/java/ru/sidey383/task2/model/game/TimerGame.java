@@ -5,19 +5,15 @@ package ru.sidey383.task2.model.game;
  * **/
 public interface TimerGame {
 
-    void start();
+    boolean start();
 
     boolean stop();
-
-    boolean isStarted();
 
     boolean pause();
 
     boolean resume();
 
     boolean isGoing();
-
-    long getStartTime();
 
     boolean isOutOfTime(long systemTime);
 

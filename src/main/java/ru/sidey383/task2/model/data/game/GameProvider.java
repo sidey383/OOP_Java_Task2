@@ -4,6 +4,6 @@ import java.util.Collection;
 
 public interface GameProvider {
 
-    public Collection<GameDescription> getGames();
+    Collection<GameDescription> readGameDescriptions();
 
 }

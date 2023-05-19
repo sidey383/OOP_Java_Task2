@@ -94,8 +94,8 @@ public class GameSession extends ControllerSession {
     @Override
     public void start() {
         super.start();
-        game.start();
-        graphicStart();
+        if(game.start())
+            graphicStart();
     }
 
     @Override
@@ -159,7 +159,6 @@ public class GameSession extends ControllerSession {
                 graphicTask.cancel();
             }
             graphicTask = new GraphicUpdaterTask();
-            logger.info(String.format("Start graphic task %d %d", 0, game.getTimeToShow() / 4_000_000));
             timer.schedule(graphicTask, 0, game.getTimeToShow() / 4_000_000);
         }
     }

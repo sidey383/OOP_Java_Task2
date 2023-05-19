@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import ru.sidey383.task2.control.Controller;
 import ru.sidey383.task2.control.ControllerSession;
 import ru.sidey383.task2.model.data.game.GameDescription;
+import ru.sidey383.task2.model.exception.IncorrectGameFileException;
 import ru.sidey383.task2.model.exception.ModelException;
 import ru.sidey383.task2.view.AppScene;
 import ru.sidey383.task2.view.choice.ChoiceView;
@@ -65,6 +66,9 @@ public class ChoiceSession extends ControllerSession {
         public void apply() {
             try {
                 getController().getModel().startGame(description);
+            } catch (IncorrectGameFileException e ) {
+                logger.warn("The file may have been modified or removed", e);
+                setDescriptions(getController().getModel().getGameDescriptions());
             } catch (ModelException e) {
                 logger.fatal("Game start error", e);
             }

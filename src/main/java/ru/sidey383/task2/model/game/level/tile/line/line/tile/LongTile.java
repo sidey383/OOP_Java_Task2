@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LongTile implements Tile, TileStatus {
+public class LongTile implements Tile {
 
     @JsonProperty
     private final long startTime;
@@ -27,7 +27,7 @@ public class LongTile implements Tile, TileStatus {
     @JsonIgnore
     @Override
     public long getStartTime() {
-        return startTime ;
+        return startTime;
     }
 
     @JsonIgnore
@@ -38,28 +38,14 @@ public class LongTile implements Tile, TileStatus {
 
     @JsonIgnore
     @Override
-    public TileStatus getStatus() {
-        return this;
+    public LongTileStatus getStatus() {
+        return new LongTileStatus(this);
     }
 
     @JsonIgnore
     @Override
     public TileType getType() {
         return TileType.LONG;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isClicked() {
-        return pressTime != -1;
-    }
-
-    @JsonIgnore
-    @Override
-    public int getScore() {
-        if (!isClicked())
-            return 0;
-        return (int) (Math.max(0, Math.min(tileTime, pressTime - releaseTime) / 200_000_000) + 2);
     }
 
     @Override
@@ -77,5 +63,23 @@ public class LongTile implements Tile, TileStatus {
         if (pressTime != -1 && (relativeTime == -1 || relativeTime < releaseTime)) {
             releaseTime = relativeTime;
         }
+    }
+
+    private record LongTileStatus(boolean isClicked, int score) implements TileStatus {
+
+        public LongTileStatus(LongTile tile) {
+            this(
+                    tile.pressTime != -1,
+                    tile.pressTime == -1 ?
+                            0 :
+                            (int) (Math.max(0, Math.min(tile.tileTime, tile.pressTime - tile.releaseTime) / 200_000_000) + 2)
+            );
+        }
+
+        @Override
+        public int getScore() {
+            return score;
+        }
+
     }
 }

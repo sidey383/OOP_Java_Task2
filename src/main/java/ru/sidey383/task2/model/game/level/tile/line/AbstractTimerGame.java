@@ -18,16 +18,13 @@ public abstract class AbstractTimerGame implements TimerGame {
     }
 
     @Override
-    public synchronized void start() {
+    public synchronized boolean start() {
         if (gameStatus == GameStatus.NOT_STARTED) {
             startTime = System.nanoTime();
             gameStatus = GameStatus.ON;
+            return true;
         }
-    }
-
-    @Override
-    public synchronized boolean isStarted() {
-        return gameStatus == GameStatus.ON;
+        return false;
     }
 
     @Override
@@ -62,11 +59,6 @@ public abstract class AbstractTimerGame implements TimerGame {
     @Override
     public synchronized boolean isGoing() {
         return gameStatus == GameStatus.ON;
-    }
-
-    @Override
-    public synchronized long getStartTime() {
-        return startTime;
     }
 
     @Override
