@@ -1,6 +1,7 @@
 package ru.sidey383.task2.view;
 
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -31,6 +32,7 @@ public class View implements ViewInterface {
 
     public View(Stage stage) {
         this.stage = stage;
+        this.stage.setMaximized(true);
         stage.setOnCloseRequest(this::windowsClose);
         stage.setFullScreenExitHint("");
         stage.setResizable(true);
@@ -51,10 +53,11 @@ public class View implements ViewInterface {
     public void setScene(AppScene controller) {
         Platform.runLater(() -> {
             boolean fullScreen = stage.isFullScreen();
-            stage.hide();
             stage.setScene(controller.getScene());
-            stage.show();
             stage.setFullScreen(fullScreen);
+            if (!stage.isShowing()) {
+                stage.show();
+            }
         });
 
     }
@@ -71,7 +74,11 @@ public class View implements ViewInterface {
         for (SceneFactory<? extends AppScene> factory : sceneFactories) {
             Class<?> factoryClazz = (Class<?>) ((ParameterizedType) factory.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
             if (clazz.isAssignableFrom(factoryClazz)) {
-                return (T) factory.createScene();
+                if (stage.getScene() == null) {
+                    return (T) factory.createScene(-1, -1);
+                } else {
+                    return (T) factory.createScene(stage.getScene().getWidth(), stage.getScene().getHeight());
+                }
             }
         }
         return null;

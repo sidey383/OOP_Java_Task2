@@ -3,18 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.stage.Screen?>
-
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           prefWidth="${screen.visualBounds.width}"
-           prefHeight="${screen.visualBounds.height}"
            minHeight="600"
            minWidth="800"
            fx:controller="ru.sidey383.task2.view.score.ScoreAppScene">
-    <fx:define>
-        <Screen fx:factory="getPrimary" fx:id="screen"/>
-    </fx:define>
     <GridPane maxHeight="Infinity" maxWidth="Infinity">
         <columnConstraints>
             <ColumnConstraints percentWidth="35"/>
@@ -22,7 +15,6 @@
             <ColumnConstraints percentWidth="35"/>
         </columnConstraints>
         <ScrollPane
-                fx:id="scrollPane"
                 StackPane.alignment="CENTER"
                 GridPane.hgrow="always"
                 GridPane.vgrow="always"
@@ -32,14 +24,13 @@
             </VBox>
         </ScrollPane>
         <StackPane
-                fx:id="rightStackPane"
                 StackPane.alignment="CENTER"
                 GridPane.hgrow="always"
                 GridPane.vgrow="always"
                 GridPane.rowIndex="0"
                 GridPane.columnIndex="2">
             <VBox>
-                <Button fx:id="exit" onAction="#pressMenu" text="menu "/>
+                <Button onAction="#pressMenu" text="menu "/>
             </VBox>
         </StackPane>
     </GridPane>

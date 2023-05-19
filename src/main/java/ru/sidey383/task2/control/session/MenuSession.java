@@ -22,7 +22,7 @@ public class MenuSession extends ControllerSession {
 
     @EventHandler
     public void onExit(PlayerGameExitEvent e) {
-        getController().stop();
+        getController().end();
     }
 
 

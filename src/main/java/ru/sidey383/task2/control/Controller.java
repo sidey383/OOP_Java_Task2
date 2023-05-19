@@ -1,7 +1,5 @@
 package ru.sidey383.task2.control;
 
-import javafx.scene.image.Image;
-import javafx.scene.media.Media;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.sidey383.task2.control.session.ChoiceSession;
@@ -18,15 +16,6 @@ import ru.sidey383.task2.model.data.settings.SettingsProvider;
 import ru.sidey383.task2.view.ViewInterface;
 import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.task2.view.events.WindowCloseEvent;
-import ru.sidey383.task2.view.game.GameView;
-import ru.sidey383.task2.view.menu.MenuView;
-import ru.sidey383.task2.view.score.ScoreView;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Controller {
 
@@ -125,7 +114,7 @@ public class Controller {
         return model;
     }
 
-    public void stop() {
+    public void end() {
         view.close();
         if (session != null) {
             session.end();

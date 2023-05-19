@@ -65,18 +65,6 @@ public class AppSettings implements SettingsProvider {
             this.values = Arrays.copyOf(values, 6);
         }
 
-
-        public int get(ClickType type) {
-            return switch (type) {
-                case LINE_1 -> values[0];
-                case LINE_2 -> values[1];
-                case LINE_3 -> values[2];
-                case LINE_4 -> values[3];
-                case LINE_5 -> values[4];
-                case LINE_6 -> values[5];
-            };
-        }
-
         public void set(ClickType key, int value) {
             switch (key) {
                 case LINE_1 -> values[0] = value;

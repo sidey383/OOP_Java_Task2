@@ -6,21 +6,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import ru.sidey383.task2.view.game.component.GameCanvas?>
 <?import javafx.scene.text.Font?>
-<?import javafx.stage.Screen?>
 <?import javafx.scene.shape.Rectangle?>
 <StackPane
         onKeyPressed="#onKeyPress"
         onKeyReleased="#onKeyRelease"
         xmlns="http://javafx.com/javafx/17.0.2-ea"
         xmlns:fx="http://javafx.com/fxml/1"
-        prefWidth="${screen.visualBounds.width}"
-        prefHeight="${screen.visualBounds.height}"
         minHeight="600"
         minWidth="800"
         fx:controller="ru.sidey383.task2.view.game.GameAppScene">
-    <fx:define>
-        <Screen fx:factory="getPrimary" fx:id="screen"/>
-    </fx:define>
     <GridPane alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity">
         <columnConstraints>
             <ColumnConstraints percentWidth="35"/>
