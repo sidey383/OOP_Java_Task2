@@ -1,19 +1,18 @@
-package ru.sidey383.task2.model.game.level.line;
+package ru.sidey383.task2.model.game.level.tile.line.line;
 
-import ru.sidey383.task2.model.game.level.PianoGame;
-import ru.sidey383.task2.model.game.level.line.tile.Tile;
-import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.tile.line.PianoGame;
+import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class TileLineContainer implements TileLine {
 
     private final static long CHUNK_TIME = 5_000_000_000L;
 
     private final TileChunk[] tileChunks;
+
+    private long missClickCount = 0;
 
     public TileLineContainer(PianoGame pianoGame, Collection<Tile> tileCollection) {
         tileChunks = new TileChunk[(int) (pianoGame.getTotalTime() / CHUNK_TIME + 1)];
@@ -25,7 +24,7 @@ public class TileLineContainer implements TileLine {
         for (int i = 0; i < tileChunks.length; i++) {
             long startTime = i * CHUNK_TIME;
             long endTime = (i + 1) * CHUNK_TIME;
-            tileChunks[i] = new TileChunk(startTime, endTime, tiles.stream().filter(t -> t.getStartTime() <= endTime && t.getEndTime() >= startTime).toArray(Tile[]::new));
+            tileChunks[i] = new TileChunk(tiles.stream().filter(t -> t.getStartTime() <= endTime && t.getEndTime() >= startTime).toArray(Tile[]::new));
         }
     }
 
@@ -59,8 +58,11 @@ public class TileLineContainer implements TileLine {
     @Override
     public void press(long time) {
         Tile t = getTile(time);
-        if (t != null)
+        if (t != null) {
             t.press(time);
+        } else {
+            missClickCount++;
+        }
     }
 
     @Override
@@ -77,16 +79,26 @@ public class TileLineContainer implements TileLine {
     }
 
     @Override
-    public Collection<TileStatus> getStatistic() {
+    public Collection<TileStatus> getTileStatistic() {
         Collection<TileStatus> statuses = new ArrayList<>();
-        getStatistic(statuses);
+        getTileStatistic(statuses);
         return statuses;
     }
 
     @Override
-    public void getStatistic(Collection<TileStatus> statuses) {
+    public long getScore() {
+        return Arrays.stream(tileChunks).mapToLong(TileChunk::getScore).sum() - missClickCount * 3;
+    }
+
+    @Override
+    public void getTileStatistic(Collection<TileStatus> statuses) {
         for (TileChunk chunk : tileChunks) {
-            chunk.getStatistic(statuses);
+            chunk.getTileStatistic(statuses);
         }
+    }
+
+    @Override
+    public long getMissCount() {
+        return missClickCount;
     }
 }

@@ -85,6 +85,7 @@ public class View implements ViewInterface {
 
     @Override
     public void close() {
+        EventManager.unregisterListener(this);
         Platform.runLater(stage::close);
     }
 

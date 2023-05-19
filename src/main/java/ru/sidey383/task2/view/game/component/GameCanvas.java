@@ -4,9 +4,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import ru.sidey383.task2.model.game.level.line.tile.Tile;
-import ru.sidey383.task2.control.TimeAdapter;
-import ru.sidey383.task2.model.game.level.line.tile.TileType;
+import ru.sidey383.task2.view.game.DrawnTile;
+import ru.sidey383.task2.view.game.DrawnTileType;
+import ru.sidey383.task2.view.game.TimeProvider;
 
 public class GameCanvas extends Canvas {
 
@@ -16,9 +16,9 @@ public class GameCanvas extends Canvas {
 
     private static final Paint LONG_TILES_PAINT = new Color(0, 0.5, 0.8, 1);
 
-    private TimeAdapter timeAdapter;
+    private TimeProvider timeProvider;
 
-    private Tile[][] tiles;
+    private DrawnTile[][] tiles;
 
     @Override
     public boolean isResizable() {
@@ -51,15 +51,15 @@ public class GameCanvas extends Canvas {
         this.setHeight(height);
     }
 
-    public void updateTiles(Tile[][] nTiles) {
+    public void updateTiles(DrawnTile[][] nTiles) {
         synchronized (this) {
             this.tiles = nTiles;
         }
     }
 
-    public void setTimeAdapter(TimeAdapter adapter) {
+    public void setTimeAdapter(TimeProvider adapter) {
         synchronized (this) {
-            this.timeAdapter = adapter;
+            this.timeProvider = adapter;
         }
     }
 
@@ -69,11 +69,10 @@ public class GameCanvas extends Canvas {
         double height = getHeight();
         graphicsContext.clearRect(0, 0, width, height);
         synchronized (this) {
-            if (timeAdapter == null || tiles == null)
+            if (timeProvider == null || tiles == null)
                 return;
-            long time = timeAdapter.getRelativeFromNano(timeNS);
-            long timeToShow = timeAdapter.getTimeToShow();
-            //System.out.println("drawer time " + (double) time / 1_000_000_000 );
+            long time = timeProvider.getRelativeFromNano(timeNS);
+            long timeToShow = timeProvider.getTimeToShow();
             int lineCount = tiles.length;
             graphicsContext.setFill(FRAMES_PAINT);
             graphicsContext.fillRect(0, 0, 0.05 * width / lineCount, height);
@@ -89,14 +88,14 @@ public class GameCanvas extends Canvas {
                 double tWidth = 0.8 * width / lineCount;
                 double xLong = (i + 0.45) * width / lineCount;
                 double tWidthLong = 0.1 * width / lineCount;
-                for (Tile t : tiles[i]) {
+                for (DrawnTile t : tiles[i]) {
                     double pose1 = 1 - (double) (t.getEndTime() - time) / timeToShow;
                     double pose2 = (double) (t.getEndTime() - t.getStartTime()) / timeToShow;
                     graphicsContext.fillRoundRect(
                            x, height * pose1,
                            tWidth,  height * pose2,
                            width/20, height/20);
-                    if (t.getType() == TileType.LONG) {
+                    if (t.getType() == DrawnTileType.LONG) {
                         graphicsContext.setFill(LONG_TILES_PAINT);
                         double pose1Long = pose1 + (pose2)/10;
                         double pose2Long = 8 * pose2 /10;

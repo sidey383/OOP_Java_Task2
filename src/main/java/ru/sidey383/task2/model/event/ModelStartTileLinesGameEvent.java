@@ -1,6 +1,6 @@
 package ru.sidey383.task2.model.event;
 
-import ru.sidey383.task2.model.game.TileLinesGame;
+import ru.sidey383.task2.model.game.level.tile.line.TileLinesGame;
 import ru.sidey383.task2.model.data.game.read.RawDataContainer;
 
 public class ModelStartTileLinesGameEvent extends ModelStartGameEvent {

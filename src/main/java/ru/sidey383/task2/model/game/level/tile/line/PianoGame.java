@@ -1,11 +1,10 @@
-package ru.sidey383.task2.model.game.level;
+package ru.sidey383.task2.model.game.level.tile.line;
 
 import ru.sidey383.task2.model.game.ClickType;
-import ru.sidey383.task2.model.game.TileLinesGame;
-import ru.sidey383.task2.model.game.level.line.TileLine;
-import ru.sidey383.task2.model.game.level.line.TileLineContainer;
-import ru.sidey383.task2.model.game.level.line.tile.Tile;
-import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.tile.line.line.TileLine;
+import ru.sidey383.task2.model.game.level.tile.line.line.TileLineContainer;
+import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
 
 import java.util.*;
 import java.util.function.Function;
@@ -38,7 +37,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     @Override
     public boolean stop() {
         boolean ret = super.stop();
-        Collection<TileStatus> statuses = getStatistic();
+        Collection<TileStatus> statuses = getTileStatistic();
         for (var listener : resultListeners) {
             listener.apply(new ArrayList<>(statuses));
         }
@@ -88,11 +87,26 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     }
 
     @Override
-    public Collection<TileStatus> getStatistic() {
-        Collection<TileStatus> collection = new ArrayList<>();
+    public Collection<TileStatus> getTileStatistic() {
+        Collection<TileStatus> statuses = new ArrayList<>();
+        getTileStatistic(statuses);
+        return statuses;
+    }
+
+    @Override
+    public void getTileStatistic(Collection<TileStatus> statuses) {
         for (TileLine line : lines.values())
-            line.getStatistic(collection);
-        return collection;
+            line.getTileStatistic(statuses);
+    }
+
+    @Override
+    public long getMissCount() {
+        return lines.values().stream().mapToLong(TileScoreProvider::getMissCount).sum();
+    }
+
+    @Override
+    public long getScore() {
+        return lines.values().stream().mapToLong(TileLine::getScore).sum();
     }
 
     /**

@@ -1,6 +1,6 @@
-package ru.sidey383.task2.control;
+package ru.sidey383.task2.view.game;
 
-public interface TimeAdapter {
+public interface TimeProvider {
 
     long getRelativeFromNano(long timeNS);
 

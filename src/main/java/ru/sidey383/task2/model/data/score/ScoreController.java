@@ -18,9 +18,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ScoreContainer implements ScoreProvider {
+public class ScoreController implements ScoreProvider {
 
-    private static final Logger logger = LogManager.getLogger(ScoreContainer.class);
+    private static final Logger logger = LogManager.getLogger(ScoreController.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -30,7 +30,7 @@ public class ScoreContainer implements ScoreProvider {
 
     private final Path path;
 
-    private ScoreContainer(List<GameScore> scoreList, Path path) {
+    private ScoreController(List<GameScore> scoreList, Path path) {
         this.scoreList = scoreList.stream()
                 .collect(
                         Collectors.toMap(
@@ -40,13 +40,13 @@ public class ScoreContainer implements ScoreProvider {
         this.path = path;
     }
 
-    public static ScoreContainer createScoreContainer(Path path) throws ModelException {
-        ScoreContainer scoreContainer;
+    public static ScoreController createScoreContainer(Path path) throws ModelException {
+        ScoreController scoreController;
         if (Files.exists(path)) {
             if (Files.isRegularFile(path)) {
                 try (InputStream is = Files.newInputStream(path)) {
                     List<GameScore> scores = mapper.reader().forType(listType).readValue(is);
-                    scoreContainer = new ScoreContainer(scores, path);
+                    scoreController = new ScoreController(scores, path);
                 } catch (IOException e) {
                     throw new ModelIOException(e);
                 }
@@ -60,7 +60,7 @@ public class ScoreContainer implements ScoreProvider {
                 throw new ModelIOException(e);
             }
         }
-        return scoreContainer;
+        return scoreController;
     }
 
     @Override
@@ -80,13 +80,13 @@ public class ScoreContainer implements ScoreProvider {
         }
     }
 
-    private static ScoreContainer createNew(Path path) throws IOException {
+    private static ScoreController createNew(Path path) throws IOException {
         if (Files.exists(path))
             Files.delete(path);
         ArrayList<GameScore> scores = new ArrayList<>();
-        ScoreContainer scoreContainer = new ScoreContainer(scores, path);
-        scoreContainer.write();
-        return scoreContainer;
+        ScoreController scoreController = new ScoreController(scores, path);
+        scoreController.write();
+        return scoreController;
     }
 
     private void write() throws IOException {

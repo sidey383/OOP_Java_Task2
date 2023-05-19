@@ -6,13 +6,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.sidey383.task2.control.Controller;
 import ru.sidey383.task2.control.ControllerSession;
-import ru.sidey383.task2.control.TimeAdapter;
+import ru.sidey383.task2.view.game.DrawnTile;
+import ru.sidey383.task2.view.game.DrawnTileType;
+import ru.sidey383.task2.view.game.TimeProvider;
 import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.model.data.game.read.RawDataContainer;
 import ru.sidey383.task2.model.game.ClickType;
-import ru.sidey383.task2.model.game.TileLinesGame;
-import ru.sidey383.task2.model.game.level.line.tile.Tile;
-import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.tile.line.TileLinesGame;
+import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
 import ru.sidey383.task2.view.AppScene;
 import ru.sidey383.task2.view.game.GameView;
 import ru.sidey383.task2.view.events.PlayerKeyEvent;
@@ -52,9 +54,20 @@ public class GameSession extends ControllerSession {
     }
 
     public static GameSession create(Controller controller, RawDataContainer container, TileLinesGame game) throws IOException {
-        GameView gameView;
+        GameView gameView = controller.getView().getScene(GameView.class);
+        setGameStyle(gameView, container);
 
-        gameView = controller.getView().getScene(GameView.class);
+        Map<Integer, ClickType> keyMap = new HashMap<>();
+        for (Map.Entry<ClickType, Integer> e : controller.getModel().getSettings().getGameKeys().entrySet()) {
+            keyMap.put(e.getValue(), e.getKey());
+        }
+
+        gameView.setTimeAdapter(new SimpleTimeProvider(game));
+        controller.getView().setScene(gameView);
+        return new GameSession(controller, game, gameView, keyMap);
+    }
+
+    private static void setGameStyle(GameView gameView, RawDataContainer container) throws IOException {
         gameView.setRightImage(new Image(new ByteArrayInputStream(
                 container.getData(byte[].class, "right")
                         .orElse(new byte[0])
@@ -76,13 +89,6 @@ public class GameSession extends ControllerSession {
             logger.error(() -> String.format("Music write error %s", tempMusicPath), e);
         }
         gameView.setMusic(new Media(tempMusicPath.toUri().toString()));
-        Map<Integer, ClickType> keyMap = new HashMap<>();
-        for (Map.Entry<ClickType, Integer> e : controller.getSettings().getGameKeys().entrySet()) {
-            keyMap.put(e.getValue(), e.getKey());
-        }
-        gameView.setTimeAdapter(new SimpleTimeAdapter(game));
-        controller.getView().setScene(gameView);
-        return new GameSession(controller, game, gameView, keyMap);
     }
 
     @Override
@@ -112,26 +118,28 @@ public class GameSession extends ControllerSession {
     }
 
     public void gamePause() {
-        if(game.pause()) {
+        if (game.pause()) {
             graphicPause();
         }
     }
 
     public void gameResume() {
-        if(game.resume()) {
+        if (game.resume()) {
             graphicStart();
         }
     }
 
     private void showScore() {
-        Collection<TileStatus> statistic = game.getStatistic();
-        int score = statistic.stream().mapToInt(TileStatus::getScore).sum();
+        Collection<TileStatus> statistic = game.getTileStatistic();
+        long score = game.getScore();
         long clicked = statistic.stream().filter(TileStatus::isClicked).count();
-                gameView.showScore(String.format("""
-                        Score: %d
-                        Clicked: %d
-                        Missed: %d
-                        """, score, clicked, statistic.size() - clicked));
+        long missed = game.getMissCount();
+        gameView.showScore(String.format("""
+                Score: %d
+                Clicked: %d
+                Missed: %d
+                Miss clicked: %d
+                """, score, clicked, statistic.size() - clicked, missed));
     }
 
     private void graphicPause() {
@@ -151,6 +159,7 @@ public class GameSession extends ControllerSession {
                 graphicTask.cancel();
             }
             graphicTask = new GraphicUpdaterTask();
+            logger.info(String.format("Start graphic task %d %d", 0, game.getTimeToShow() / 4_000_000));
             timer.schedule(graphicTask, 0, game.getTimeToShow() / 4_000_000);
         }
     }
@@ -183,22 +192,44 @@ public class GameSession extends ControllerSession {
 
         @Override
         public void run() {
-            long time = game.toLocalTime(System.nanoTime());
-            if (game.isOutOfTime(time)) {
+            long nTime = System.nanoTime();
+            if (game.isOutOfTime(nTime)) {
                 gameEnd();
             }
+            long time = game.toLocalTime(nTime);
             long endTime = time + game.getTimeToShow() * 2;
             ClickType[] types = game.getAvailableTypes();
-            Tile[][] tiles = new Tile[types.length][];
+            DrawnTile[][] tiles = new DrawnTile[types.length][];
             for (int i = 0; i < types.length; i++) {
-                tiles[i] = game.getLine(types[i]).getTiles(time, endTime).toArray(Tile[]::new);
+                tiles[i] = game.getLine(types[i]).getTiles(time, endTime).stream().map(TileAdapter::new).toArray(TileAdapter[]::new);
             }
             gameView.updateTiles(tiles);
         }
 
     }
 
-    private record SimpleTimeAdapter(TileLinesGame game) implements TimeAdapter {
+    private record TileAdapter(Tile tile) implements DrawnTile {
+
+        @Override
+        public long getEndTime() {
+            return tile.getEndTime();
+        }
+
+        @Override
+        public long getStartTime() {
+            return tile.getStartTime();
+        }
+
+        @Override
+        public DrawnTileType getType() {
+            return switch (tile.getType()) {
+                case LONG -> DrawnTileType.LONG;
+                case DEFAULT -> DrawnTileType.SHORT;
+            };
+        }
+    }
+
+    private record SimpleTimeProvider(TileLinesGame game) implements TimeProvider {
 
         @Override
         public long getRelativeFromNano(long timeNS) {

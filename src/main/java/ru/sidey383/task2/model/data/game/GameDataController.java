@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.zip.ZipException;
 
-public class GameDataContainer implements GameProvider {
+public class GameDataController implements GameProvider {
 
-    private final static Logger logger = LogManager.getLogger(GameDataContainer.class);
+    private final static Logger logger = LogManager.getLogger(GameDataController.class);
 
     private final ZIPGameDescriptionReader gameDescriptionReader = new ZIPGameDescriptionReader();
 
     private final SettingsProvider settingsProvider;
 
-    public GameDataContainer(SettingsProvider settings) {
+    public GameDataController(SettingsProvider settings) {
         this.settingsProvider = settings;
     }
 

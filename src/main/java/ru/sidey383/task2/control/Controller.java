@@ -10,9 +10,8 @@ import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.event.EventManager;
 import ru.sidey383.task2.model.ModelInterface;
 import ru.sidey383.task2.model.event.ModelStartTileLinesGameEvent;
-import ru.sidey383.task2.model.game.TileLinesGame;
+import ru.sidey383.task2.model.game.level.tile.line.TileLinesGame;
 import ru.sidey383.task2.model.data.game.read.RawDataContainer;
-import ru.sidey383.task2.model.data.settings.SettingsProvider;
 import ru.sidey383.task2.view.ViewInterface;
 import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.task2.view.events.WindowCloseEvent;
@@ -23,15 +22,12 @@ public class Controller {
 
     private final ViewInterface view;
 
-    private final SettingsProvider settings;
-
     private final ModelInterface model;
 
     private ControllerSession session = null;
 
     public Controller(ViewInterface view, ModelInterface model) {
         this.view = view;
-        this.settings = model.getSettings();
         this.model = model;
         EventManager.registerListener(this);
     }
@@ -98,14 +94,9 @@ public class Controller {
         openGame(event.getData(), event.getGame());
     }
 
-    public ControllerSession getSession() {
+    public synchronized ControllerSession getSession() {
         return session;
     }
-
-    public SettingsProvider getSettings() {
-        return settings;
-    }
-
     public ViewInterface getView() {
         return view;
     }
@@ -114,11 +105,11 @@ public class Controller {
         return model;
     }
 
-    public void end() {
-        view.close();
+    public synchronized void end() {
         if (session != null) {
             session.end();
         }
+        view.close();
         EventManager.unregisterListener(this);
     }
 

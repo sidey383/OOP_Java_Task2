@@ -1,4 +1,4 @@
-package ru.sidey383.task2.model.game.level;
+package ru.sidey383.task2.model.game.level.tile.line;
 
 import ru.sidey383.task2.model.game.TimerGame;
 
@@ -53,6 +53,7 @@ public abstract class AbstractTimerGame implements TimerGame {
     public synchronized boolean stop() {
         if (gameStatus != GameStatus.IS_OVER) {
             gameStatus = GameStatus.IS_OVER;
+            pauseTime = System.nanoTime();
             return true;
         }
         return false;

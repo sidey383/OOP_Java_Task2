@@ -2,6 +2,7 @@ package ru.sidey383.task2.view.game;
 
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -12,10 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import ru.sidey383.task2.control.AvailableScene;
-import ru.sidey383.task2.control.TimeAdapter;
 import ru.sidey383.task2.event.EventManager;
-import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.task2.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.task2.view.events.game.PlayerPauseEvent;
@@ -46,7 +44,7 @@ public class GameAppScene extends GameView  implements Initializable {
 
     private MediaPlayer mediaPlayer;
 
-    private TimeAdapter timeAdapter;
+    private TimeProvider timeProvider;
 
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
@@ -59,61 +57,67 @@ public class GameAppScene extends GameView  implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {}
 
     @Override
-    public void updateTiles(Tile[][] nTiles) {
+    public void updateTiles(DrawnTile[][] nTiles) {
         gameField.updateTiles(nTiles);
     }
 
     @Override
-    public void setTimeAdapter(TimeAdapter adapter) {
-        this.timeAdapter = adapter;
+    public void setTimeAdapter(TimeProvider adapter) {
+        this.timeProvider = adapter;
         gameField.setTimeAdapter(adapter);
     }
 
     @Override
     public void start() {
-        if (timeAdapter == null)
-            throw new IllegalStateException("Time adapter must be initialized");
-        if (mediaPlayer != null) {
-            mediaPlayer.setStartTime(new Duration((double) (timeAdapter.getRelativeFromNano(System.nanoTime()) / 1_000_000L)));
-            mediaPlayer.setVolume(1);
-            mediaPlayer.play();
-        }
-        timer.start();
+        Platform.runLater(() -> {
+            if (timeProvider == null)
+                throw new IllegalStateException("Time adapter must be initialized");
+            if (mediaPlayer != null) {
+                mediaPlayer.setStartTime(new Duration((double) (timeProvider.getRelativeFromNano(System.nanoTime()) / 1_000_000L)));
+                mediaPlayer.setVolume(1);
+                mediaPlayer.play();
+            }
+            timer.start();
+        });
     }
 
     @Override
     public void stop() {
-        if (mediaPlayer != null)
-            mediaPlayer.stop();
-        timer.stop();
+        Platform.runLater(() -> {
+            if (mediaPlayer != null)
+                mediaPlayer.stop();
+            timer.stop();
+        });
     }
 
     @Override
     public void showScore(String scoreStr) {
-        score.setText(scoreStr);
-        menuButton.setDisable(false);
-        menuButton.setVisible(true);
-        scorePane.setVisible(true);
+        Platform.runLater(() -> {
+            score.setText(scoreStr);
+            menuButton.setDisable(false);
+            menuButton.setVisible(true);
+            scorePane.setVisible(true);
+        });
     }
 
     @Override
     public void setLeftImage(Image image) {
-        leftBackground.setImage(image);
+        Platform.runLater(() -> leftBackground.setImage(image));
     }
 
     @Override
     public void setRightImage(Image image) {
-        rightBackground.setImage(image);
+        Platform.runLater(() -> rightBackground.setImage(image));
     }
 
     @Override
     public void setCenterImage(Image image) {
-        centerBackground.setImage(image);
+        Platform.runLater(() -> centerBackground.setImage(image));
     }
 
     @Override
     public void setMusic(Media sound) {
-        mediaPlayer = new MediaPlayer(sound);
+        Platform.runLater(() -> mediaPlayer = new MediaPlayer(sound));
     }
 
     @FXML
@@ -133,7 +137,7 @@ public class GameAppScene extends GameView  implements Initializable {
 
     @FXML
     public void toMenu() {
-        EventManager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
+        EventManager.runEvent(new PlayerChangeSceneEvent(PlayerChangeSceneEvent.AvailableScene.MENU));
     }
 
 }
