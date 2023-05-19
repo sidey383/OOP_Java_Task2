@@ -12,7 +12,6 @@ import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.model.data.game.read.RawDataContainer;
 import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.TileLinesGame;
-import ru.sidey383.task2.model.game.TimerGame;
 import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 import ru.sidey383.task2.view.game.GameView;
@@ -39,17 +38,14 @@ public class GameSession extends ControllerSession {
 
     private Timer graphicUpdateTimer;
 
-    private final Path tempMusicFile;
-
     private final Map<Integer, ClickType> keyMap;
 
 
-    public GameSession(Controller controller, TileLinesGame game, GameView gameView, Map<Integer, ClickType> keyMap, Path tempMusicFile) {
+    public GameSession(Controller controller, TileLinesGame game, GameView gameView, Map<Integer, ClickType> keyMap) {
         super(controller);
         this.game = game;
         this.gameView = gameView;
         this.keyMap = keyMap;
-       this.tempMusicFile = tempMusicFile;
     }
 
     public static GameSession create(Controller controller, RawDataContainer container, TileLinesGame game) throws IOException {
@@ -83,7 +79,7 @@ public class GameSession extends ControllerSession {
         }
         gameView.setTimeAdapter(new SimpleTimeAdapter(game));
         controller.getView().setScene(gameView);
-        return new GameSession(controller, game, gameView, keyMap, tempMusicPath);
+        return new GameSession(controller, game, gameView, keyMap);
     }
 
     @Override
@@ -142,6 +138,7 @@ public class GameSession extends ControllerSession {
                 long time = game.toLocalTime(System.nanoTime());
                 if (time > game.getTotalTime()) {
                     gameEnd();
+                    cancel();
                 }
                 long endTime = time + game.getTimeToShow() * 2;
                 ClickType[] types = game.getAvailableTypes();

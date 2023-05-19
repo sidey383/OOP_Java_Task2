@@ -1,6 +1,6 @@
 package ru.sidey383.task2.model.data;
 
-import ru.sidey383.task2.model.data.game.GameContainer;
+import ru.sidey383.task2.model.data.game.GameDataContainer;
 import ru.sidey383.task2.model.data.game.GameProvider;
 import ru.sidey383.task2.model.data.score.ScoreContainer;
 import ru.sidey383.task2.model.data.score.ScoreProvider;
@@ -29,7 +29,7 @@ public class DataController implements DataProvider {
     public static DataController createController(Path scores, Path settings) throws ModelException {
         SettingsProvider settingsProvider = SettingsController.createSettingsController(settings);
         ScoreProvider scoreProvider = ScoreContainer.createScoreContainer(scores);
-        GameProvider gameProvider = new GameContainer(settingsProvider);
+        GameProvider gameProvider = new GameDataContainer(settingsProvider);
         return new DataController(gameProvider, scoreProvider, settingsProvider);
     }
 
