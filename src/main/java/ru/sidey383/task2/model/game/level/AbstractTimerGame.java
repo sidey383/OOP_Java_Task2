@@ -7,54 +7,74 @@ import ru.sidey383.task2.model.game.TimerGame;
  * **/
 public abstract class AbstractTimerGame implements TimerGame {
 
-    protected final static long NO_TIME = -1;
+    protected long startTime = 0;
 
-    protected long startTime = NO_TIME;
+    protected long pauseTime = 0;
 
-    protected long pauseTime = NO_TIME;
+    private GameStatus gameStatus = GameStatus.NOT_STARTED;
+
+    private enum GameStatus {
+        NOT_STARTED, PAUSED, ON, IS_OVER
+    }
 
     @Override
-    public void start() {
-        if (startTime == NO_TIME)
+    public synchronized void start() {
+        if (gameStatus == GameStatus.NOT_STARTED) {
             startTime = System.nanoTime();
-    }
-
-    @Override
-    public boolean isOn() {
-        return startTime != NO_TIME;
-    }
-
-    @Override
-    public void pause() {
-        if (!isPaused())
-            pauseTime = System.nanoTime();
-    }
-
-    @Override
-    public void resume() {
-        if (isPaused()) {
-            startTime = startTime + System.nanoTime() - pauseTime;
-            pauseTime = NO_TIME;
+            gameStatus = GameStatus.ON;
         }
     }
 
-    public void stop() {
-        startTime = NO_TIME;
-        pauseTime = NO_TIME;
+    @Override
+    public synchronized boolean isStarted() {
+        return gameStatus == GameStatus.ON;
     }
 
     @Override
-    public boolean isPaused() {
-        return pauseTime != NO_TIME;
+    public synchronized boolean pause() {
+        if (gameStatus == GameStatus.ON) {
+            pauseTime = System.nanoTime();
+            gameStatus = GameStatus.PAUSED;
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public long getStartTime() {
+    public synchronized boolean resume() {
+        if (gameStatus == GameStatus.PAUSED) {
+            startTime = startTime + System.nanoTime() - pauseTime;
+            gameStatus = GameStatus.ON;
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized boolean stop() {
+        if (gameStatus != GameStatus.IS_OVER) {
+            gameStatus = GameStatus.IS_OVER;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public synchronized boolean isGoing() {
+        return gameStatus == GameStatus.ON;
+    }
+
+    @Override
+    public synchronized long getStartTime() {
         return startTime;
     }
 
     @Override
-    public long toLocalTime(long systemTime) {
-        return systemTime - startTime;
+    public synchronized long toLocalTime(long systemTime) {
+        return switch (gameStatus) {
+            case ON -> systemTime - startTime;
+            case PAUSED, IS_OVER -> pauseTime - startTime;
+            case NOT_STARTED -> 0;
+        };
     }
+
 }

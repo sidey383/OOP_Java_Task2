@@ -40,7 +40,7 @@ public class RootModel implements ModelInterface {
                 dataProvider.getScoreProvider().addScore(gameDescription, data.stream().mapToLong(TileStatus::getScore).sum());
                 return null;
             });
-            EventManager.manager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
+            EventManager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
         } catch (IOException e) {
             throw new ModelIOException(e);
         }

@@ -36,25 +36,31 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     }
 
     @Override
-    public void stop() {
-        super.stop();
+    public boolean stop() {
+        boolean ret = super.stop();
         Collection<TileStatus> statuses = getStatistic();
         for (var listener : resultListeners) {
             listener.apply(new ArrayList<>(statuses));
         }
+        return ret;
+    }
+
+    @Override
+    public boolean isOutOfTime(long systemTime) {
+        return toLocalTime(systemTime) >= getTotalTime();
     }
 
     @Override
     public void press(ClickType type, long globalTime) {
         TileLine line = lines.get(type);
-        if (line != null && isOn() && !isPaused())
+        if (line != null && isGoing())
             line.press(globalTime);
     }
 
     @Override
     public void release(ClickType type, long globalTime) {
         TileLine line = lines.get(type);
-        if (line != null && isOn() && !isPaused())
+        if (line != null && isGoing())
             line.release(globalTime);
     }
 

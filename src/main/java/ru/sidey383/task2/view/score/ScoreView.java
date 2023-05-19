@@ -6,6 +6,6 @@ import java.util.Collection;
 
 public abstract class ScoreView extends AppScene {
 
-    public abstract void setGameChoice(Collection<ScoreUnit> choices);
+    public abstract void setGameScores(Collection<ScoreUnit> choices);
 
 }

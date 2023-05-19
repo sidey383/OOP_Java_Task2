@@ -1,6 +1,5 @@
 package ru.sidey383.task2.control.session;
 
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +13,7 @@ import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.TileLinesGame;
 import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
+import ru.sidey383.task2.view.AppScene;
 import ru.sidey383.task2.view.game.GameView;
 import ru.sidey383.task2.view.events.PlayerKeyEvent;
 import ru.sidey383.task2.view.events.game.PlayerGameStopEvent;
@@ -27,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-//TODO: fix repeated pressing of pause and play
 public class GameSession extends ControllerSession {
 
     private final static Logger logger = LogManager.getLogger(GameSession.class);
@@ -36,9 +35,13 @@ public class GameSession extends ControllerSession {
 
     private final GameView gameView;
 
-    private Timer graphicUpdateTimer;
-
     private final Map<Integer, ClickType> keyMap;
+
+    private final Object graphicLock = new Object();
+
+    private final Timer timer = new Timer();
+
+    private TimerTask graphicTask = null;
 
 
     public GameSession(Controller controller, TileLinesGame game, GameView gameView, Map<Integer, ClickType> keyMap) {
@@ -95,62 +98,61 @@ public class GameSession extends ControllerSession {
         gameEnd();
     }
 
-    private void gameEnd() {
-        graphicStop();
-        showScore();
-        if (game.isOn())
-            game.stop();
+    @Override
+    public AppScene getScene() {
+        return gameView;
+    }
+
+    public void gameEnd() {
+        if (game.stop()) {
+            gameView.stop();
+            timer.cancel();
+            showScore();
+        }
+    }
+
+    public void gamePause() {
+        if(game.pause()) {
+            graphicPause();
+        }
+    }
+
+    public void gameResume() {
+        if(game.resume()) {
+            graphicStart();
+        }
     }
 
     private void showScore() {
         Collection<TileStatus> statistic = game.getStatistic();
         int score = statistic.stream().mapToInt(TileStatus::getScore).sum();
         long clicked = statistic.stream().filter(TileStatus::isClicked).count();
-        Platform.runLater(() ->
                 gameView.showScore(String.format("""
                         Score: %d
                         Clicked: %d
                         Missed: %d
-                        """, score, clicked, statistic.size() - clicked))
-        );
+                        """, score, clicked, statistic.size() - clicked));
     }
 
-    private void gamePause() {
-        game.pause();
-        graphicStop();
-    }
-
-    private void gameResume() {
-        game.resume();
-        graphicStart();
-    }
-
-    private void graphicStop() {
+    private void graphicPause() {
         gameView.stop();
-        graphicUpdateTimer.cancel();
+        synchronized (graphicLock) {
+            if (graphicTask != null) {
+                graphicTask.cancel();
+                graphicTask = null;
+            }
+        }
     }
 
     private void graphicStart() {
         gameView.start();
-        TimerTask graphicUpdateTask = new TimerTask() {
-            @Override
-            public void run() {
-                long time = game.toLocalTime(System.nanoTime());
-                if (time > game.getTotalTime()) {
-                    gameEnd();
-                    cancel();
-                }
-                long endTime = time + game.getTimeToShow() * 2;
-                ClickType[] types = game.getAvailableTypes();
-                Tile[][] tiles = new Tile[types.length][];
-                for (int i = 0; i < types.length; i++) {
-                    tiles[i] = game.getLine(types[i]).getTiles(time, endTime).toArray(Tile[]::new);
-                }
-                gameView.updateTiles(tiles);
+        synchronized (graphicLock) {
+            if (graphicTask != null) {
+                graphicTask.cancel();
             }
-        };
-        graphicUpdateTimer = new Timer();
-        graphicUpdateTimer.schedule(graphicUpdateTask, 0, game.getTimeToShow() / 4_000_000);
+            graphicTask = new GraphicUpdaterTask();
+            timer.schedule(graphicTask, 0, game.getTimeToShow() / 4_000_000);
+        }
     }
 
     @EventHandler
@@ -177,13 +179,26 @@ public class GameSession extends ControllerSession {
         }
     }
 
-    private static class SimpleTimeAdapter implements TimeAdapter {
+    private class GraphicUpdaterTask extends TimerTask {
 
-        private final TileLinesGame game;
-
-        public SimpleTimeAdapter(TileLinesGame game) {
-            this.game = game;
+        @Override
+        public void run() {
+            long time = game.toLocalTime(System.nanoTime());
+            if (game.isOutOfTime(time)) {
+                gameEnd();
+            }
+            long endTime = time + game.getTimeToShow() * 2;
+            ClickType[] types = game.getAvailableTypes();
+            Tile[][] tiles = new Tile[types.length][];
+            for (int i = 0; i < types.length; i++) {
+                tiles[i] = game.getLine(types[i]).getTiles(time, endTime).toArray(Tile[]::new);
+            }
+            gameView.updateTiles(tiles);
         }
+
+    }
+
+    private record SimpleTimeAdapter(TileLinesGame game) implements TimeAdapter {
 
         @Override
         public long getRelativeFromNano(long timeNS) {

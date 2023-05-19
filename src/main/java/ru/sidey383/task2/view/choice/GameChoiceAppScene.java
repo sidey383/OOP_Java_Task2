@@ -22,7 +22,7 @@ public class GameChoiceAppScene extends ChoiceView {
 
     @FXML
     public void pressMenu() {
-        EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
+        EventManager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
     }
 
 }

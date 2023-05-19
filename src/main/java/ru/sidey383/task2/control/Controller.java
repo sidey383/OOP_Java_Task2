@@ -33,7 +33,7 @@ public class Controller {
         this.view = view;
         this.settings = model.getSettings();
         this.model = model;
-        EventManager.manager.registerListener(this);
+        EventManager.registerListener(this);
     }
 
     public void openGame(RawDataContainer container, TileLinesGame game) {
@@ -69,7 +69,7 @@ public class Controller {
         }
     }
 
-    private void setSession(ControllerSession newSession) {
+    private synchronized void setSession(ControllerSession newSession) {
         if (session != null)
             session.end();
         session = newSession;
@@ -119,7 +119,7 @@ public class Controller {
         if (session != null) {
             session.end();
         }
-        EventManager.manager.unregisterListener(this);
+        EventManager.unregisterListener(this);
     }
 
 }

@@ -7,17 +7,19 @@ public interface TimerGame {
 
     void start();
 
-    void stop();
+    boolean stop();
 
-    boolean isOn();
+    boolean isStarted();
 
-    void pause();
+    boolean pause();
 
-    void resume();
+    boolean resume();
 
-    boolean isPaused();
+    boolean isGoing();
 
     long getStartTime();
+
+    boolean isOutOfTime(long systemTime);
 
     long toLocalTime(long systemTime);
 

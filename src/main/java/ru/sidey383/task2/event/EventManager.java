@@ -1,20 +1,23 @@
 package ru.sidey383.task2.event;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class EventManager {
 
-    public static final EventManager manager = new EventManager();
+    private static final Logger logger = LogManager.getLogger(EventManager.class);
 
-    Map<Class<? extends Event>, List<EventExecutor>> executorMap = new HashMap<>();
+    private final static Map<Class<? extends Event>, List<EventExecutor>> executorMap = new HashMap<>();
 
     private EventManager() {
     }
 
     @SuppressWarnings("unchecked")
-    public void registerListener(Object listener) {
+    public static void registerListener(Object listener) {
         if (listener == null)
             return;
         Class<?> clazz = listener.getClass();
@@ -35,7 +38,7 @@ public class EventManager {
         }
     }
 
-    public void unregisterListener(Object listener) {
+    public static void unregisterListener(Object listener) {
         executorMap.values().forEach(
                 list -> list.removeIf(
                         executor -> executor.getObject().equals(listener)
@@ -43,7 +46,7 @@ public class EventManager {
         );
     }
 
-    public void runEvent(Event event) {
+    public static void runEvent(Event event) {
         Class<? extends Event> clazz = event.getClass();
         List<EventExecutor> executors = executorMap.get(clazz);
         if (executors == null)
@@ -54,7 +57,7 @@ public class EventManager {
                         try {
                             e.execute(event);
                         } catch (Throwable ex) {
-                            ex.printStackTrace();
+                            logger.error("Asynchronous event run exception", ex);
                         }
                     }).start());
         } else {
@@ -62,7 +65,7 @@ public class EventManager {
                 try {
                     e.execute(event);
                 } catch (Throwable ex) {
-                    ex.printStackTrace();
+                    logger.error("Synchronous event run exception", ex);
                 }
             });
         }

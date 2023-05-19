@@ -118,22 +118,22 @@ public class GameAppScene extends GameView  implements Initializable {
 
     @FXML
     public void pressExit() {
-        EventManager.manager.runEvent(new PlayerGameStopEvent());
+        EventManager.runEvent(new PlayerGameStopEvent());
     }
 
     @FXML
     public void pressPause() {
-        EventManager.manager.runEvent(new PlayerPauseEvent());
+        EventManager.runEvent(new PlayerPauseEvent());
     }
 
     @FXML
     public void pressResume() {
-        EventManager.manager.runEvent(new PlayerResumeEvent());
+        EventManager.runEvent(new PlayerResumeEvent());
     }
 
     @FXML
     public void toMenu() {
-        EventManager.manager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
+        EventManager.runEvent(new PlayerChangeSceneEvent(AvailableScene.MENU));
     }
 
 }

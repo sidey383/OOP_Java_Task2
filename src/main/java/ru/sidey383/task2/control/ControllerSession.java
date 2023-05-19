@@ -1,6 +1,7 @@
 package ru.sidey383.task2.control;
 
 import ru.sidey383.task2.event.EventManager;
+import ru.sidey383.task2.view.AppScene;
 
 public abstract class ControllerSession {
 
@@ -11,15 +12,18 @@ public abstract class ControllerSession {
     }
 
     public void start() {
-        EventManager.manager.registerListener(this);
+        EventManager.registerListener(this);
+        getController().getView().setScene(getScene());
     }
 
     public void end() {
-        EventManager.manager.unregisterListener(this);
+        EventManager.unregisterListener(this);
     }
 
     public Controller getController() {
         return controller;
     }
+
+    public abstract AppScene getScene();
 
 }

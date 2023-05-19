@@ -1,7 +1,6 @@
 package ru.sidey383.task2.view;
 
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -38,11 +37,11 @@ public class View implements ViewInterface {
         stage.setResizable(true);
         stage.setTitle("Piano tiles");
         stage.getIcons().add(new Image("/icon.png"));
-        EventManager.manager.registerListener(this);
+        EventManager.registerListener(this);
     }
 
     private void windowsClose(WindowEvent windowEvent) {
-        EventManager.manager.runEvent(new WindowCloseEvent());
+        EventManager.runEvent(new WindowCloseEvent());
     }
 
     public Stage getStage() {
