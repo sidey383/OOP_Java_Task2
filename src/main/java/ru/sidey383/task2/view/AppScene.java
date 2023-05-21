@@ -11,7 +11,7 @@ public abstract class AppScene {
     @FXML
     private Parent root;
 
-    public Parent getContent() {
+    public Parent content() {
         return root;
     }
 

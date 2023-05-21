@@ -46,7 +46,7 @@ public class GameSession extends ControllerSession {
         super.start(controller);
         gameView.setTimeAdapter(new SimpleTimeProvider(game));
         keyMap = new HashMap<>();
-        for (Map.Entry<ClickType, Integer> e : controller().getModel().getSettings().getGameKeys().entrySet()) {
+        for (Map.Entry<ClickType, Integer> e : controller().model().getSettings().getGameKeys().entrySet()) {
             keyMap.put(e.getValue(), e.getKey());
         }
         if(!game.start())
@@ -137,9 +137,9 @@ public class GameSession extends ControllerSession {
     @EventHandler
     public void onGameKey(PlayerKeyEvent e) {
         if (e.isPress()) {
-            game.press(keyMap.get(e.getKeyCode().getCode()), game.toLocalTime(e.getCreateNanoTine()));
+            game.press(keyMap.get(e.keyCode().getCode()), game.toLocalTime(e.createNanoTine()));
         } else {
-            game.release(keyMap.get(e.getKeyCode().getCode()), game.toLocalTime(e.getCreateNanoTine()));
+            game.release(keyMap.get(e.keyCode().getCode()), game.toLocalTime(e.createNanoTine()));
         }
     }
 
@@ -166,17 +166,17 @@ public class GameSession extends ControllerSession {
     private record TileAdapter(Tile tile) implements DrawnTile {
 
         @Override
-        public long getEndTime() {
+        public long endTime() {
             return tile.endTime();
         }
 
         @Override
-        public long getStartTime() {
+        public long startTime() {
             return tile.startTime();
         }
 
         @Override
-        public DrawnTileType getType() {
+        public DrawnTileType type() {
             return switch (tile.type()) {
                 case LONG -> DrawnTileType.LONG;
                 case DEFAULT -> DrawnTileType.SHORT;

@@ -89,13 +89,13 @@ public class GameCanvas extends Canvas {
                 double xLong = (i + 0.45) * width / lineCount;
                 double tWidthLong = 0.1 * width / lineCount;
                 for (DrawnTile t : tiles[i]) {
-                    double pose1 = 1 - (double) (t.getEndTime() - time) / timeToShow;
-                    double pose2 = (double) (t.getEndTime() - t.getStartTime()) / timeToShow;
+                    double pose1 = 1 - (double) (t.endTime() - time) / timeToShow;
+                    double pose2 = (double) (t.endTime() - t.startTime()) / timeToShow;
                     graphicsContext.fillRoundRect(
                            x, height * pose1,
                            tWidth,  height * pose2,
                            width/20, height/20);
-                    if (t.getType() == DrawnTileType.LONG) {
+                    if (t.type() == DrawnTileType.LONG) {
                         graphicsContext.setFill(LONG_TILES_PAINT);
                         double pose1Long = pose1 + (pose2)/10;
                         double pose2Long = 8 * pose2 /10;

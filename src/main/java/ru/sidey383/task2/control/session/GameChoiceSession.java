@@ -41,7 +41,7 @@ public class GameChoiceSession extends ControllerSession {
 
     public void updateDescriptions() {
         choiceView.setGameChoice(
-                controller().getModel().getGameDescriptions()
+                controller().model().getGameDescriptions()
                         .stream()
                         .filter(Objects::nonNull)
                         .map(ViewChoiceUint::new)

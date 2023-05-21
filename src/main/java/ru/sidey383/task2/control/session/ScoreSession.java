@@ -18,7 +18,7 @@ public class ScoreSession extends ControllerSession {
 
     public void updateScores() {
         choiceView.setGameScores(
-                controller().getModel().getScores()
+                controller().model().getScores()
                         .stream()
                         .map(ViewScore::new)
                         .collect(Collectors.toList()));
@@ -32,12 +32,12 @@ public class ScoreSession extends ControllerSession {
     private record ViewScore(GameScore gameScore) implements ScoreUnit {
 
         @Override
-        public String getGameName() {
+        public String name() {
             return gameScore.name();
         }
 
         @Override
-        public long getScore() {
+        public long score() {
             return gameScore.maxScore();
         }
     }

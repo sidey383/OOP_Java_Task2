@@ -26,7 +26,7 @@ public class Controller {
 
     private final ModelInterface model;
 
-    public Collection<ControllerSessionCreator> sessionCreators = new HashSet<>();
+    public final Collection<ControllerSessionCreator> sessionCreators = new HashSet<>();
 
     private ControllerSession session = null;
 
@@ -83,7 +83,7 @@ public class Controller {
         end();
     }
 
-    public synchronized ControllerSession getSession() {
+    public synchronized ControllerSession session() {
         return session;
     }
 
@@ -91,7 +91,7 @@ public class Controller {
         return view.getScene(clazz);
     }
 
-    public ModelInterface getModel() {
+    public ModelInterface model() {
         return model;
     }
 

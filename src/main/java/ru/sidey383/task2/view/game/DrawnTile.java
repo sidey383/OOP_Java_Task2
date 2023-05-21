@@ -2,9 +2,9 @@ package ru.sidey383.task2.view.game;
 
 public interface DrawnTile {
 
-    long getEndTime();
+    long endTime();
 
-    long getStartTime();
+    long startTime();
 
-    DrawnTileType getType();
+    DrawnTileType type();
 }

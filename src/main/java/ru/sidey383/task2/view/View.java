@@ -50,9 +50,9 @@ public class View implements ViewInterface {
     public void setScene(AppScene controller) {
         Platform.runLater(() -> {
             if (stage.getScene() == null) {
-                stage.setScene(new Scene(controller.getContent()));
+                stage.setScene(new Scene(controller.content()));
             } else {
-                stage.getScene().setRoot(controller.getContent());
+                stage.getScene().setRoot(controller.content());
             }
             if (!stage.isShowing()) {
                 stage.show();
@@ -63,7 +63,7 @@ public class View implements ViewInterface {
 
     @EventHandler
     public void onKeyPress(PlayerKeyEvent keyEvent) {
-        if (keyEvent.isPress() && keyEvent.getKeyCode() == KeyCode.F11) {
+        if (keyEvent.isPress() && keyEvent.keyCode() == KeyCode.F11) {
             stage.setFullScreen(!stage.fullScreenProperty().get());
         }
     }

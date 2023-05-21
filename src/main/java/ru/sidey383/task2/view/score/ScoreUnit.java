@@ -2,8 +2,8 @@ package ru.sidey383.task2.view.score;
 
 public interface ScoreUnit {
 
-    public String getGameName();
+    String name();
 
-    public long getScore();
+    long score();
 
 }

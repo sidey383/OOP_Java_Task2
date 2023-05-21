@@ -34,7 +34,7 @@ public class GameSessionCreator extends ControllerSessionCreator {
     @EventHandler
     public void onGameChoice(GameChoiceEvent e) {
         try {
-            controller().getModel().startGame(e.getGameDescription());
+            controller().model().startGame(e.getGameDescription());
         } catch (IncorrectGameFileException ex) {
             logger.warn("The file may have been modified or removed", ex);
             gameChoiceSession.updateDescriptions();

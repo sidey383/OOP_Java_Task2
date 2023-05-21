@@ -18,7 +18,7 @@ public class PlayerKeyEvent extends Event {
         createTime = System.nanoTime();
     }
 
-    public KeyCode getKeyCode() {
+    public KeyCode keyCode() {
         return keyCode;
     }
 
@@ -26,7 +26,7 @@ public class PlayerKeyEvent extends Event {
         return isPress;
     }
 
-    public long getCreateNanoTine() {
+    public long createNanoTine() {
         return createTime;
     }
 

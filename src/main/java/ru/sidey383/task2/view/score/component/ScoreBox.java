@@ -7,8 +7,8 @@ import ru.sidey383.task2.view.score.ScoreUnit;
 public class ScoreBox extends HBox {
 
     public ScoreBox(ScoreUnit unit) {
-        Label textLabel = new Label(unit.getGameName());
-        Label scoreLabel = new Label(Long.toString(unit.getScore()));
+        Label textLabel = new Label(unit.name());
+        Label scoreLabel = new Label(Long.toString(unit.score()));
         getChildren().add(textLabel);
         getChildren().add(scoreLabel);
     }
