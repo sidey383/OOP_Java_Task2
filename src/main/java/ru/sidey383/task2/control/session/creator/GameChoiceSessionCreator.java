@@ -17,8 +17,13 @@ public class GameChoiceSessionCreator extends ControllerSessionCreator {
     @EventHandler
     public void onGameChoiceOpen(PlayerOpenGameChooseEvent e) {
         try {
-            if (choiceView == null)
+            if (choiceView == null) {
                 choiceView = getController().getScene(ChoiceView.class);
+            }
+            if (choiceView == null) {
+                logger.error("Can't create game choice view");
+                return;
+            }
             GameChoiceSession session = new GameChoiceSession(choiceView);
             getController().setSession(session);
         } catch (Exception ex) {

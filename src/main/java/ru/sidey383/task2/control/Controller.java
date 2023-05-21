@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Main controller class
+ * Manage access to view
+ * **/
 public class Controller {
 
     private static final Logger logger = LogManager.getLogger(Controller.class);

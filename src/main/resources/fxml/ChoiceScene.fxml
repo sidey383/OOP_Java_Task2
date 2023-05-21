@@ -7,7 +7,8 @@
            xmlns:fx="http://javafx.com/fxml"
            minHeight="600"
            minWidth="800"
-           fx:controller="ru.sidey383.task2.view.choice.GameChoiceAppScene">
+           fx:controller="ru.sidey383.task2.view.choice.GameChoiceAppScene"
+           fx:id="root">
     <GridPane maxHeight="Infinity" maxWidth="Infinity">
         <columnConstraints>
             <ColumnConstraints percentWidth="35"/>

@@ -1,10 +1,12 @@
 package ru.sidey383.task2.view;
 
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.jetbrains.annotations.Nullable;
 import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.event.EventManager;
 import ru.sidey383.task2.view.events.PlayerKeyEvent;
@@ -44,16 +46,14 @@ public class View implements ViewInterface {
         EventManager.runEvent(new WindowCloseEvent());
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
     @Override
     public void setScene(AppScene controller) {
         Platform.runLater(() -> {
-            boolean fullScreen = stage.isFullScreen();
-            stage.setScene(controller.getScene());
-            stage.setFullScreen(fullScreen);
+            if (stage.getScene() == null) {
+                stage.setScene(new Scene(controller.getContent()));
+            } else {
+                stage.getScene().setRoot(controller.getContent());
+            }
             if (!stage.isShowing()) {
                 stage.show();
             }
@@ -68,16 +68,13 @@ public class View implements ViewInterface {
         }
     }
 
+    @Nullable
     @SuppressWarnings("unchecked")
     public <T extends AppScene> T getScene(Class<T> clazz) throws IOException {
         for (SceneFactory<? extends AppScene> factory : sceneFactories) {
             Class<?> factoryClazz = (Class<?>) ((ParameterizedType) factory.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
             if (clazz.isAssignableFrom(factoryClazz)) {
-                if (stage.getScene() == null) {
-                    return (T) factory.createScene(-1, -1);
-                } else {
-                    return (T) factory.createScene(stage.getScene().getWidth(), stage.getScene().getHeight());
-                }
+                return (T) factory.createScene();
             }
         }
         return null;

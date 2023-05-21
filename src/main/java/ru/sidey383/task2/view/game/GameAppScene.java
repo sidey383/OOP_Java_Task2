@@ -4,7 +4,6 @@ package ru.sidey383.task2.view.game;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,10 +19,7 @@ import ru.sidey383.task2.view.events.game.PlayerPauseEvent;
 import ru.sidey383.task2.view.events.game.PlayerResumeEvent;
 import ru.sidey383.task2.view.game.component.GameCanvas;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class GameAppScene extends GameView  implements Initializable {
+public class GameAppScene extends GameView {
 
     @FXML
     public Label score;
@@ -52,9 +48,6 @@ public class GameAppScene extends GameView  implements Initializable {
             gameField.update(now);
         }
     };
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {}
 
     @Override
     public void updateTiles(DrawnTile[][] nTiles) {

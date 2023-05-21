@@ -14,7 +14,8 @@
         xmlns:fx="http://javafx.com/fxml/1"
         minHeight="600"
         minWidth="800"
-        fx:controller="ru.sidey383.task2.view.menu.MenuAppScene">
+        fx:controller="ru.sidey383.task2.view.menu.MenuAppScene"
+        fx:id="root">
     <VBox alignment="CENTER">
         <Button minHeight="30.0" minWidth="100.0" onAction="#startAction" text="Start game"/>
         <Button minHeight="30.0" minWidth="100.0" onAction="#scoreAction" text="Score"/>

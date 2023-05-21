@@ -17,8 +17,13 @@ public class ScoreSessionCreator extends ControllerSessionCreator {
     @EventHandler
     public void onScoreOpen(PlayerOpenScoreEvent e) {
         try {
-            if (choiceView == null)
+            if (choiceView == null) {
                 choiceView = getController().getScene(ScoreView.class);
+            }
+            if (choiceView == null) {
+                logger.error("Can't create choice view");
+                return;
+            }
             ScoreSession scoreSession = new ScoreSession(choiceView);
             getController().setSession(scoreSession);
             scoreSession.updateScores();

@@ -47,6 +47,10 @@ public class GameSessionCreator extends ControllerSessionCreator {
     public void onTileLineGameStart(ModelStartTileLinesGameEvent event) {
         try {
             GameView gameView = getController().getScene(GameView.class);
+            if (gameView == null) {
+                logger.error("Can't create game view");
+                return;
+            }
             setGameStyle(gameView, event.getData());
             getController().setSession(new GameSession(event.getGame(), gameView));
         } catch (Exception e) {

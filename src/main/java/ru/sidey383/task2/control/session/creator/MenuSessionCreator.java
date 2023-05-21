@@ -17,8 +17,13 @@ public class MenuSessionCreator extends ControllerSessionCreator {
     @EventHandler
     public void onMenuOpen(PlayerOpenMenuEvent e) {
         try {
-            if (menuView == null)
+            if (menuView == null) {
                 menuView = getController().getScene(MenuView.class);
+            }
+            if (menuView == null) {
+                logger.error("Can't create menu view");
+                return;
+            }
             getController().setSession(new MenuSession(menuView));
         } catch (Exception ex) {
             logger.fatal("Choice scene create error", ex);

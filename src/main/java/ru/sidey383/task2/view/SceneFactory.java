@@ -7,13 +7,11 @@ import java.net.URL;
 
 public abstract class SceneFactory<T extends AppScene> {
 
-    public T createScene(double width, double height) throws IOException {
+    public T createScene() throws IOException {
         FXMLLoader loader = new FXMLLoader(getFXMLPath());
         loader.setControllerFactory(this::controllerFXMLFactory);
-        javafx.scene.Scene scene = new javafx.scene.Scene(loader.load(), width, height);
-        T sceneController = loader.getController();
-        sceneController.setScene(scene);
-        return sceneController;
+        loader.load();
+        return loader.getController();
     }
 
     protected abstract URL getFXMLPath();

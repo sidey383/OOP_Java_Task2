@@ -14,7 +14,8 @@
         xmlns:fx="http://javafx.com/fxml/1"
         minHeight="600"
         minWidth="800"
-        fx:controller="ru.sidey383.task2.view.game.GameAppScene">
+        fx:controller="ru.sidey383.task2.view.game.GameAppScene"
+        fx:id="root">
     <GridPane alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity">
         <columnConstraints>
             <ColumnConstraints percentWidth="35"/>
