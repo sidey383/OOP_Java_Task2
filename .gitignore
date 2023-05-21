@@ -4,3 +4,8 @@
 /build/classes/java/main/
 /.idea/
 /gradle/
+#game tests
+/settings
+/scores
+/games*
+/gameCollection*
