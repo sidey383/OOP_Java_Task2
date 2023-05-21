@@ -14,7 +14,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import ru.sidey383.task2.event.EventManager;
-import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
+import ru.sidey383.task2.view.events.PlayerOpenMenuEvent;
 import ru.sidey383.task2.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.task2.view.events.game.PlayerPauseEvent;
 import ru.sidey383.task2.view.events.game.PlayerResumeEvent;
@@ -137,7 +137,7 @@ public class GameAppScene extends GameView  implements Initializable {
 
     @FXML
     public void toMenu() {
-        EventManager.runEvent(new PlayerChangeSceneEvent(PlayerChangeSceneEvent.AvailableScene.MENU));
+        EventManager.runEvent(new PlayerOpenMenuEvent());
     }
 
 }

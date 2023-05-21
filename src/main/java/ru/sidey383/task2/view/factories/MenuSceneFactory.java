@@ -1,6 +1,5 @@
 package ru.sidey383.task2.view.factories;
 
-import ru.sidey383.task2.view.AppScene;
 import ru.sidey383.task2.view.SceneFactory;
 import ru.sidey383.task2.view.menu.MenuAppScene;
 
@@ -8,11 +7,6 @@ import java.net.URL;
 
 
 public class MenuSceneFactory extends SceneFactory<MenuAppScene> {
-
-    @Override
-    public boolean canProduceType(Class<? extends AppScene> clazz) {
-        return clazz.isAssignableFrom(MenuAppScene.class);
-    }
 
     @Override
     protected URL getFXMLPath() {

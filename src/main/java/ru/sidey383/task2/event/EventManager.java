@@ -32,25 +32,33 @@ public class EventManager {
             Class<?>[] params = method.getParameterTypes();
             if (params.length != 1 || !Event.class.isAssignableFrom(params[0]))
                 return;
-            if (!executorMap.containsKey(params[0]))
-                executorMap.put((Class<? extends Event>) params[0], new ArrayList<>());
-            executorMap.get(params[0]).add(new EventExecutor(listener, method));
+            synchronized (executorMap) {
+                if (!executorMap.containsKey(params[0]))
+                    executorMap.put((Class<? extends Event>) params[0], new ArrayList<>());
+                executorMap.get(params[0]).add(new EventExecutor(listener, method));
+            }
         }
     }
 
     public static void unregisterListener(Object listener) {
-        executorMap.values().forEach(
-                list -> list.removeIf(
-                        executor -> executor.getObject().equals(listener)
-                )
-        );
+        synchronized (executorMap) {
+            executorMap.values().forEach(
+                    list -> list.removeIf(
+                            executor -> executor.getObject().equals(listener)
+                    )
+            );
+        }
     }
 
     public static void runEvent(Event event) {
         Class<? extends Event> clazz = event.getClass();
-        List<EventExecutor> executors = executorMap.get(clazz);
-        if (executors == null)
+        List<EventExecutor> originExecutors;
+        synchronized (executorMap) {
+            originExecutors = executorMap.get(clazz);
+        }
+        if (originExecutors == null)
             return;
+        List<EventExecutor> executors = new ArrayList<>(originExecutors);
         if (event.isAsynchronous()) {
             executors.forEach(e ->
                     new Thread(() -> {

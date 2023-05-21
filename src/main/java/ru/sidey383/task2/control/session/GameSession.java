@@ -1,16 +1,13 @@
 package ru.sidey383.task2.control.session;
 
-import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.sidey383.task2.control.Controller;
 import ru.sidey383.task2.control.ControllerSession;
+import ru.sidey383.task2.control.exception.ControllerException;
+import ru.sidey383.task2.control.exception.GameAlreadyStartedException;
 import ru.sidey383.task2.view.game.DrawnTile;
 import ru.sidey383.task2.view.game.DrawnTileType;
 import ru.sidey383.task2.view.game.TimeProvider;
 import ru.sidey383.task2.event.EventHandler;
-import ru.sidey383.task2.model.data.game.read.RawDataContainer;
 import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.level.tile.line.TileLinesGame;
 import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
@@ -22,22 +19,15 @@ import ru.sidey383.task2.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.task2.view.events.game.PlayerPauseEvent;
 import ru.sidey383.task2.view.events.game.PlayerResumeEvent;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class GameSession extends ControllerSession {
 
-    private final static Logger logger = LogManager.getLogger(GameSession.class);
-
     private final TileLinesGame game;
 
-    private final GameView gameView;
+    private Map<Integer, ClickType> keyMap;
 
-    private final Map<Integer, ClickType> keyMap;
+    private final GameView gameView;
 
     private final Object graphicLock = new Object();
 
@@ -46,61 +36,27 @@ public class GameSession extends ControllerSession {
     private TimerTask graphicTask = null;
 
 
-    public GameSession(Controller controller, TileLinesGame game, GameView gameView, Map<Integer, ClickType> keyMap) {
-        super(controller);
+    public GameSession(TileLinesGame game, GameView gameView) {
         this.game = game;
         this.gameView = gameView;
-        this.keyMap = keyMap;
     }
 
-    public static GameSession create(Controller controller, RawDataContainer container, TileLinesGame game) throws IOException {
-        GameView gameView = controller.getView().getScene(GameView.class);
-        setGameStyle(gameView, container);
-
-        Map<Integer, ClickType> keyMap = new HashMap<>();
-        for (Map.Entry<ClickType, Integer> e : controller.getModel().getSettings().getGameKeys().entrySet()) {
+    @Override
+    public void start(Controller controller) throws ControllerException {
+        super.start(controller);
+        gameView.setTimeAdapter(new SimpleTimeProvider(game));
+        keyMap = new HashMap<>();
+        for (Map.Entry<ClickType, Integer> e : getController().getModel().getSettings().getGameKeys().entrySet()) {
             keyMap.put(e.getValue(), e.getKey());
         }
-
-        gameView.setTimeAdapter(new SimpleTimeProvider(game));
-        controller.getView().setScene(gameView);
-        return new GameSession(controller, game, gameView, keyMap);
-    }
-
-    private static void setGameStyle(GameView gameView, RawDataContainer container) throws IOException {
-        gameView.setRightImage(new Image(new ByteArrayInputStream(
-                container.getData(byte[].class, "right")
-                        .orElse(new byte[0])
-        )));
-        gameView.setLeftImage(new Image(new ByteArrayInputStream(
-                container.getData(byte[].class, "left")
-                        .orElse(new byte[0])
-        )));
-        gameView.setCenterImage(new Image(new ByteArrayInputStream(
-                container.getData(byte[].class, "center")
-                        .orElse(new byte[0])
-        )));
-        Path tempMusicPath = Files.createTempFile("gameMedia", "");
-        try (OutputStream os = Files.newOutputStream(tempMusicPath)) {
-            os.write(container
-                    .getData(byte[].class, "music")
-                    .orElse(new byte[0]));
-        } catch (IOException e) {
-            logger.error(() -> String.format("Music write error %s", tempMusicPath), e);
-        }
-        gameView.setMusic(new Media(tempMusicPath.toUri().toString()));
+        if(!game.start())
+            throw new GameAlreadyStartedException("I tried to start " + game.getName() + " game, but it was already started");
+        graphicStart();
     }
 
     @Override
-    public void start() {
-        super.start();
-        if(game.start())
-            graphicStart();
-    }
-
-    @Override
-    public void end() {
-        super.end();
+    public void stop() throws ControllerException {
+        super.stop();
         gameEnd();
     }
 

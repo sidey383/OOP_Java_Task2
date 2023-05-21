@@ -16,8 +16,6 @@ public abstract class SceneFactory<T extends AppScene> {
         return sceneController;
     }
 
-    public abstract boolean canProduceType(Class<? extends AppScene> clazz);
-
     protected abstract URL getFXMLPath();
 
     protected abstract Object controllerFXMLFactory(Class<?> clazz);

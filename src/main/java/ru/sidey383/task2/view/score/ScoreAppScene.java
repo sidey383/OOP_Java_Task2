@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import ru.sidey383.task2.event.EventManager;
-import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
+import ru.sidey383.task2.view.events.PlayerOpenMenuEvent;
 import ru.sidey383.task2.view.score.component.ScoreBox;
 
 import java.util.Collection;
@@ -19,7 +19,7 @@ public class ScoreAppScene extends ScoreView {
 
     @FXML
     public void pressMenu() {
-        EventManager.runEvent(new PlayerChangeSceneEvent(PlayerChangeSceneEvent.AvailableScene.MENU));
+        EventManager.runEvent(new PlayerOpenMenuEvent());
     }
 
 }

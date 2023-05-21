@@ -2,19 +2,17 @@ package ru.sidey383.task2.control;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.sidey383.task2.control.session.ChoiceSession;
-import ru.sidey383.task2.control.session.GameSession;
-import ru.sidey383.task2.control.session.MenuSession;
-import ru.sidey383.task2.control.session.ScoreSession;
+import ru.sidey383.task2.control.exception.ControllerException;
 import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.event.EventManager;
 import ru.sidey383.task2.model.ModelInterface;
-import ru.sidey383.task2.model.event.ModelStartTileLinesGameEvent;
-import ru.sidey383.task2.model.game.level.tile.line.TileLinesGame;
-import ru.sidey383.task2.model.data.game.read.RawDataContainer;
+import ru.sidey383.task2.view.AppScene;
 import ru.sidey383.task2.view.ViewInterface;
-import ru.sidey383.task2.view.events.PlayerChangeSceneEvent;
 import ru.sidey383.task2.view.events.WindowCloseEvent;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class Controller {
 
@@ -24,6 +22,8 @@ public class Controller {
 
     private final ModelInterface model;
 
+    public Collection<ControllerSessionCreator> sessionCreators = new HashSet<>();
+
     private ControllerSession session = null;
 
     public Controller(ViewInterface view, ModelInterface model) {
@@ -32,73 +32,59 @@ public class Controller {
         EventManager.registerListener(this);
     }
 
-    public void openGame(RawDataContainer container, TileLinesGame game) {
+    private <T extends ControllerModule> T startModule(T module) throws ControllerException {
+        module.start(this);
+        return module;
+    }
+
+    private void stopModule(ControllerModule module) {
+        if (module == null)
+            return;
         try {
-            setSession(GameSession.create(this, container, game));
-        } catch (Exception e) {
-            logger.fatal("Game scene create error", e);
+            module.stop();
+        } catch (ControllerException e) {
+            logger.error("Controller module stop error", e);
         }
     }
 
-    public void openMenu() {
+    public synchronized void setSession(ControllerSession newSession) {
         try {
-            setSession(MenuSession.create(this));
-        } catch (Exception e) {
-            logger.fatal("Choice scene create error", e);
+            ControllerSession oldSession = session;
+            session = startModule(newSession);
+            stopModule(oldSession);
+        } catch (ControllerException e) {
+            logger.error("Controller session start error ");
+            return;
+        }
+        view.setScene(session.getScene());
+    }
+
+    public synchronized void addSessionCreator(ControllerSessionCreator creator) {
+        if (!sessionCreators.contains(creator)) {
+            try {
+                sessionCreators.add(startModule(creator));
+            } catch (ControllerException e) {
+                logger.error("Controller session creator start error", e);
+            }
         }
     }
 
-    public void openGameChoice() {
-        try {
-            setSession(ChoiceSession.create(this));
-        } catch (Exception e) {
-            logger.fatal("Choice scene create error", e);
-        }
-    }
-
-    public void openGameScore() {
-        try {
-            setSession(ScoreSession.create(this));
-        } catch (Exception e) {
-            logger.error("Score scene create error", e);
-            e.printStackTrace();
-        }
-    }
-
-    private synchronized void setSession(ControllerSession newSession) {
-        if (session != null)
-            session.end();
-        session = newSession;
-        session.start();
+    public synchronized void removeSessionCreator(ControllerSessionCreator creator) {
+        if (sessionCreators.remove(creator))
+            stopModule(creator);
     }
 
     @EventHandler
     public void onWindowsClose(WindowCloseEvent e) {
-        if (session != null) {
-            session.end();
-        }
-    }
-
-    @EventHandler
-    public void onPlayerOpenScene(PlayerChangeSceneEvent e) {
-        switch (e.getScene()) {
-            case MENU -> openMenu();
-            case GAME_CHOOSE -> openGameChoice();
-            case SCORE -> openGameScore();
-            default -> {}
-        }
-    }
-
-    @EventHandler
-    public void onTileLineGameStart(ModelStartTileLinesGameEvent event) {
-        openGame(event.getData(), event.getGame());
+        end();
     }
 
     public synchronized ControllerSession getSession() {
         return session;
     }
-    public ViewInterface getView() {
-        return view;
+
+    public <T extends AppScene> T getScene(Class<T> clazz) throws IOException {
+        return view.getScene(clazz);
     }
 
     public ModelInterface getModel() {
@@ -106,10 +92,11 @@ public class Controller {
     }
 
     public synchronized void end() {
-        if (session != null) {
-            session.end();
-        }
+        stopModule(session);
         view.close();
+        for (ControllerSessionCreator creator : sessionCreators) {
+            stopModule(creator);
+        }
         EventManager.unregisterListener(this);
     }
 
