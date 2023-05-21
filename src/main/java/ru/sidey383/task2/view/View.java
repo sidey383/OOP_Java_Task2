@@ -38,7 +38,7 @@ public class View implements ViewInterface {
         stage.setFullScreenExitHint("");
         stage.setResizable(true);
         stage.setTitle("Piano tiles");
-        stage.getIcons().add(new Image("/icon.png"));
+        stage.getIcons().add(new Image("/images/icon.png"));
         EventManager.registerListener(this);
     }
 

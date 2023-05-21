@@ -30,18 +30,18 @@ public class GameChoiceSession extends ControllerSession {
         super.start(controller);
         updateDescriptions();
         this.gameSessionCreator = new GameSessionCreator(this);
-        getController().addSessionCreator(gameSessionCreator);
+        controller().addSessionCreator(gameSessionCreator);
     }
 
     @Override
     public void stop() throws ControllerException {
         super.stop();
-        getController().removeSessionCreator(gameSessionCreator);
+        controller().removeSessionCreator(gameSessionCreator);
     }
 
     public void updateDescriptions() {
         choiceView.setGameChoice(
-                getController().getModel().getGameDescriptions()
+                controller().getModel().getGameDescriptions()
                         .stream()
                         .filter(Objects::nonNull)
                         .map(ViewChoiceUint::new)
@@ -50,7 +50,7 @@ public class GameChoiceSession extends ControllerSession {
     }
 
     @Override
-    public AppScene getScene() {
+    public AppScene scene() {
         return choiceView;
     }
 
@@ -58,7 +58,7 @@ public class GameChoiceSession extends ControllerSession {
 
         @Override
             public String getText() {
-                return description.getName();
+                return description.name();
             }
 
             @Override

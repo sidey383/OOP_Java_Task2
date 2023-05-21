@@ -6,10 +6,10 @@ import ru.sidey383.task2.model.data.settings.SettingsProvider;
 
 public interface DataProvider {
 
-    public GameProvider getGameProvider();
+    GameProvider gameProvider();
 
-    public ScoreProvider getScoreProvider();
+    ScoreProvider scoreProvider();
 
-    public SettingsProvider getSettingProvider();
+    SettingsProvider getSettingProvider();
 
 }

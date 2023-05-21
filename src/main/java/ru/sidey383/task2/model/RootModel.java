@@ -22,7 +22,7 @@ import java.util.Collection;
 
 public class RootModel implements ModelInterface {
 
-    DataProvider dataProvider;
+    private final DataProvider dataProvider;
 
     private final ZIPGameReader gameReader = new ZIPGameReader();
 
@@ -37,38 +37,38 @@ public class RootModel implements ModelInterface {
     @Override
     public void startGame(GameDescription gameDescription) throws ModelException {
         try {
-            RawDataContainer dataContainer = gameReader.readZIP(gameDescription.getGameContainer());
+            RawDataContainer dataContainer = gameReader.readZIP(gameDescription.gameContainer());
 
-            if (!dataContainer.getHash().equals(gameDescription.getHash())) {
+            if (!dataContainer.getHash().equals(gameDescription.hash())) {
                 throw new IncorrectGameFileException(
                         gameDescription,
-                        String.format("Wrong hash, expect %s value %s", gameDescription.getHash(), dataContainer.getHash())
+                        String.format("Wrong hash, expect %s value %s", gameDescription.hash(), dataContainer.getHash())
                 );
             }
 
             PianoGame game = gameReader.readGame(dataContainer);
 
             game.addResultListener((data) -> {
-                dataProvider.getScoreProvider().addScore(gameDescription, data.stream().mapToLong(TileStatus::getScore).sum());
+                dataProvider.scoreProvider().addScore(gameDescription, data.stream().mapToLong(TileStatus::score).sum());
                 return null;
             });
 
             EventManager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
         } catch (NoSuchFileException e) {
             throw new IncorrectGameFileException( gameDescription, "The file has been deleted", e);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new ModelIOException(e);
         }
     }
 
     @Override
     public Collection<GameDescription> getGameDescriptions() {
-        return dataProvider.getGameProvider().readGameDescriptions();
+        return dataProvider.gameProvider().readGameDescriptions();
     }
 
     @Override
     public Collection<GameScore> getScores() {
-        return dataProvider.getScoreProvider().getScores();
+        return dataProvider.scoreProvider().getScores();
     }
 
     @Override

@@ -3,19 +3,17 @@ package ru.sidey383.task2.model.game.level.tile.line.line.tile;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName("LongTile")
 public class LongTile implements Tile {
 
-    @JsonProperty
     private final long startTime;
 
-    @JsonProperty
     private final long tileTime;
 
-    @JsonIgnore
     private long pressTime = -1;
 
-    @JsonIgnore
     private long releaseTime = -1;
 
     @JsonCreator
@@ -24,15 +22,19 @@ public class LongTile implements Tile {
         this.tileTime = tileTime;
     }
 
-    @JsonIgnore
+    @JsonProperty("tileTime")
+    public long tileTime() {
+        return tileTime;
+    }
+
+    @JsonProperty("startTime")
     @Override
-    public long getStartTime() {
+    public long startTime() {
         return startTime;
     }
 
-    @JsonIgnore
     @Override
-    public long getEndTime() {
+    public long endTime() {
         return startTime + tileTime;
     }
 
@@ -42,9 +44,8 @@ public class LongTile implements Tile {
         return new LongTileStatus(this);
     }
 
-    @JsonIgnore
     @Override
-    public TileType getType() {
+    public TileType type() {
         return TileType.LONG;
     }
 
@@ -65,7 +66,7 @@ public class LongTile implements Tile {
         }
     }
 
-    private record LongTileStatus(boolean isClicked, int score) implements TileStatus {
+    private record LongTileStatus(boolean clicked, int score) implements TileStatus {
 
         public LongTileStatus(LongTile tile) {
             this(
@@ -74,11 +75,6 @@ public class LongTile implements Tile {
                             0 :
                             (int) (Math.max(0, Math.min(tile.tileTime, tile.pressTime - tile.releaseTime) / 200_000_000) + 2)
             );
-        }
-
-        @Override
-        public int getScore() {
-            return score;
         }
 
     }

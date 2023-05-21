@@ -60,7 +60,7 @@ public class Controller {
             logger.error("Controller session start error ");
             return;
         }
-        view.setScene(session.getScene());
+        view.setScene(session.scene());
     }
 
     public synchronized void addSessionCreator(ControllerSessionCreator creator) {

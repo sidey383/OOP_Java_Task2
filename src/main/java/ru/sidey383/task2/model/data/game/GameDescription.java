@@ -4,12 +4,12 @@ import java.nio.file.Path;
 
 public interface GameDescription {
 
-    String getGameKey();
+    String gameKey();
 
-    String getName();
+    String name();
 
-    String getHash();
+    String hash();
 
-    Path getGameContainer();
+    Path gameContainer();
 
 }

@@ -16,7 +16,7 @@ public class TileChunk {
 
     public void getTiles(Collection<Tile> tileCollection, long startTime, long endTime) {
         for (Tile t : tiles) {
-            if (t.getEndTime() >= startTime && t.getStartTime()  <= endTime) {
+            if (t.endTime() >= startTime && t.startTime()  <= endTime) {
                 tileCollection.add(t);
             }
         }
@@ -24,9 +24,9 @@ public class TileChunk {
 
     public Tile getTile(long time) {
         for (Tile tile : tiles) {
-            if (tile.getEndTime() <= time)
+            if (tile.endTime() <= time)
                 continue;
-            if (tile.getStartTime() >= time)
+            if (tile.startTime() >= time)
                 break;
             return tile;
         }
@@ -34,7 +34,7 @@ public class TileChunk {
     }
 
     public long getScore() {
-        return Arrays.stream(tiles).map(Tile::getStatus).mapToLong(TileStatus::getScore).sum();
+        return Arrays.stream(tiles).map(Tile::getStatus).mapToLong(TileStatus::score).sum();
     }
 
     public void getTileStatistic(Collection<TileStatus> statuses) {

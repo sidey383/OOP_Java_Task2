@@ -33,11 +33,11 @@ public class DataController implements DataProvider {
         return new DataController(gameProvider, scoreProvider, settingsProvider);
     }
 
-    public GameProvider getGameProvider() {
+    public GameProvider gameProvider() {
         return gameProvider;
     }
 
-    public ScoreProvider getScoreProvider() {
+    public ScoreProvider scoreProvider() {
         return scoreProvider;
     }
 

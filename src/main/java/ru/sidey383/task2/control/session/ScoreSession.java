@@ -18,14 +18,14 @@ public class ScoreSession extends ControllerSession {
 
     public void updateScores() {
         choiceView.setGameScores(
-                getController().getModel().getScores()
+                controller().getModel().getScores()
                         .stream()
                         .map(ViewScore::new)
                         .collect(Collectors.toList()));
     }
 
     @Override
-    public AppScene getScene() {
+    public AppScene scene() {
         return choiceView;
     }
 

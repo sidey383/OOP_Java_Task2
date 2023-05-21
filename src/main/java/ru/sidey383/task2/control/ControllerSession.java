@@ -8,6 +8,6 @@ import ru.sidey383.task2.view.AppScene;
  * **/
 public abstract class ControllerSession extends ControllerModule {
 
-    public abstract AppScene getScene();
+    public abstract AppScene scene();
 
 }

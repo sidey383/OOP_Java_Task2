@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class ZIPGameDescriptionReader extends ZIPReader {
     public ZIPGameDescriptionReader() {
-        super(new HashMap<>(), (is) -> null);
+        super(new HashMap<>(), is -> null);
         readerStructure.put("gameLore.json", ReaderMethods::readGameLore);
     }
 
@@ -21,28 +21,14 @@ public class ZIPGameDescriptionReader extends ZIPReader {
                 .orElse(null);
     }
 
-    private record DefaultGameDescription(GameLore gameLore, Path gameContainer, String gameKey,
+    private record DefaultGameDescription(GameLore gameLore,
+                                          Path gameContainer,
+                                          String gameKey,
                                           String hash) implements GameDescription {
 
-
         @Override
-        public String getGameKey() {
-            return gameKey;
-        }
-
-        @Override
-        public String getName() {
+        public String name() {
             return gameLore.name();
-        }
-
-        @Override
-        public String getHash() {
-            return hash;
-        }
-
-        @Override
-        public Path getGameContainer() {
-            return gameContainer;
         }
     }
 

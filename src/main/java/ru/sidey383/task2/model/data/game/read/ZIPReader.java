@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -42,6 +43,7 @@ public class ZIPReader {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+        md.reset();
         try (InputStream fis = Files.newInputStream(path);
              DigestInputStream dis = new DigestInputStream(fis, md);
              ZipInputStream zis = new ZipInputStream(dis)) {
@@ -61,19 +63,18 @@ public class ZIPReader {
                         logger.warn(() -> String.format("Error while read entry %s in %s", name, path), t);
                     }
                 } else {
-                    builder.withObject(name, zis.readAllBytes());
+                    try {
+                        builder.withObject(name, defaultReader.read(zis));
+                    } catch (Throwable t) {
+                        logger.warn(() -> String.format("Error while read entry %s in %s", name, path), t);
+                    }
                 }
             }
+            dis.readAllBytes();
         }
-
-        byte[] hash = md.digest();
-        StringBuilder stringBuilder = new StringBuilder(2*hash.length);
-        for(byte b : hash){
-            stringBuilder.append(String.format("%02x", b&0xff));
-        }
-        builder.withHash(stringBuilder.toString());
-        return builder.build();
+        return builder.withHash(HexFormat.of().formatHex(md.digest())).build();
     }
+
 
     @FunctionalInterface
     public interface DataReader {

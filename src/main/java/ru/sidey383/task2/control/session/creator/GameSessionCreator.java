@@ -34,7 +34,7 @@ public class GameSessionCreator extends ControllerSessionCreator {
     @EventHandler
     public void onGameChoice(GameChoiceEvent e) {
         try {
-            getController().getModel().startGame(e.getGameDescription());
+            controller().getModel().startGame(e.getGameDescription());
         } catch (IncorrectGameFileException ex) {
             logger.warn("The file may have been modified or removed", ex);
             gameChoiceSession.updateDescriptions();
@@ -46,13 +46,13 @@ public class GameSessionCreator extends ControllerSessionCreator {
     @EventHandler
     public void onTileLineGameStart(ModelStartTileLinesGameEvent event) {
         try {
-            GameView gameView = getController().getScene(GameView.class);
+            GameView gameView = controller().getScene(GameView.class);
             if (gameView == null) {
                 logger.error("Can't create game view");
                 return;
             }
             setGameStyle(gameView, event.getData());
-            getController().setSession(new GameSession(event.getGame(), gameView));
+            controller().setSession(new GameSession(event.getGame(), gameView));
         } catch (Exception e) {
             logger.fatal("Game scene create error", e);
         }

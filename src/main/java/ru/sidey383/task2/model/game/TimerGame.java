@@ -19,6 +19,6 @@ public interface TimerGame {
 
     long toLocalTime(long systemTime);
 
-    long getTotalTime();
+    long totalTime();
 
 }

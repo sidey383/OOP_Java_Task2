@@ -15,13 +15,13 @@ public class MenuSession extends ControllerSession {
     }
 
     @Override
-    public AppScene getScene() {
+    public AppScene scene() {
         return menuView;
     }
 
     @EventHandler
     public void onExit(PlayerGameExitEvent e) {
-        getController().end();
+        controller().end();
     }
 
 

@@ -1,8 +1,11 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
-
+    id 'org.openjfx.javafxplugin' version '0.0.14'
+    id 'java-library'
 }
+
+version = '0.1'
+mainClassName = 'ru.sidey383.task2.Main'
 
 repositories {
     mavenCentral()
@@ -14,12 +17,24 @@ javafx {
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
-    compileOnly 'org.jetbrains:annotations:24.0.1'
+    testImplementation group: 'com.github.marschall', name: 'memoryfilesystem', version: '2.6.0'
+    implementation 'org.jetbrains:annotations:24.0.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
-    implementation 'org.apache.logging.log4j:log4j-api:2.17.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.20.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.20.0'
+    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.20.0'
 }
 
 application {
-    mainClass = 'ru.sidey383.task2.Main'
+    mainClass = mainClassName
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    maxHeapSize = '1G'
+
+    testLogging {
+        events "passed"
+    }
 }

@@ -7,11 +7,11 @@ import ru.sidey383.task2.model.game.level.tile.line.line.TileLine;
 
 public interface TileLinesGame extends TimerGame, ClickableGame, TileScoreProvider {
 
-    String getName();
+    String name();
 
     TileLine getLine(ClickType clickType);
 
-    ClickType[] getAvailableTypes();
+    ClickType[] availableClickTypes();
 
     /**
      * @return nano time

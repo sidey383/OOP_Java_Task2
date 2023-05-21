@@ -3,13 +3,13 @@ package ru.sidey383.task2.model.game.level.tile.line.line.tile;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName("DefaultTile")
 public class DefaultTile implements Tile {
 
-    @JsonProperty
     private final long startTime;
 
-    @JsonIgnore
     private DefaultTileStatus tileStatus = DefaultTileStatus.NOT_CLICKED;
 
     @JsonCreator
@@ -17,14 +17,14 @@ public class DefaultTile implements Tile {
         this.startTime = startTime;
     }
 
+    @JsonProperty("startTime")
     @Override
-    public long getStartTime() {
+    public long startTime() {
         return startTime;
     }
 
-    @JsonIgnore
     @Override
-    public long getEndTime() {
+    public long endTime() {
         return startTime + 300_000_000;
     }
 
@@ -34,9 +34,8 @@ public class DefaultTile implements Tile {
         return tileStatus;
     }
 
-    @JsonIgnore
     @Override
-    public TileType getType() {
+    public TileType type() {
         return TileType.DEFAULT;
     }
 
@@ -62,12 +61,12 @@ public class DefaultTile implements Tile {
         }
 
         @Override
-        public boolean isClicked() {
+        public boolean clicked() {
             return isClicked;
         }
 
         @Override
-        public int getScore() {
+        public int score() {
             return score;
         }
     }

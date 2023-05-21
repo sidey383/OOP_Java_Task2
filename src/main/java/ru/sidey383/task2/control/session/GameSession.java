@@ -46,11 +46,11 @@ public class GameSession extends ControllerSession {
         super.start(controller);
         gameView.setTimeAdapter(new SimpleTimeProvider(game));
         keyMap = new HashMap<>();
-        for (Map.Entry<ClickType, Integer> e : getController().getModel().getSettings().getGameKeys().entrySet()) {
+        for (Map.Entry<ClickType, Integer> e : controller().getModel().getSettings().getGameKeys().entrySet()) {
             keyMap.put(e.getValue(), e.getKey());
         }
         if(!game.start())
-            throw new GameAlreadyStartedException("I tried to start " + game.getName() + " game, but it was already started");
+            throw new GameAlreadyStartedException("I tried to start " + game.name() + " game, but it was already started");
         graphicStart();
     }
 
@@ -61,7 +61,7 @@ public class GameSession extends ControllerSession {
     }
 
     @Override
-    public AppScene getScene() {
+    public AppScene scene() {
         return gameView;
     }
 
@@ -88,7 +88,7 @@ public class GameSession extends ControllerSession {
     private void showScore() {
         Collection<TileStatus> statistic = game.getTileStatistic();
         long score = game.getScore();
-        long clicked = statistic.stream().filter(TileStatus::isClicked).count();
+        long clicked = statistic.stream().filter(TileStatus::clicked).count();
         long missed = game.getMissCount();
         gameView.showScore(String.format("""
                 Score: %d
@@ -153,7 +153,7 @@ public class GameSession extends ControllerSession {
             }
             long time = game.toLocalTime(nTime);
             long endTime = time + game.getTimeToShow() * 2;
-            ClickType[] types = game.getAvailableTypes();
+            ClickType[] types = game.availableClickTypes();
             DrawnTile[][] tiles = new DrawnTile[types.length][];
             for (int i = 0; i < types.length; i++) {
                 tiles[i] = game.getLine(types[i]).getTiles(time, endTime).stream().map(TileAdapter::new).toArray(TileAdapter[]::new);
@@ -167,17 +167,17 @@ public class GameSession extends ControllerSession {
 
         @Override
         public long getEndTime() {
-            return tile.getEndTime();
+            return tile.endTime();
         }
 
         @Override
         public long getStartTime() {
-            return tile.getStartTime();
+            return tile.startTime();
         }
 
         @Override
         public DrawnTileType getType() {
-            return switch (tile.getType()) {
+            return switch (tile.type()) {
                 case LONG -> DrawnTileType.LONG;
                 case DEFAULT -> DrawnTileType.SHORT;
             };

@@ -45,7 +45,7 @@ public abstract class ControllerModule {
      * returns null before calling start
      * @return associated {@link Controller}
      * **/
-    public Controller getController() {
+    public Controller controller() {
         if (!isStarted)
             throw new IllegalStateException("The module is not started, it is impossible to get the controller");
         return controller;

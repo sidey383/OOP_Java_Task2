@@ -14,7 +14,7 @@ public class RawDataContainer {
     }
 
     @SuppressWarnings("unchecked")
-    public synchronized  <T> Optional<T> getData(Class<T> type, String name) {
+    public <T> Optional<T> getData(Class<T> type, String name) {
         Object obj = data.get(name);
         if (obj == null || !type.isAssignableFrom(obj.getClass()))
             return Optional.empty();
@@ -52,7 +52,7 @@ public class RawDataContainer {
         public RawDataContainer build() {
             if (hash == null)
                 throw new IllegalStateException("Hash not initialized");
-            return new RawDataContainer(data, hash);
+            return new RawDataContainer(Collections.unmodifiableMap(data), hash);
         }
     }
 

@@ -15,16 +15,16 @@ public class TileLineContainer implements TileLine {
     private long missClickCount = 0;
 
     public TileLineContainer(PianoGame pianoGame, Collection<Tile> tileCollection) {
-        tileChunks = new TileChunk[(int) (pianoGame.getTotalTime() / CHUNK_TIME + 1)];
-        List<Tile> tiles = tileCollection.stream().sorted(Comparator.comparingLong(Tile::getStartTime)).toList();
+        tileChunks = new TileChunk[(int) (pianoGame.totalTime() / CHUNK_TIME + 1)];
+        List<Tile> tiles = tileCollection.stream().sorted(Comparator.comparingLong(Tile::startTime)).toList();
         for (int i = 1; i < tiles.size(); i++) {
-            if (tiles.get(i - 1).getEndTime() > tiles.get(i).getStartTime())
-                throw new IllegalArgumentException("Tile overlap each other, end " + tiles.get(i - 1).getEndTime() + " start " + tiles.get(i).getStartTime());
+            if (tiles.get(i - 1).endTime() > tiles.get(i).startTime())
+                throw new IllegalArgumentException("Tile overlap each other, end " + tiles.get(i - 1).endTime() + " start " + tiles.get(i).startTime());
         }
         for (int i = 0; i < tileChunks.length; i++) {
             long startTime = i * CHUNK_TIME;
             long endTime = (i + 1) * CHUNK_TIME;
-            tileChunks[i] = new TileChunk(tiles.stream().filter(t -> t.getStartTime() <= endTime && t.getEndTime() >= startTime).toArray(Tile[]::new));
+            tileChunks[i] = new TileChunk(tiles.stream().filter(t -> t.startTime() <= endTime && t.endTime() >= startTime).toArray(Tile[]::new));
         }
     }
 
@@ -49,7 +49,7 @@ public class TileLineContainer implements TileLine {
     @Override
     public void getTiles(Collection<Tile> tileCollection, long  startTime, long  endTime) {
         int startN = Math.max(0, (int) (startTime / CHUNK_TIME));
-        int endN = Math.min(tileChunks.length - 1, (int) (startTime / CHUNK_TIME) + 1) ;
+        int endN = Math.min(tileChunks.length, (int) (startTime / CHUNK_TIME) + 1) ;
         for (int i = startN; i < endN; i++) {
             tileChunks[i].getTiles(tileCollection, startTime, endTime);
         }

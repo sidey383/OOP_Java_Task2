@@ -70,8 +70,8 @@ public class ScoreController implements ScoreProvider {
 
     @Override
     public void addScore(GameDescription description, long score) {
-        if (!scoreList.containsKey(description.getGameKey()) || scoreList.get(description.getGameKey()).maxScore() < score) {
-            scoreList.put(description.getGameKey(), new GameScore(description.getGameKey(), description.getName(), score));
+        if (!scoreList.containsKey(description.gameKey()) || scoreList.get(description.gameKey()).maxScore() < score) {
+            scoreList.put(description.gameKey(), new GameScore(description.gameKey(), description.name(), score));
             try {
                 write();
             } catch (IOException e) {

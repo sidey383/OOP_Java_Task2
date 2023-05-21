@@ -59,7 +59,7 @@ public class GameDataController implements GameProvider {
         if (!Files.exists(path)) {
             Files.createDirectories(path);
             Path game = path.resolve("exampleGame.zip");
-            try (InputStream is = getClass().getResourceAsStream("/exampleGame.zip")) {
+            try (InputStream is = getClass().getResourceAsStream("/game/exampleGame.zip")) {
                 assert is != null;
                 Files.copy(is, game);
             }

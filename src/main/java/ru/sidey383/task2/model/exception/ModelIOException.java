@@ -8,6 +8,10 @@ public class ModelIOException extends ModelException {
         super(ex);
     }
 
+    public ModelIOException(String reason) {
+        super(reason);
+    }
+
     @Override
     public String getMessage() {
         return "IOException in model";

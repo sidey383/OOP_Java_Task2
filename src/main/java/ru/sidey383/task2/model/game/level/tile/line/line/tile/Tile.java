@@ -3,13 +3,18 @@ package ru.sidey383.task2.model.game.level.tile.line.line.tile;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property="type")
-@JsonSubTypes({@JsonSubTypes.Type(value = DefaultTile.class, name = "DefaultTile"), @JsonSubTypes.Type(value = LongTile.class, name = "LongTile")})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes(
+        {
+                @JsonSubTypes.Type(value = DefaultTile.class),
+                @JsonSubTypes.Type(value = LongTile.class)
+        }
+)
 public interface Tile {
 
-    long getStartTime();
+    long startTime();
 
-    long getEndTime();
+    long endTime();
 
     TileStatus getStatus();
 
@@ -17,6 +22,6 @@ public interface Tile {
 
     void release(long relativeTime);
 
-    TileType getType();
+    TileType type();
 
 }

@@ -49,7 +49,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
     @Override
     public boolean isOutOfTime(long systemTime) {
-        return toLocalTime(systemTime) >= getTotalTime();
+        return toLocalTime(systemTime) >= totalTime();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -81,7 +81,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     }
 
     @Override
-    public ClickType[] getAvailableTypes() {
+    public ClickType[] availableClickTypes() {
         return new ClickType[] {ClickType.LINE_1, ClickType.LINE_2, ClickType.LINE_3, ClickType.LINE_4, ClickType.LINE_5, ClickType.LINE_6};
     }
 
@@ -120,7 +120,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
      * @return nano time
      * **/
     @Override
-    public long getTotalTime() {
+    public long totalTime() {
         return totalTime;
     }
 
