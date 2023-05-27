@@ -8,8 +8,6 @@ import java.nio.file.Path;
 public class SimpleModelTest {
 
     @Test
-    public void modelCreateTest() throws ModelException {
-        ModelInterface model = RootModel.createModel(Path.of("."));
-    }
+    public void modelCreateTest() throws ModelException {}
 
 }

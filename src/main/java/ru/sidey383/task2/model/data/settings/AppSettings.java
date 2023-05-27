@@ -20,7 +20,7 @@ public class AppSettings implements SettingsProvider {
             @JsonProperty("keys") ClickKeys keys,
             @JsonProperty("gamePath") Path gamePath) {
         this.clickKeys = keys;
-        this.gamePath = gamePath;
+        this.gamePath = gamePath.toAbsolutePath();
     }
 
     public static AppSettings getDefault() {
@@ -46,15 +46,15 @@ public class AppSettings implements SettingsProvider {
 
     @Override
     public synchronized void setGamesDir(Path path) {
-        this.gamePath = path;
+        this.gamePath = path.toAbsolutePath();
     }
 
-    @JsonGetter
+    @JsonGetter(value = "keys")
     public ClickKeys getClickKeys() {
         return clickKeys;
     }
 
-    private static class ClickKeys {
+    static class ClickKeys {
 
         Integer[] values;
 
@@ -91,6 +91,6 @@ public class AppSettings implements SettingsProvider {
         public Integer[] getValues() {
             return values;
         }
-
     }
+
 }

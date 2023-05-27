@@ -26,7 +26,7 @@ public class DataController implements DataProvider {
         return createController(mainPath.resolve("scores"), mainPath.resolve("settings"));
     }
 
-    public static DataController createController(Path scores, Path settings) throws ModelException {
+    private static DataController createController(Path scores, Path settings) throws ModelException {
         SettingsProvider settingsProvider = SettingsController.createSettingsController(settings);
         ScoreProvider scoreProvider = ScoreController.createScoreContainer(scores);
         GameProvider gameProvider = new GameDataController(settingsProvider);
