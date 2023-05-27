@@ -1,6 +1,6 @@
-package ru.sidey383.task2.model.game.level.tile.line;
+package ru.sidey383.task2.model.game.level;
 
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 
 import java.util.Collection;
 

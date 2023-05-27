@@ -1,8 +1,8 @@
 package ru.sidey383.task2.model.data.game.read;
 
 import ru.sidey383.task2.model.exception.ModelIOException;
-import ru.sidey383.task2.model.game.level.tile.line.PianoGame;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.PianoGame;
+import ru.sidey383.task2.model.game.level.line.tile.Tile;
 
 import java.util.HashMap;
 import java.util.Optional;

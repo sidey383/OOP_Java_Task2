@@ -2,7 +2,7 @@ package ru.sidey383.task2.model.data.game;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import ru.sidey383.task2.model.CustomFileSystem;
+import ru.sidey383.task2.CustomFileSystem;
 import ru.sidey383.task2.model.data.game.read.ZIPReaderTest;
 import ru.sidey383.task2.model.data.settings.SettingsProvider;
 import ru.sidey383.task2.model.game.ClickType;

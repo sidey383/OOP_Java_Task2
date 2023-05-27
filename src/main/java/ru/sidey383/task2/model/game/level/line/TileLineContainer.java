@@ -1,8 +1,8 @@
-package ru.sidey383.task2.model.game.level.tile.line.line;
+package ru.sidey383.task2.model.game.level.line;
 
-import ru.sidey383.task2.model.game.level.tile.line.PianoGame;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.PianoGame;
 
 import java.util.*;
 

@@ -2,7 +2,7 @@ package ru.sidey383.task2.model.data.game.read;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import ru.sidey383.task2.model.CustomFileSystem;
+import ru.sidey383.task2.CustomFileSystem;
 
 import java.io.IOException;
 import java.io.InputStream;

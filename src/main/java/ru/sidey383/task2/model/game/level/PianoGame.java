@@ -1,10 +1,10 @@
-package ru.sidey383.task2.model.game.level.tile.line;
+package ru.sidey383.task2.model.game.level;
 
 import ru.sidey383.task2.model.game.ClickType;
-import ru.sidey383.task2.model.game.level.tile.line.line.TileLine;
-import ru.sidey383.task2.model.game.level.tile.line.line.TileLineContainer;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileStatus;
+import ru.sidey383.task2.model.game.level.line.TileLine;
+import ru.sidey383.task2.model.game.level.line.TileLineContainer;
+import ru.sidey383.task2.model.game.level.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 
 import java.util.*;
 import java.util.function.Function;

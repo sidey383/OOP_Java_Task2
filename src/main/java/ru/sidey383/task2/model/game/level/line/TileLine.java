@@ -1,7 +1,7 @@
-package ru.sidey383.task2.model.game.level.tile.line.line;
+package ru.sidey383.task2.model.game.level.line;
 
-import ru.sidey383.task2.model.game.level.tile.line.TileScoreProvider;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.TileScoreProvider;
+import ru.sidey383.task2.model.game.level.line.tile.Tile;
 
 import java.util.Collection;
 

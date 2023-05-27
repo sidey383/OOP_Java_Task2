@@ -2,12 +2,12 @@ package ru.sidey383.task2.model.data.game.read;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import ru.sidey383.task2.model.CustomFileSystem;
+import ru.sidey383.task2.CustomFileSystem;
 import ru.sidey383.task2.model.exception.ModelIOException;
 import ru.sidey383.task2.model.game.ClickType;
-import ru.sidey383.task2.model.game.level.tile.line.PianoGame;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.Tile;
-import ru.sidey383.task2.model.game.level.tile.line.line.tile.TileType;
+import ru.sidey383.task2.model.game.level.PianoGame;
+import ru.sidey383.task2.model.game.level.line.tile.Tile;
+import ru.sidey383.task2.model.game.level.line.tile.TileType;
 
 import java.io.IOException;
 import java.io.InputStream;

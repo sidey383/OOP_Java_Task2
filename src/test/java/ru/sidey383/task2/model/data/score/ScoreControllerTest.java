@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import ru.sidey383.task2.model.CustomFileSystem;
+import ru.sidey383.task2.CustomFileSystem;
 import ru.sidey383.task2.model.data.game.GameDescription;
 import ru.sidey383.task2.model.exception.ModelException;
 

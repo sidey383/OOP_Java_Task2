@@ -1,4 +1,4 @@
-package ru.sidey383.task2.model;
+package ru.sidey383.task2;
 
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
 import org.junit.jupiter.api.extension.AfterAllCallback;

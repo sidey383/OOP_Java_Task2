@@ -1,4 +1,4 @@
-package ru.sidey383.task2.model.game.level.tile.line.line.tile;
+package ru.sidey383.task2.model.game.level.line.tile;
 
 public interface TileStatus {
 
