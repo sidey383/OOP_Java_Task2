@@ -3,6 +3,7 @@ package ru.sidey383.task2.model.data.game.read;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.sidey383.task2.CustomFileSystem;
+import ru.sidey383.task2.model.exception.ModelException;
 import ru.sidey383.task2.model.exception.ModelIOException;
 import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.level.PianoGame;
@@ -93,7 +94,7 @@ public class ZIPGameReaderTest {
 
     @Order(0)
     @Test
-    public void simpleTest() throws ModelIOException, IOException {
+    public void simpleTest() throws ModelException, IOException {
         ZIPGameReader reader = new ZIPGameReader();
         for (int i = 0; i < files.length; i++) {
             Path p = fileSystem.getRoot().resolve(files[i]);
@@ -115,7 +116,7 @@ public class ZIPGameReaderTest {
 
     @Order(1)
     @Test
-    public void gameDataTest() throws ModelIOException, IOException {
+    public void gameDataTest() throws ModelException, IOException {
         Path simpleGamePath = fileSystem.getRoot().resolve(simpleGame);
         ZIPGameReader reader = new ZIPGameReader();
         RawDataContainer container = reader.readZIP(simpleGamePath);

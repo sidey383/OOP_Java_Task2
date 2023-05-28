@@ -101,7 +101,7 @@ public class TileLineContainer implements TileLine {
             long barrierTime = i * CHUNK_TIME;
             score += tileChunks[i].getScore(p -> p.startTime() > barrierTime);
         }
-        return score - missClickCount;
+        return score - missClickCount * 2;
     }
 
     @Override

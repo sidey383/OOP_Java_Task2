@@ -4,19 +4,16 @@ import ru.sidey383.task2.model.data.game.GameDescription;
 
 public class IncorrectGameFileException extends ModelException {
 
-    private final GameDescription gameDescription;
 
     public IncorrectGameFileException(GameDescription description, String message) {
-        super(message);
-        gameDescription = description;
+        super(message + "\n" + description);
     }
     public IncorrectGameFileException(GameDescription description, String message, Throwable throwable) {
-        super(message, throwable);
-        gameDescription = description;
+        super(message + "\n" + description, throwable);
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage() + "\n" + gameDescription;
+    public IncorrectGameFileException(String message, Throwable throwable) {
+        super(message, throwable);
     }
+
 }

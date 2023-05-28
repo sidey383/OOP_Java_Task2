@@ -89,7 +89,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
      * @return nano time
      * **/
     @Override
-    public long getTimeToShow() {
+    public long timeToShow() {
         return 1_000_000_000 ;
     }
 

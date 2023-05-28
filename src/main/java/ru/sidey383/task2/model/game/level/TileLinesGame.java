@@ -16,7 +16,7 @@ public interface TileLinesGame extends TimerGame, ClickableGame, TileScoreProvid
     /**
      * @return nano time
      * **/
-    long getTimeToShow();
+    long timeToShow();
 
 
 

@@ -115,7 +115,7 @@ public class GameSession extends ControllerSession {
                 graphicTask.cancel();
             }
             graphicTask = new GraphicUpdaterTask();
-            timer.schedule(graphicTask, 0, game.getTimeToShow() / 4_000_000);
+            timer.schedule(graphicTask, 0, game.timeToShow() / 4_000_000);
         }
     }
 
@@ -152,7 +152,7 @@ public class GameSession extends ControllerSession {
                 gameEnd();
             }
             long time = game.toLocalTime(nTime);
-            long endTime = time + game.getTimeToShow() * 2;
+            long endTime = time + game.timeToShow() * 2;
             ClickType[] types = game.availableClickTypes();
             DrawnTile[][] tiles = new DrawnTile[types.length][];
             for (int i = 0; i < types.length; i++) {
@@ -193,7 +193,7 @@ public class GameSession extends ControllerSession {
 
         @Override
         public long getTimeToShow() {
-            return game.getTimeToShow();
+            return game.timeToShow();
         }
 
     }
