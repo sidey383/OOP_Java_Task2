@@ -65,8 +65,12 @@ public class SettingsController implements SettingsProvider {
                 try (InputStream is = Files.newInputStream(path)) {
                     AppSettings settings = mapper.reader().readValue(is, AppSettings.class);
                     settingsContainer = new SettingsController(settings, path);
-                } catch (IOException e) {
-                    throw new ModelIOException(e);
+                } catch (IOException e1) {
+                    try {
+                        settingsContainer = createNew(path);
+                    } catch (IOException e2) {
+                        throw new ModelIOException(e2);
+                    }
                 }
             } else {
                 throw new NotRegularFileException(path);
@@ -84,7 +88,7 @@ public class SettingsController implements SettingsProvider {
     private static SettingsController createNew(Path path) throws IOException {
         if (Files.exists(path))
             Files.delete(path);
-        AppSettings settings = AppSettings.getDefault();
+        AppSettings settings = AppSettings.getDefault(path.getParent());
         SettingsController settingsController = new SettingsController(settings, path);
         settingsController.write();
         return settingsController;

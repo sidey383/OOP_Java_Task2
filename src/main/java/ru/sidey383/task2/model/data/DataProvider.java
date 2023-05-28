@@ -10,6 +10,6 @@ public interface DataProvider {
 
     ScoreProvider scoreProvider();
 
-    SettingsProvider getSettingProvider();
+    SettingsProvider settingProvider();
 
 }

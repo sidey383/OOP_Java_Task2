@@ -29,7 +29,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
         this.totalTime = time;
         for (Map.Entry<ClickType, Tile[]> entry : tiles.entrySet()) {
             try {
-                lines.put(entry.getKey(), new TileLineContainer(this, Arrays.asList(entry.getValue())));
+                lines.put(entry.getKey(), new TileLineContainer(totalTime, Arrays.asList(entry.getValue())));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Illegal state on line "+ entry.getKey(), e);
             }

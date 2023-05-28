@@ -73,6 +73,6 @@ public class RootModel implements ModelInterface {
 
     @Override
     public SettingsProvider getSettings() {
-        return dataProvider.getSettingProvider();
+        return dataProvider.settingProvider();
     }
 }

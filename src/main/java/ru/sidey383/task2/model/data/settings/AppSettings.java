@@ -23,8 +23,8 @@ public class AppSettings implements SettingsProvider {
         this.gamePath = gamePath.toAbsolutePath();
     }
 
-    public static AppSettings getDefault() {
-        return new AppSettings(new AppSettings.ClickKeys(new Integer[]{0x41, 0x53, 0x44, 0x4A, 0x4B, 0x4C}), Path.of("games"));
+    public static AppSettings getDefault(Path settingsDir) {
+        return new AppSettings(new AppSettings.ClickKeys(new Integer[]{0x41, 0x53, 0x44, 0x4A, 0x4B, 0x4C}), settingsDir.resolve("games"));
     }
 
     @Override

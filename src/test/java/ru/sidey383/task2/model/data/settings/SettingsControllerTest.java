@@ -85,7 +85,7 @@ public class SettingsControllerTest {
     public void initTest() throws ModelException {
         Path p = fileSystem.getRoot().resolve("initSettings");
         SettingsController controller = SettingsController.createSettingsController(p);
-        AppSettings defaultSettings = AppSettings.getDefault();
+        AppSettings defaultSettings = AppSettings.getDefault(p.getParent());
         assertEquals(defaultSettings.getGamesDir(), controller.getGamesDir(), "Wrong games dir for new  settings");
         for (ClickType type : ClickType.values()) {
             assertEquals(defaultSettings.getGameKeys().get(type), controller.getGameKeys().get(type), "Wrong key value " + type + " for new settings" );

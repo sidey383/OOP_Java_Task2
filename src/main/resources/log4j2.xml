@@ -4,7 +4,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
-        <WindowAppender name="UserLog" icon="/errorIcon.png">
+        <WindowAppender name="UserLog" icon="/images/errorIcon.png">
             <PatternLayout pattern="[%level]: %msg%n" />
             <LevelRangeFilter minLevel="OFF" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
         </WindowAppender>>

@@ -61,7 +61,7 @@ public class LongTile implements Tile {
     public void release(long relativeTime) {
         if (relativeTime < startTime || relativeTime > startTime + tileTime)
             return;
-        if (pressTime != -1 && (relativeTime == -1 || relativeTime < releaseTime)) {
+        if (pressTime != -1 && (releaseTime == -1 || relativeTime < releaseTime)) {
             releaseTime = relativeTime;
         }
     }
@@ -73,7 +73,7 @@ public class LongTile implements Tile {
                     tile.pressTime != -1,
                     tile.pressTime == -1 ?
                             0 :
-                            (int) (Math.max(0, Math.min(tile.tileTime, tile.pressTime - tile.releaseTime) / 200_000_000) + 2)
+                            (int) (Math.max(0, Math.min(tile.tileTime, tile.releaseTime - tile.pressTime) / 200_000_000) + 2)
             );
         }
 

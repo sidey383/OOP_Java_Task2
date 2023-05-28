@@ -41,7 +41,7 @@ public class DataController implements DataProvider {
         return scoreProvider;
     }
 
-    public SettingsProvider getSettingProvider() {
+    public SettingsProvider settingProvider() {
         return settingsProvider;
     }
 

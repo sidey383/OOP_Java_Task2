@@ -2,7 +2,6 @@ package ru.sidey383.task2.model.game.level.line;
 
 import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
-import ru.sidey383.task2.model.game.level.PianoGame;
 
 import java.util.*;
 
@@ -14,9 +13,9 @@ public class TileLineContainer implements TileLine {
 
     private long missClickCount = 0;
 
-    public TileLineContainer(PianoGame pianoGame, Collection<Tile> tileCollection) {
-        tileChunks = new TileChunk[(int) (pianoGame.totalTime() / CHUNK_TIME + 1)];
-        List<Tile> tiles = tileCollection.stream().sorted(Comparator.comparingLong(Tile::startTime)).toList();
+    public TileLineContainer(long totalTime, Collection<Tile> tileCollection) {
+        tileChunks = new TileChunk[(int) (totalTime / CHUNK_TIME + 1)];
+        List<Tile> tiles = tileCollection.stream().sorted(Comparator.comparingLong(Tile::startTime)).filter(t -> t.startTime() < totalTime && t.startTime() > 0).toList();
         for (int i = 1; i < tiles.size(); i++) {
             if (tiles.get(i - 1).endTime() > tiles.get(i).startTime())
                 throw new IllegalArgumentException("Tile overlap each other, end " + tiles.get(i - 1).endTime() + " start " + tiles.get(i).startTime());
@@ -38,7 +37,6 @@ public class TileLineContainer implements TileLine {
         return null;
     }
 
-
     @Override
     public Collection<Tile> getTiles(long startTime, long endTime) {
         Collection<Tile> tiles = new ArrayList<>();
@@ -47,11 +45,21 @@ public class TileLineContainer implements TileLine {
     }
 
     @Override
-    public void getTiles(Collection<Tile> tileCollection, long  startTime, long  endTime) {
+    public void getTiles(Collection<Tile> tileCollection, long startTime, long endTime) {
         int startN = Math.max(0, (int) (startTime / CHUNK_TIME));
-        int endN = Math.min(tileChunks.length, (int) (startTime / CHUNK_TIME) + 1) ;
-        for (int i = startN; i < endN; i++) {
-            tileChunks[i].getTiles(tileCollection, startTime, endTime);
+        int endN = Math.min(tileChunks.length, (int) (endTime / CHUNK_TIME) + 1);
+        if (startN >= endN)
+            return;
+        // Collect all tiles in this chunk
+        tileChunks[startN].getTiles(tileCollection, (t) -> t.endTime() >= startTime && t.startTime() <= endTime);
+        for (int i = startN + 1; i < endN; i++) {
+            int finalI = i;
+            // Collects all tiles that are not in the previous chunks
+            tileChunks[i].getTiles(tileCollection,
+                    (t) ->
+                            t.startTime() > finalI * CHUNK_TIME &&  // Not in previous blocks
+                            (t.endTime() >= startTime && t.startTime() <= endTime)
+            );
         }
     }
 
@@ -87,13 +95,21 @@ public class TileLineContainer implements TileLine {
 
     @Override
     public long getScore() {
-        return Arrays.stream(tileChunks).mapToLong(TileChunk::getScore).sum() - missClickCount * 3;
+        long score = 0;
+        tileChunks[0].getScore(t -> true);
+        for (int i = 0; i < tileChunks.length; i++) {
+            long barrierTime = i * CHUNK_TIME;
+            score += tileChunks[i].getScore(p -> p.startTime() > barrierTime);
+        }
+        return score - missClickCount;
     }
 
     @Override
     public void getTileStatistic(Collection<TileStatus> statuses) {
-        for (TileChunk chunk : tileChunks) {
-            chunk.getTileStatistic(statuses);
+        tileChunks[0].getTileStatistic(statuses, (t) -> true);
+        for (int i = 1; i < tileChunks.length; i++) {
+            long barrierTime = i * CHUNK_TIME;
+            tileChunks[i].getTileStatistic(statuses, (t) -> t.startTime() > barrierTime);
         }
     }
 

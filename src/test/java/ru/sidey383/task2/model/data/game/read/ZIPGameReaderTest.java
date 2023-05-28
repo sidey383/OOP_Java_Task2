@@ -122,7 +122,7 @@ public class ZIPGameReaderTest {
         PianoGame game = reader.readGame(container);
 
         assertEquals("simpleGame", game.name(), "Wrong game name");
-        assertEquals(100000, game.totalTime(), "Wrong total time");
+        assertEquals(410000000, game.totalTime(), "Wrong total time");
 
         for (int i = 0; i < ClickType.values().length; i++) {
             List<Tile> tiles = new ArrayList<>();

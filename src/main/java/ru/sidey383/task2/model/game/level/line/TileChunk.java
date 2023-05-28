@@ -5,6 +5,7 @@ import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 public class TileChunk {
 
@@ -14,9 +15,9 @@ public class TileChunk {
         this.tiles = tiles;
     }
 
-    public void getTiles(Collection<Tile> tileCollection, long startTime, long endTime) {
+    public void getTiles(Collection<Tile> tileCollection, Predicate<Tile> predicate) {
         for (Tile t : tiles) {
-            if (t.endTime() >= startTime && t.startTime()  <= endTime) {
+            if (predicate.test(t)) {
                 tileCollection.add(t);
             }
         }
@@ -33,8 +34,14 @@ public class TileChunk {
         return null;
     }
 
-    public long getScore() {
-        return Arrays.stream(tiles).map(Tile::getStatus).mapToLong(TileStatus::score).sum();
+    public long getScore(Predicate<Tile> predicate) {
+        return Arrays.stream(tiles).filter(predicate).map(Tile::getStatus).mapToLong(TileStatus::score).sum();
+    }
+
+    public void getTileStatistic(Collection<TileStatus> statuses, Predicate<Tile> predicate) {
+        for (Tile t : tiles)
+            if (predicate.test(t))
+                statuses.add(t.getStatus());
     }
 
     public void getTileStatistic(Collection<TileStatus> statuses) {

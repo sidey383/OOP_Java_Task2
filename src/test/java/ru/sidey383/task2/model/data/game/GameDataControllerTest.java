@@ -32,7 +32,7 @@ public class GameDataControllerTest {
     private static final String[] hashes = new String[] {
             "15005739c899b18d3d62580a927606e5",
             "b64da659d7232dfcbbfe4af7d6951d34",
-            "3fb21f899d256b701cf75c728bf83aa6"
+            "da858000540877b4383f1a96af0ff9b5"
     };
 
     private static final String[] names = new String[] {

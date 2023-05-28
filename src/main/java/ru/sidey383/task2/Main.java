@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         View view = new View(primaryStage);
-        RootModel model = RootModel.createModel(Path.of(""));
+        RootModel model = RootModel.createModel(Path.of("."));
         Controller controller = new Controller(view, model);
         controller.addSessionCreator(new MenuSessionCreator());
         controller.addSessionCreator(new ScoreSessionCreator());
