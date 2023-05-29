@@ -21,6 +21,7 @@ import ru.sidey383.task2.view.events.game.PlayerResumeEvent;
 
 import java.util.*;
 
+// CR: less synchronized?
 public class GameSession extends ControllerSession {
 
     private final TileLinesGame game;
@@ -163,6 +164,7 @@ public class GameSession extends ControllerSession {
 
     }
 
+    // CR: merge timers?
     private record TileAdapter(Tile tile) implements DrawnTile {
 
         @Override

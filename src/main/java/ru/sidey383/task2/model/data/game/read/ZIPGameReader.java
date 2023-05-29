@@ -22,6 +22,7 @@ public class ZIPGameReader extends ZIPReader {
         readerStructure.put("tiles6.json", ReaderMethods::readTiles);
     }
 
+    // CR: a bit complex
     public PianoGame readGame(RawDataContainer data) throws ModelException {
         Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
         if (lore.isEmpty())

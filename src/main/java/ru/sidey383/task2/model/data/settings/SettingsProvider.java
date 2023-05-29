@@ -7,12 +7,12 @@ import java.util.Map;
 
 public interface SettingsProvider {
 
-    public Map<ClickType, Integer> getGameKeys();
+    Map<ClickType, Integer> getGameKeys();
 
-    public void setGameKey(ClickType type, int key);
+    void setGameKey(ClickType type, int key);
 
-    public Path getGamesDir();
+    Path getGamesDir();
 
-    public void setGamesDir(Path path);
+    void setGamesDir(Path path);
 
 }

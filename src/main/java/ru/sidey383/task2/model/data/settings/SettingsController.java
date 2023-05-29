@@ -21,6 +21,7 @@ public class SettingsController implements SettingsProvider {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private final AppSettings settings;
+    // CR: rename
     private final Path path;
 
     private SettingsController(AppSettings settings, Path path) {

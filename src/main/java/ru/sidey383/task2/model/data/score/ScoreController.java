@@ -40,6 +40,7 @@ public class ScoreController implements ScoreProvider {
         this.path = path;
     }
 
+    // CR: load later
     public static ScoreController createScoreContainer(Path path) throws ModelException {
         ScoreController scoreController;
         if (Files.exists(path)) {

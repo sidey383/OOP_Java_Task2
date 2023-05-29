@@ -22,6 +22,7 @@ import java.io.Serializable;
         category = Core.CATEGORY_NAME,
         elementType = Appender.ELEMENT_TYPE,
         printObject = true)
+// CR: think about it
 public class WindowAppender extends AbstractAppender {
 
     private Stage dialog = null;

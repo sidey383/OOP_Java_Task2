@@ -9,6 +9,7 @@ public class TileLineContainer implements TileLine {
 
     private final static long CHUNK_TIME = 5_000_000_000L;
 
+    // CR: think about it
     private final TileChunk[] tileChunks;
 
     private long missClickCount = 0;
