@@ -3,9 +3,6 @@ package ru.sidey383.task2.model.data.settings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.sidey383.task2.model.exception.ModelException;
-import ru.sidey383.task2.model.exception.ModelIOException;
-import ru.sidey383.task2.model.exception.NotRegularFileException;
 import ru.sidey383.task2.model.game.ClickType;
 
 import java.io.IOException;
@@ -20,37 +17,44 @@ public class SettingsController implements SettingsProvider {
     private final Logger logger = LogManager.getLogger(SettingsController.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private final AppSettings settings;
-    // CR: rename
-    private final Path path;
+    private AppSettings settings = null;
 
-    private SettingsController(AppSettings settings, Path path) {
-        this.settings = settings;
-        this.path = path;
+    private final Path settingsPath;
+
+    public SettingsController(Path settingsPath) {
+        this.settingsPath = settingsPath;
     }
 
     @Override
     public Map<ClickType, Integer> getGameKeys() {
+        if (settings == null)
+            readSetting();
         return settings.getGameKeys();
     }
 
     @Override
     public void setGameKey(ClickType type, int key) {
+        if (settings == null)
+            readSetting();
         settings.setGameKey(type, key);
         try {
             write();
         } catch (IOException e) {
-            logger.error(() -> String.format("Settings write error %s", path), e);
+            logger.error(() -> String.format("Settings write error %s", settingsPath), e);
         }
     }
 
     @Override
     public Path getGamesDir() {
+        if (settings == null)
+            readSetting();
         return settings.getGamesDir();
     }
 
     @Override
     public void setGamesDir(Path path) {
+        if (settings == null)
+            readSetting();
         settings.setGamesDir(path);
         try {
             write();
@@ -59,44 +63,21 @@ public class SettingsController implements SettingsProvider {
         }
     }
 
-    public static SettingsController createSettingsController(Path path) throws ModelException {
-        SettingsController settingsContainer;
-        if (Files.exists(path)) {
-            if (Files.isRegularFile(path)) {
-                try (InputStream is = Files.newInputStream(path)) {
-                    AppSettings settings = mapper.reader().readValue(is, AppSettings.class);
-                    settingsContainer = new SettingsController(settings, path);
-                } catch (IOException e1) {
-                    try {
-                        settingsContainer = createNew(path);
-                    } catch (IOException e2) {
-                        throw new ModelIOException(e2);
-                    }
-                }
-            } else {
-                throw new NotRegularFileException(path);
-            }
-        } else {
-            try {
-                return createNew(path);
-            } catch (IOException e) {
-                throw new ModelIOException(e);
-            }
+    private void readSetting() {
+        if (!Files.exists(settingsPath)) {
+            this.settings = AppSettings.getDefault(settingsPath.getParent());
+            return;
         }
-        return settingsContainer;
-    }
-
-    private static SettingsController createNew(Path path) throws IOException {
-        if (Files.exists(path))
-            Files.delete(path);
-        AppSettings settings = AppSettings.getDefault(path.getParent());
-        SettingsController settingsController = new SettingsController(settings, path);
-        settingsController.write();
-        return settingsController;
+        try (InputStream is = Files.newInputStream(settingsPath)) {
+            this.settings = mapper.reader().readValue(is, AppSettings.class);
+        } catch (IOException e) {
+            logger.warn("Settings read error", e);
+            this.settings = AppSettings.getDefault(settingsPath.getParent());
+        }
     }
 
     private void write() throws IOException {
-        try (OutputStream os = Files.newOutputStream(path)) {
+        try (OutputStream os = Files.newOutputStream(settingsPath)) {
             mapper.writer().writeValue(os, settings);
         }
     }

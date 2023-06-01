@@ -7,7 +7,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.sidey383.task2.CustomFileSystem;
 import ru.sidey383.task2.model.data.game.GameDescription;
-import ru.sidey383.task2.model.exception.ModelException;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -25,8 +24,8 @@ public class ScoreControllerTest {
 
     @Test
     @Order(0)
-    public void initTest() throws ModelException {
-        ScoreController scoreController = ScoreController.createScoreContainer(fileSystem.getRoot().resolve("initTest"));
+    public void initTest() {
+        ScoreController scoreController = new ScoreController(fileSystem.getRoot().resolve("initTest"));
         assertIterableEquals(scoreController.getScores(), Collections.emptyList());
     }
 
@@ -56,8 +55,8 @@ public class ScoreControllerTest {
 
     @Test
     @Order(1)
-    public void singleScoreTest() throws ModelException {
-        ScoreController scoreController = ScoreController.createScoreContainer(fileSystem.getRoot().resolve("singleScoreTest"));
+    public void singleScoreTest() {
+        ScoreController scoreController = new ScoreController(fileSystem.getRoot().resolve("singleScoreTest"));
         for (int i = 0; i < 100; i++) {
             scoreController.addScore(createDescription("Foo"), i*1000L);
             Collection<GameScore> scores = scoreController.getScores();
@@ -70,8 +69,8 @@ public class ScoreControllerTest {
 
     @Test
     @Order(2)
-    public void someGameTestTest() throws ModelException {
-        ScoreController scoreController = ScoreController.createScoreContainer(fileSystem.getRoot().resolve("someGameTestTest"));
+    public void someGameTestTest() {
+        ScoreController scoreController = new ScoreController(fileSystem.getRoot().resolve("someGameTestTest"));
         for (int i = 1; i <= 100; i++) {
             scoreController.addScore(createDescription("Foo"+i), i*1000L);
             Collection<GameScore> scores = scoreController.getScores();
@@ -87,8 +86,8 @@ public class ScoreControllerTest {
 
     @Test
     @Order(3)
-    public void multiGameChangeScoreTest() throws ModelException {
-        ScoreController scoreController = ScoreController.createScoreContainer(fileSystem.getRoot().resolve("multiGameChangeScoreTest"));
+    public void multiGameChangeScoreTest() {
+        ScoreController scoreController = new ScoreController(fileSystem.getRoot().resolve("multiGameChangeScoreTest"));
         for (int i = 1; i <= 100; i++) {
             scoreController.addScore(createDescription("Foo"+i), i*1000L);
         }

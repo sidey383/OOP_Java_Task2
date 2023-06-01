@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.sidey383.task2.CustomFileSystem;
 import ru.sidey383.task2.model.data.game.read.ZIPReaderTest;
-import ru.sidey383.task2.model.exception.ModelException;
 import ru.sidey383.task2.model.game.ClickType;
 
 import java.io.IOException;
@@ -68,10 +67,10 @@ public class SettingsControllerTest {
 
     @Test
     @Order(0)
-    public void loadTest() throws ModelException {
+    public void loadTest() {
         for (int i = 0; i < files.length; i++) {
             Path p = fileSystem.getRoot().resolve(files[i]);
-            SettingsController controller = SettingsController.createSettingsController(p);
+            SettingsController controller = new SettingsController(p);
             assertEquals(gameDirs[i], controller.getGamesDir(), "Wrong game dir for file " + files[i]);
             Map<ClickType, Integer> keys = controller.getGameKeys();
             for (ClickType type : ClickType.values()) {
@@ -82,9 +81,9 @@ public class SettingsControllerTest {
 
     @Test
     @Order(1)
-    public void initTest() throws ModelException {
+    public void initTest() {
         Path p = fileSystem.getRoot().resolve("initSettings");
-        SettingsController controller = SettingsController.createSettingsController(p);
+        SettingsController controller = new SettingsController(p);
         AppSettings defaultSettings = AppSettings.getDefault(p.getParent());
         assertEquals(defaultSettings.getGamesDir(), controller.getGamesDir(), "Wrong games dir for new  settings");
         for (ClickType type : ClickType.values()) {
@@ -94,8 +93,8 @@ public class SettingsControllerTest {
 
     @Test
     @Order(2)
-    public void changeTest() throws ModelException {
-        SettingsController settings = SettingsController.createSettingsController(fileSystem.getRoot().resolve("settingsChange"));
+    public void changeTest() {
+        SettingsController settings = new SettingsController(fileSystem.getRoot().resolve("settingsChange"));
         settings.setGameKey(ClickType.LINE_1, 455);
         assertEquals(455, settings.getGameKeys().get(ClickType.LINE_1), "Value was changed");
         settings.setGameKey(ClickType.LINE_2, -455);
@@ -115,9 +114,9 @@ public class SettingsControllerTest {
 
     @Test
     @Order(3)
-    public void reloadChange() throws ModelException {
+    public void reloadChange() {
         Path settingsPath = fileSystem.getRoot().resolve("settingsChange");
-        SettingsController settings = SettingsController.createSettingsController(settingsPath);
+        SettingsController settings = new SettingsController(settingsPath);
         settings.setGameKey(ClickType.LINE_1, 455);
         settings.setGameKey(ClickType.LINE_2, -455);
         settings.setGameKey(ClickType.LINE_3, 455);
@@ -127,7 +126,7 @@ public class SettingsControllerTest {
         Path p = Path.of("test");
         settings.setGamesDir(p);
 
-        settings = SettingsController.createSettingsController(settingsPath);
+        settings = new SettingsController(settingsPath);
         assertEquals(455, settings.getGameKeys().get(ClickType.LINE_1), "Value was changed");
         assertEquals(-455, settings.getGameKeys().get(ClickType.LINE_2), "Value was changed");
         assertEquals(455, settings.getGameKeys().get(ClickType.LINE_3), "Value was changed");

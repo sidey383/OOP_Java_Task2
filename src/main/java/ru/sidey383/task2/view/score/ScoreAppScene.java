@@ -14,7 +14,7 @@ public class ScoreAppScene extends ScoreView {
     public VBox scrollBox;
 
     public void setGameScores(Collection<ScoreUnit> scores) {
-        Platform.runLater(() -> scrollBox.getChildren().addAll(scores.stream().map(ScoreBox::new).toList()));
+        Platform.runLater(() -> scrollBox.getChildren().setAll(scores.stream().map(ScoreBox::new).toList()));
     }
 
     @FXML

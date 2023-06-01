@@ -6,7 +6,6 @@ import ru.sidey383.task2.model.data.score.ScoreController;
 import ru.sidey383.task2.model.data.score.ScoreProvider;
 import ru.sidey383.task2.model.data.settings.SettingsController;
 import ru.sidey383.task2.model.data.settings.SettingsProvider;
-import ru.sidey383.task2.model.exception.ModelException;
 
 import java.nio.file.Path;
 
@@ -22,13 +21,13 @@ public class DataController implements DataProvider {
         this.settingsProvider = settingsProvider;
     }
 
-    public static DataController createController(Path mainPath) throws ModelException {
+    public static DataController createController(Path mainPath) {
         return createController(mainPath.resolve("scores"), mainPath.resolve("settings"));
     }
 
-    private static DataController createController(Path scores, Path settings) throws ModelException {
-        SettingsProvider settingsProvider = SettingsController.createSettingsController(settings);
-        ScoreProvider scoreProvider = ScoreController.createScoreContainer(scores);
+    private static DataController createController(Path scores, Path settings) {
+        SettingsProvider settingsProvider = new SettingsController(settings);
+        ScoreProvider scoreProvider = new ScoreController(scores);
         GameProvider gameProvider = new GameDataController(settingsProvider);
         return new DataController(gameProvider, scoreProvider, settingsProvider);
     }

@@ -13,7 +13,6 @@ import ru.sidey383.task2.model.exception.IncorrectGameFileException;
 import ru.sidey383.task2.model.exception.ModelException;
 import ru.sidey383.task2.model.exception.ModelIOException;
 import ru.sidey383.task2.model.game.level.PianoGame;
-import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -30,7 +29,7 @@ public class RootModel implements ModelInterface {
         this.dataProvider = dataProvider;
     }
 
-    public static RootModel createModel(Path dir) throws ModelException {
+    public static RootModel createModel(Path dir) {
         return new RootModel(DataController.createController(dir));
     }
 
@@ -48,10 +47,7 @@ public class RootModel implements ModelInterface {
 
             PianoGame game = gameReader.readGame(dataContainer);
 
-            game.addResultListener((data) -> {
-                dataProvider.scoreProvider().addScore(gameDescription, data.stream().mapToLong(TileStatus::score).sum());
-                return null;
-            });
+            game.onEnd(() -> dataProvider.scoreProvider().addScore(gameDescription, game.getScore()));
 
             EventManager.runEvent(new ModelStartTileLinesGameEvent(dataContainer, game));
         } catch (NoSuchFileException e) {

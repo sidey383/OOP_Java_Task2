@@ -7,7 +7,6 @@ import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 
 import java.util.*;
-import java.util.function.Function;
 
 public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
@@ -15,9 +14,7 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
     private final String name;
     HashMap<ClickType, TileLine> lines = new HashMap<>();
 
-    private boolean isEnded = false;
-
-    private final List<Function<Collection<TileStatus>, Void>> resultListeners = new ArrayList<>();
+    private final List<Runnable> resultListeners = new ArrayList<>();
 
     /**
      * use nano time
@@ -38,13 +35,12 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
     @Override
     public boolean stop() {
-        boolean ret = super.stop();
-        Collection<TileStatus> statuses = getTileStatistic();
-        for (var listener : resultListeners) {
-            listener.apply(new ArrayList<>(statuses));
+        if(super.stop()) {
+            for (var listener : resultListeners)
+                listener.run();
+            return true;
         }
-        isEnded = true;
-        return ret;
+        return false;
     }
 
     @Override
@@ -54,19 +50,19 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
 
     @Override
     public void press(ClickType type, long globalTime) {
-        if (isEnded)
+        if (!isGoing())
             return;
         TileLine line = lines.get(type);
-        if (line != null && isGoing())
+        if (line != null)
             line.press(globalTime);
     }
 
     @Override
     public void release(ClickType type, long globalTime) {
-        if (isEnded)
+        if (!isGoing())
             return;
         TileLine line = lines.get(type);
-        if (line != null && isGoing())
+        if (line != null)
             line.release(globalTime);
     }
 
@@ -124,8 +120,8 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
         return totalTime;
     }
 
-    public void addResultListener(Function<Collection<TileStatus>, Void> listener) {
-        if (isEnded)
+    public void onEnd(Runnable listener) {
+        if (gameStatus == GameStatus.IS_OVER)
             return;
         resultListeners.add(listener);
     }

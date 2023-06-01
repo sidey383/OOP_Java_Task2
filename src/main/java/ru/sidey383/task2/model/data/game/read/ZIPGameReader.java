@@ -22,11 +22,20 @@ public class ZIPGameReader extends ZIPReader {
         readerStructure.put("tiles6.json", ReaderMethods::readTiles);
     }
 
-    // CR: a bit complex
     public PianoGame readGame(RawDataContainer data) throws ModelException {
-        Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
-        if (lore.isEmpty())
-            throw new ModelIOException("Can't read game lore from file, see other errors");
+
+        GameLore lore = readLore(data);
+
+        Tile[][] gameTiles = readTiles(data);
+
+        try {
+            return new PianoGame(lore.name(), lore.levelTime(), ReaderMethods.convert(gameTiles));
+        } catch (IllegalArgumentException e) {
+            throw new IncorrectGameFileException("Create game " + lore.name() + " error", e);
+        }
+    }
+
+    private Tile[][] readTiles(RawDataContainer data) throws ModelException {
         Tile[][] gameTiles = new Tile[6][];
         for (int i = 1; i <= 6; i++) {
             Optional<Tile[]> tiles = data.getData(Tile[].class, "tiles"+i+".json");
@@ -34,11 +43,14 @@ public class ZIPGameReader extends ZIPReader {
                 throw new ModelIOException("Can't read tiles "+i+" from file, see other errors");
             gameTiles[i-1] = tiles.get();
         }
-        try {
-            return new PianoGame(lore.get().name(), lore.get().levelTime(), ReaderMethods.convert(gameTiles));
-        } catch (IllegalArgumentException e) {
-            throw new IncorrectGameFileException("Create game " + lore.get().name() + " error", e);
-        }
+        return gameTiles;
+    }
+
+    private GameLore readLore(RawDataContainer data) throws ModelException {
+        Optional<GameLore> lore = data.getData(GameLore.class, "gameLore.json");
+        if (lore.isEmpty())
+            throw new ModelIOException("Can't read game lore from file, see other errors");
+        return lore.get();
     }
 
 }

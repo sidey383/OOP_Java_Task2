@@ -11,9 +11,9 @@ public abstract class AbstractTimerGame implements TimerGame {
 
     protected long pauseTime = 0;
 
-    private GameStatus gameStatus = GameStatus.NOT_STARTED;
+    protected GameStatus gameStatus = GameStatus.NOT_STARTED;
 
-    private enum GameStatus {
+    protected enum GameStatus {
         NOT_STARTED, PAUSED, ON, IS_OVER
     }
 
