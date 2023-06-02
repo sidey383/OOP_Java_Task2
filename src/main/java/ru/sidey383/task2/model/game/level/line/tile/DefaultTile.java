@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("DefaultTile")
+// CR(minor): maybe 'RegularTile'?
 public class DefaultTile implements Tile {
 
     private final long startTime;
