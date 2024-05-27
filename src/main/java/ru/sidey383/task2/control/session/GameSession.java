@@ -4,16 +4,13 @@ import ru.sidey383.task2.control.Controller;
 import ru.sidey383.task2.control.ControllerSession;
 import ru.sidey383.task2.control.exception.ControllerException;
 import ru.sidey383.task2.control.exception.GameAlreadyStartedException;
-import ru.sidey383.task2.view.game.DrawnTile;
-import ru.sidey383.task2.view.game.DrawnTileType;
-import ru.sidey383.task2.view.game.TimeProvider;
+import ru.sidey383.task2.view.game.*;
 import ru.sidey383.task2.event.EventHandler;
 import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.level.TileLinesGame;
 import ru.sidey383.task2.model.game.level.line.tile.Tile;
 import ru.sidey383.task2.model.game.level.line.tile.TileStatus;
 import ru.sidey383.task2.view.AppScene;
-import ru.sidey383.task2.view.game.GameView;
 import ru.sidey383.task2.view.events.PlayerKeyEvent;
 import ru.sidey383.task2.view.events.game.PlayerGameStopEvent;
 import ru.sidey383.task2.view.events.game.PlayerPauseEvent;
@@ -155,17 +152,24 @@ public class GameSession extends ControllerSession {
             long time = game.toLocalTime(nTime);
             long endTime = time + game.timeToShow() * 2;
             ClickType[] types = game.availableClickTypes();
-            DrawnTile[][] tiles = new DrawnTile[types.length][];
+            DrawnInfo[][] tiles = new DrawnInfo[types.length][];
+            LineStatus[] status = new LineStatus[types.length];
             for (int i = 0; i < types.length; i++) {
-                tiles[i] = game.getLine(types[i]).getTiles(time, endTime).stream().map(TileAdapter::new).toArray(TileAdapter[]::new);
+                tiles[i] = game.getLine(types[i]).getTiles(time, endTime).stream().map(InfoAdapter::new).toArray(InfoAdapter[]::new);
+                status[i] = switch (game.getLastStatus(types[i], time)) {
+
+                    case GOOD_CLICKED -> LineStatus.GOOD_CLICK;
+                    case GOOD_PRESSED -> LineStatus.GOOD_HOLD;
+                    case MISSED_TILE -> LineStatus.NO_CLICK;
+                    case NOTHING -> LineStatus.NOTHING;
+                };
             }
-            gameView.updateTiles(tiles);
+            gameView.updateView(tiles, status);
         }
 
     }
 
-    // CR: merge timers?
-    private record TileAdapter(Tile tile) implements DrawnTile {
+    private record InfoAdapter(Tile tile) implements DrawnInfo {
 
         @Override
         public long endTime() {
@@ -183,6 +187,11 @@ public class GameSession extends ControllerSession {
                 case LONG -> DrawnTileType.LONG;
                 case DEFAULT -> DrawnTileType.SHORT;
             };
+        }
+
+        @Override
+        public boolean isClicked() {
+            return tile.getStatus().clicked();
         }
     }
 

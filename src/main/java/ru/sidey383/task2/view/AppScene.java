@@ -15,14 +15,13 @@ public abstract class AppScene {
         return root;
     }
 
-    @FXML
-    public void onKeyPress(KeyEvent keyEvent) {
-        EventManager.runEvent(new PlayerKeyEvent(true, keyEvent.getCode()));
-    }
+        @FXML
+        public void onKeyPress(KeyEvent keyEvent) {
+            EventManager.runEvent(new PlayerKeyEvent(true, keyEvent.getCode()));
+        }
 
-    @FXML
-    public void onKeyRelease(KeyEvent keyEvent) {
-        EventManager.runEvent(new PlayerKeyEvent(false, keyEvent.getCode()));
-    }
+        @FXML
+        public void onKeyRelease(KeyEvent keyEvent) {
+        }
 
 }

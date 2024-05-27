@@ -6,4 +6,6 @@ public interface ClickableGame {
 
     void release(ClickType type, long globalTime);
 
+    ClickStatus getLastStatus(ClickType type, long globalTime);
+
 }

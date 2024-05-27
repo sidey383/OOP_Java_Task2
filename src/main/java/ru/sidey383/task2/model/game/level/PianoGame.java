@@ -1,5 +1,6 @@
 package ru.sidey383.task2.model.game.level;
 
+import ru.sidey383.task2.model.game.ClickStatus;
 import ru.sidey383.task2.model.game.ClickType;
 import ru.sidey383.task2.model.game.level.line.TileLine;
 import ru.sidey383.task2.model.game.level.line.TileLineContainer;
@@ -64,6 +65,24 @@ public class PianoGame extends AbstractTimerGame implements TileLinesGame {
         TileLine line = lines.get(type);
         if (line != null)
             line.release(globalTime);
+    }
+
+    @Override
+    public ClickStatus getLastStatus(ClickType type, long globalTime) {
+        if (!isGoing())
+            return ClickStatus.NOTHING;
+        TileLine line = lines.get(type);
+        Tile t = line.getTile(globalTime);
+        if (t == null)
+            return ClickStatus.NOTHING;
+        if (t.getStatus().clicked()) {
+            return switch (t.type()) {
+                case LONG -> ClickStatus.GOOD_PRESSED;
+                case DEFAULT -> ClickStatus.GOOD_CLICKED;
+            };
+        } else {
+            return ClickStatus.MISSED_TILE;
+        }
     }
 
     @Override

@@ -50,8 +50,8 @@ public class GameAppScene extends GameView {
     };
 
     @Override
-    public void updateTiles(DrawnTile[][] nTiles) {
-        gameField.updateTiles(nTiles);
+    public void updateView(DrawnInfo[][] nTiles, LineStatus[] status) {
+        gameField.updateTiles(nTiles, status);
     }
 
     @Override
